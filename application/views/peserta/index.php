@@ -9,6 +9,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
+                <a href="<?= site_url('Peserta/vtambah') ?>" class="btn btn-primary" style="margin-bottom: 10px;" ><i class="fa fa-plus"></i> | Tambah Data</a>
                 <div id="div-table-peserta"></div>
             </div>
         </div>

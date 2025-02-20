@@ -1,26 +1,49 @@
 <table class="table table-bordered" id="tablePeserta" width="100%" cellspacing="0">
     <thead>
         <tr>
-            <th>No</th>
+            <!-- <th>No</th> -->
             <th>No. Anggota</th>
             <th>Nama</th>
             <th>Jenis Kelamin</th>
             <th>Telpon</th>
+            <th>NIK</th>
+            <th>Alamat</th>
+            <th>TTL</th>
+            <th>Nama Orangtua</th>
             <th>Action</th>
         </tr>
     </thead>
     <tbody>
+        <?php 
+        // $x=1;
+        foreach ($anggota as $row) { 
+        $kelamin = $row->jk;
+        ?>
         <tr>
-            <td>Tiger Nixon</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011/04/25</td>
+            <!-- <td><?= $x++; ?></td> -->
+            <td><?= $row->no_agt ?></td>
+            <td><?= $row->name ?></td>
             <td>
-                <button type="button" class="btn btn-primary" title="detail"><i class="fa fa-list"></i></button>
-                <button type="button" class="btn btn-warning" title="edit"><i class="fa fa-edit"></i></button>
-                <button type="button" class="btn btn-danger" title="hapus data"><i class="fa fa-trash"></i></button>
+                <?php 
+                if ($kelamin == 'laki') {
+                    echo 'Laki-laki';
+                }else {
+                    echo 'Perempuan';
+                }
+                ?>
+            </td>
+            <td><?= $row->no_telp ?></td>
+            <td><?= $row->nik ?></td>
+            <td><?= $row->alamat ?></td>
+            <td><?= $row->tmp_lahir.", ". date('d-m-Y', strtotime($row->tgl_lahir)) ?></td>
+            <td><?= $row->binbinti ?></td>
+            <td>
+                <!-- <button type="button" class="btn btn-primary" title="detail"><i class="fa fa-list"></i></button> -->
+                <a href="<?= site_url('Peserta/vedit/'.$row->id) ?>" class="btn btn-warning" title="edit data" ><i class="fa fa-edit"></i></a>
+                <a href="<?= site_url('Peserta/delete_data/'.$row->id) ?>" class="btn btn-danger" title="hapus" ><i class="fa fa-trash"></i></a>
             </td>
         </tr>
+        <?php }
+        ?>
     </tbody>
 </table>
