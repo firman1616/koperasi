@@ -11,7 +11,7 @@
  Target Server Version : 100428 (10.4.28-MariaDB)
  File Encoding         : 65001
 
- Date: 20/02/2025 16:53:05
+ Date: 20/02/2025 17:01:05
 */
 
 SET NAMES utf8mb4;
@@ -156,5 +156,25 @@ INSERT INTO `tbl_anggota` VALUES (112, '123123321', 'lagi lagi baru', 'laki', 't
 INSERT INTO `tbl_anggota` VALUES (113, '123123321', 'barunih', 'laki', 'test', 'surabaya', '1999-01-01', '3456789876543456', 'surabaya no 1', '', '', '', '');
 INSERT INTO `tbl_anggota` VALUES (114, '123123321', 'barunih', 'laki', 'test', 'surabaya', '1999-01-01', '3456789876543456', 'surabaya no 1', '', '', '', '');
 INSERT INTO `tbl_anggota` VALUES (115, '123123321', 'barunih', 'laki', 'test', 'surabaya', '1999-01-01', '3456789876543456', 'surabaya no 1', '', '', '', '08213123');
+
+-- ----------------------------
+-- Table structure for tbl_uom
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_uom`;
+CREATE TABLE `tbl_uom`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `kode` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `uom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_uom
+-- ----------------------------
+INSERT INTO `tbl_uom` VALUES (1, 'pcs', 'Picies');
+INSERT INTO `tbl_uom` VALUES (2, 'Kg', 'Kilogram');
+INSERT INTO `tbl_uom` VALUES (3, 'Gr', 'Gram');
+INSERT INTO `tbl_uom` VALUES (4, 'Dus', 'Dus');
+INSERT INTO `tbl_uom` VALUES (5, 'Ball', 'Ball');
 
 SET FOREIGN_KEY_CHECKS = 1;
