@@ -59,6 +59,23 @@
 <script src="<?= base_url() ?>assets/template/js/demo/chart-area-demo.js"></script>
 <script src="<?= base_url() ?>assets/template/js/demo/chart-pie-demo.js"></script>
 
+<script src="<?= base_url() ?>assets/template/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="<?= base_url() ?>assets/template/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="<?= base_url() ?>assets/template/js/demo/datatables-demo.js"></script>
+
+<script>
+  var BASE_URL = "<?php echo base_url(); ?>";
+</script>
+
+<?php
+if (isset($footer_js)) {
+    foreach ($footer_js as $fjs) { ?>
+        <script type="text/javascript" src="<?= base_url($fjs) ?>"></script>
+<?php }
+} ?>
+
 </body>
 
 </html>

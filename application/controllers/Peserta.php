@@ -17,8 +17,17 @@ class Peserta extends CI_Controller {
 	{
 		$data = [
 			'title' => 'Data Peserta',
-			'conten' => 'peserta/index'
+            'subtitle' => 'List',
+			'conten' => 'peserta/index',
+            'footer_js' => array('assets/js/peserta.js')
 		];
 		$this->load->view('template/conten',$data);
 	}
+
+    function tablePeserta()
+    {
+        // $data['kwitansi'] = $this->kwitansi->getKwitansi()->result();
+
+        echo json_encode($this->load->view('peserta/peserta-table',false));
+    }
 }
