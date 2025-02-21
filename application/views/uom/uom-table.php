@@ -17,7 +17,7 @@
             <td><?= $row->kode ?></td>
             <td><?= $row->uom ?></td>
             <td>
-                <button type="button" class="btn btn-warning"><i class="fa fa-edit"></i></button>
+                <button type="button" class="btn btn-warning edit" data-id="<?= $row->id ?>"><i class="fa fa-edit"></i></button>
             </td>
         </tr>
         <?php }

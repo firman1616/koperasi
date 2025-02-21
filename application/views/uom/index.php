@@ -11,12 +11,13 @@
                     <h6 class="m-0 font-weight-bold text-primary">Tambah Data</h6>
                 </div>
                 <div class="card-body">
-                    <form action="" method="post">
+                    <form action="" id="uomForm" name="uomForm" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="id" id="id">
                         <label class="form-label">Kode Satuan</label>
                         <input type="text" class="form-control" id="kode_satuan" name="kode_satuan" required>
                         <label class="form-label">Nama Satuan</label>
                         <input type="text" class="form-control" id="nama_satuan" name="nama_satuan" required>
-                        <button type="submit" class="btn btn-primary" style="margin-top: 10px;" ><i class="fa fa-save"></i> | Simpan Data</button>
+                        <button type="submit" class="btn btn-primary" id="save-data" style="margin-top: 10px;"><i class="fa fa-save"></i> | Simpan Data</button>
                     </form>
                 </div>
             </div>
