@@ -24,10 +24,6 @@
                         <label class="form-label">Harga Jual</label>
                         <input type="number" class="form-control" id="harga_jual" name="harga_jual" required>
                     </div>
-                    <div class="col">
-                        <label class="form-label">Margin</label>
-                        <input type="number" class="form-control" id="margin" name="margin" required>
-                    </div>
                 </div>
 
                 <div class="row">
@@ -46,7 +42,7 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-warning" style="margin-top: 10px;"><i class="fa fa-save"></i> | Simpan Data</button>
+                <button type="submit" class="btn btn-primary" style="margin-top: 10px;"><i class="fa fa-save"></i> | Simpan Data</button>
                 
             </form>
         </div>

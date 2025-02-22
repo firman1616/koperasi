@@ -75,12 +75,15 @@ class Barang extends CI_Controller {
     function update_data($id) {
         date_default_timezone_set('Asia/Jakarta');
         $table = 'tbl_barang';
+        $beli = $this->input->post('harga_beli');
+        $jual = $this->input->post('harga_jual');
+        $margin = $jual - $beli;
         $data = [
            'kode_barang' => $this->input->post('kode_barang'),
             'nama_barang' => $this->input->post('nama_barang'),
             'harga_beli' => $this->input->post('harga_beli'),
             'harga_jual' => $this->input->post('harga_jual'),
-            'margin' => $this->input->post('margin'),
+            'margin' => $margin,
             'qty' => $this->input->post('qty'),
             'uom' => $this->input->post('uom'),
             'tgl_update' => date('Y-m-d H:i:s'),
