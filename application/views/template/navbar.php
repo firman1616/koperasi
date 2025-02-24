@@ -25,6 +25,12 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link" href="<?= site_url('Transaksi') ?>">
+                    <i class="fas fa-fw fa-exchange-alt"></i>
+                    <span>Transaksi</span></a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link" href="<?= site_url('Peserta') ?>">
                     <i class="fas fa-fw fa-users"></i>
                     <span>Peserta</span></a>
