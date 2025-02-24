@@ -69,7 +69,7 @@
                     </div>
                     <div class="button-group">
                         <button id="tambahBtn" class="btn btn-success" disabled>Tambah</button>
-                        <button class="btn btn-success">Bayar</button>
+                        <button id="bayarBtn" class="btn btn-success" disabled>Bayar</button>
                     </div>
                 </div>
                 <div class="col-md-6 text-end">
