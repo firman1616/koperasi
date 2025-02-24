@@ -41,16 +41,29 @@ class Transaksi extends CI_Controller
     }
 
     public function get_barang()
-    {
-        $barcode = $this->input->get('barcode'); // Ambil barcode dari request
-        $this->db->where('kode_barang', $barcode);
-        $barang = $this->db->get('tbl_barang')->row_array();
-        echo json_encode($barang);
+{
+    $barcode = $this->input->get('barcode'); // Ambil barcode dari request
+    $this->db->where('kode_barang', $barcode);
+    $barang = $this->db->get('tbl_barang')->row_array();
+
+    if ($barang) {
+        echo json_encode([
+            'kode_barang' => $barang['kode_barang'],
+            'nama_barang' => $barang['nama_barang'],
+            'harga_jual' => $barang['harga_jual'], // Pastikan harga ikut diambil
+            'qty' => $barang['qty']
+        ]);
+    } else {
+        echo json_encode([]);
     }
+}
 
     public function get_all_barang()
     {
-        $barang = $this->db->get('tbl_barang')->result();
+        $this->db->select('id, kode_barang, nama_barang, qty');
+        $this->db->from('tbl_barang');
+        $barang = $this->db->get()->result();
+
         echo json_encode($barang);
     }
 }

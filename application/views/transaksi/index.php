@@ -30,6 +30,13 @@
     .form-control-sm {
         width: 250px;
     }
+
+    .input-group-text {
+        background-color: #f8f9fa; 
+    border: 1px solid #ced4da;
+        padding: 0.375rem 0.75rem;
+        font-weight: bold;
+    }
 </style>
 
 <div class="container-fluid">
@@ -49,10 +56,11 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label"><strong>Barcode</strong></label>
-                        <select id="barcode" class="form-control">
-                            <option value="" disabled selected>Pilih Barang</option>
+                        <select id="barcode" class="form-control transelect2" onchange="return autofill();" style="width: 100%">
+                            <option value=""></option>
                             <!-- Data barang akan dimuat melalui AJAX -->
                         </select>
+                        <br>
                         <small>Stock : <b id="qty-tersedia">-</b> </small>
                     </div>
                     <div class="mb-3">

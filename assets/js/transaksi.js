@@ -3,12 +3,15 @@ $(document).ready(function() {
     // tableDetailLot();
     $('#id').val('');
     $('#modulForm').trigger("reset");
+    $(document).ready(function() {
+        $('.transelect2').select2();
+    });
 
     function cekInput() {
         var barcode = $("#barcode").val().trim();
         var jumlah = $("#jumlah").val().trim();
         
-        if (barcode !== "" && jumlah !== "") {
+        if (barcode !== "" && jumlah !== "" && parseInt(jumlah) > 0) {
             $("#tambahBtn").prop("disabled", false);
         } else {
             $("#tambahBtn").prop("disabled", true);
@@ -26,7 +29,8 @@ $(document).ready(function() {
                 dataType: "json",
                 success: function(data) {
                     if (data) {
-                        $("#tambahBtn").data("barang", data); // Simpan data barang di tombol
+                        $("#tambahBtn").data("barang", data);
+                        $("#qty-tersedia").text(data.qty); // Menampilkan stok barang
                     }
                 }
             });
@@ -39,11 +43,16 @@ $(document).ready(function() {
 
     // Saat tombol tambah ditekan
     $("#tambahBtn").click(function() {
-        var jumlah = $("#jumlah").val();
+        var jumlah = parseInt($("#jumlah").val());
         var barang = $(this).data("barang");
 
         if (!barang) {
             alert("Barang tidak ditemukan!");
+            return;
+        }
+
+        if (jumlah > barang.qty) {
+            alert("Stok tidak mencukupi!");
             return;
         }
 
@@ -55,11 +64,12 @@ $(document).ready(function() {
             <td><button class="btn btn-danger btn-sm removeRow">Hapus</button></td>
         </tr>`;
 
-        $("#transaksiTable tbody").append(newRow);
+        $("#tableTransaksi tbody").append(newRow);
 
         // Reset form
-        $("#barcode").val("");
+        $("#barcode").val("").trigger("change");;
         $("#jumlah").val("");
+        $("#qty-tersedia").text("-"); // Kosongkan stok
         $("#tambahBtn").prop("disabled", true);
     });
 
@@ -68,7 +78,7 @@ $(document).ready(function() {
         $(this).closest("tr").remove();
     });
 
-    // **(Opsional) Memuat data barang ke dalam select barcode**
+    // **Memuat data barang ke dalam select barcode**
     function loadBarang() {
         $.ajax({
             url: BASE_URL + "Transaksi/get_all_barang",
@@ -83,11 +93,11 @@ $(document).ready(function() {
         });
     }
 
-    loadBarang(); // Panggil saat halaman pertama kali dimuat
+    loadBarang(); // Panggil saat halaman pertama kali dimuat// Panggil saat halaman pertama kali dimuat
 });
 
 function autofill() {
-	var kode = $('#kd_barang').val();
+	var kode = $('#barcode').val();
     // console.log(kode);
 	$.ajax({
 		url: BASE_URL + "Transaksi/cari",
@@ -109,10 +119,10 @@ function tableTransaksi() {
         type: "POST",
         success: function (data) {
             $('#div-table-transaksi').html(data);
-            $('#tableTransaksi').DataTable({
-                "processing": true,
-                "responsive": true,
-            });
+            // $('#tableTransaksi').DataTable({
+            //     "processing": true,
+            //     "responsive": true,
+            // });
         }
     });
 }

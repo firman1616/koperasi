@@ -21,5 +21,7 @@
     <link href="<?= base_url() ?>assets/template/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="<?= base_url() ?>assets/template/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
 </head>
     <!-- End of Topbar -->

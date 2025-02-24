@@ -65,6 +65,8 @@
 <!-- Page level custom scripts -->
 <script src="<?= base_url() ?>assets/template/js/demo/datatables-demo.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
 
 
 <script>
