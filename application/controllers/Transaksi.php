@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Transaksi extends CI_Controller {
+class Transaksi extends CI_Controller
+{
 
     public function __construct()
     {
@@ -10,54 +11,46 @@ class Transaksi extends CI_Controller {
         //     redirect(base_url("Login"));
         // }
         // $this->load->library('Pdf');
-        // $this->load->model('M_dashboard', 'dash');
+        $this->load->model('M_transaksi', 'trans');
     }
-	
-	public function index()
-	{
-		$data = [
-			'title' => 'Data Transaksi',
+
+    public function index()
+    {
+        $data = [
+            'title' => 'Data Transaksi',
             'subtitle' => 'List',
-			'conten' => 'transaksi/index',
-            'footer_js' => array('assets/js/transaksi.js')
-		];
-		$this->load->view('template/conten',$data);
-	}
+            'conten' => 'transaksi/index',
+            'footer_js' => array('assets/js/transaksi.js'),
+            'barang' => $this->m_data->get_data('tbl_barang')->result()
+        ];
+        $this->load->view('template/conten', $data);
+    }
 
     function tableTransaksi()
     {
         // $data['uom'] = $this->m_data->get_data('tbl_uom')->result();
 
-        echo json_encode($this->load->view('transaksi/transaksi-table',false));
+        echo json_encode($this->load->view('transaksi/transaksi-table', false));
     }
 
-    function store()
+    public function cari()
     {
-        $id = $this->input->post('id');
-        if ($id != null) {
-            $table = 'tbl_uom';
-            $dataupdate = [
-                'kode' => $this->input->post('kode_satuan'),
-                'uom' => $this->input->post('nama_satuan')
-            ];
-            $where = array('id' => $id);
-            $this->m_data->update_data($table, $dataupdate, $where);
-        } else {
-            $table = 'tbl_uom';
-            $data = [
-                'kode' => $this->input->post('kode_satuan'),
-                'uom' => $this->input->post('nama_satuan')
-            ];
-            // $die(var_dump($data));
-            $this->m_data->simpan_data($table, $data);
-        }
+        $kode = $_GET['kode'];
+        $cari = $this->trans->cari($kode)->row_array();
+        echo json_encode($cari);
     }
 
-    function vedit($id)
+    public function get_barang()
     {
-        $table = 'tbl_uom';
-        $where = array('id' => $id);
-        $data = $this->m_data->get_data_by_id($table, $where)->row();
-        echo json_encode($data);
+        $barcode = $this->input->get('barcode'); // Ambil barcode dari request
+        $this->db->where('kode_barang', $barcode);
+        $barang = $this->db->get('tbl_barang')->row_array();
+        echo json_encode($barang);
+    }
+
+    public function get_all_barang()
+    {
+        $barang = $this->db->get('tbl_barang')->result();
+        echo json_encode($barang);
     }
 }

@@ -10,10 +10,5 @@
         </tr>
     </thead>
     <tbody>
-        <td>No.</td>
-        <td>Kode SAtuan</td>
-        <td>Nama Satuan</td>
-        <td>Qty</td>
-        <td>Action</td>
     </tbody>
 </table>

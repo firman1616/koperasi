@@ -65,9 +65,13 @@
 <!-- Page level custom scripts -->
 <script src="<?= base_url() ?>assets/template/js/demo/datatables-demo.js"></script>
 
+
+
 <script>
   var BASE_URL = "<?php echo base_url(); ?>";
 </script>
+
+
 
 <?php
 if (isset($footer_js)) {

@@ -11,11 +11,12 @@
         float: right;
         font-weight: bold;
         color: gray;
+        /* font-size: 50px; */
     }
 
     .total {
         float: right;
-        font-size: 50px;
+        font-size: 80px;
         font-weight: bold;
         color: red;
         clear: both;
@@ -23,7 +24,11 @@
 
     .button-group {
         display: flex;
-        gap: 10px;
+        gap: 20px;
+    }
+
+    .form-control-sm {
+        width: 250px;
     }
 </style>
 
@@ -40,28 +45,30 @@
 
             <!-- <div class="container mt-12"> -->
             <!-- <div class="container-box mt-3"> -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label"><strong>Barcode</strong></label>
-                            <select name="" id="" class="form-control">
-                                <option value="">Barang</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label"><strong>Jumlah</strong></label>
-                            <input type="number" class="form-control" placeholder="Jumlah">
-                        </div>
-                        <div class="button-group">
-                            <button class="btn btn-success">Tambah</button>
-                            <button class="btn btn-success">Bayar</button>
-                        </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Barcode</strong></label>
+                        <select id="barcode" class="form-control">
+                            <option value="" disabled selected>Pilih Barang</option>
+                            <!-- Data barang akan dimuat melalui AJAX -->
+                        </select>
+                        <small>Stock : <b id="qty-tersedia">-</b> </small>
                     </div>
-                    <div class="col-md-6 text-end">
-                        <div class="nota">Nota: X92AZMY66283B2W</div>
-                        <div class="total">0</div>
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Jumlah</strong></label>
+                        <input type="number" id="jumlah" class="form-control" placeholder="Jumlah">
+                    </div>
+                    <div class="button-group">
+                        <button id="tambahBtn" class="btn btn-success" disabled>Tambah</button>
+                        <button class="btn btn-success">Bayar</button>
                     </div>
                 </div>
+                <div class="col-md-6 text-end">
+                    <div class="nota">Nota: X92AZMY66283B2W</div>
+                    <div class="total">Rp. 0,-</div>
+                </div>
+            </div>
             <!-- </div> -->
             <div class="table-responsive" style="margin-top: 15px;">
                 <div id="div-table-transaksi"></div>
