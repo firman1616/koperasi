@@ -21,6 +21,7 @@ class Transaksi extends CI_Controller
             'subtitle' => 'List',
             'conten' => 'transaksi/index',
             'footer_js' => array('assets/js/transaksi.js'),
+            'kd_trans' => $this->trans->kd_trans(),
             'barang' => $this->m_data->get_data('tbl_barang')->result()
         ];
         $this->load->view('template/conten', $data);
@@ -58,12 +59,13 @@ class Transaksi extends CI_Controller
     }
 }
 
-    public function get_all_barang()
-    {
-        $this->db->select('id, kode_barang, nama_barang, qty');
-        $this->db->from('tbl_barang');
-        $barang = $this->db->get()->result();
+public function get_all_barang()
+{
+    $this->db->select('id, kode_barang, nama_barang, qty');
+    $this->db->from('tbl_barang');
+    $this->db->where('status', 1); // Filter hanya barang dengan status = 1
+    $barang = $this->db->get()->result();
 
-        echo json_encode($barang);
-    }
+    echo json_encode($barang);
+}
 }

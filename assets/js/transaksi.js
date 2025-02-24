@@ -1,11 +1,9 @@
 $(document).ready(function () {
     tableTransaksi();
-    // tableDetailLot();
     $('#id').val('');
     $('#modulForm').trigger("reset");
-    $(document).ready(function () {
-        $('.transelect2').select2();
-    });
+    
+    $('.transelect2').select2();
 
     function cekInput() {
         var barcode = $("#barcode").val().trim();
@@ -24,6 +22,23 @@ $(document).ready(function () {
         } else {
             $("#bayarBtn").prop("disabled", true);
         }
+        hitungTotalHarga(); // Hitung total harga setiap ada perubahan di tabel
+    }
+
+    function hitungTotalHarga() {
+        var total = 0;
+        $("#tableTransaksi tbody tr").each(function () {
+            var hargaText = $(this).find("td:nth-child(3)").text(); // Kolom Harga
+            var qty = parseInt($(this).find("td:nth-child(4)").text()); // Kolom Qty
+            
+            // Ambil angka dari format "Rp. xxx.xxx"
+            var harga = parseInt(hargaText.replace(/Rp. |,/g, "")); 
+            
+            total += harga * qty;
+        });
+
+        // Tampilkan hasil dalam elemen total harga
+        $(".total-harga").text(`Rp. ${total.toLocaleString()}`);
     }
 
     // Saat barcode dipilih, ambil data barang dari database
@@ -65,11 +80,11 @@ $(document).ready(function () {
         }
 
         var newRow = `<tr>
-        <td>${barang.kode_barang}</td>
-        <td>${barang.nama_barang}</td>
-        <td>Rp. ${parseFloat(barang.harga_jual).toLocaleString()}</td>
-        <td>${jumlah}</td>
-        <td><button class="btn btn-danger btn-sm removeRow">Hapus</button></td>
+            <td>${barang.kode_barang}</td>
+            <td>${barang.nama_barang}</td>
+            <td>Rp. ${parseFloat(barang.harga_jual).toLocaleString()}</td>
+            <td>${jumlah}</td>
+            <td><button class="btn btn-danger btn-sm removeRow">Hapus</button></td>
         </tr>`;
 
         $("#tableTransaksi tbody").append(newRow);
@@ -80,16 +95,15 @@ $(document).ready(function () {
         $("#qty-tersedia").text("-"); // Kosongkan stok
         $("#tambahBtn").prop("disabled", true);
 
-        // Cek apakah tombol bayar bisa diaktifkan
+        // Perbarui total harga setelah menambahkan barang
         cekTabelTransaksi();
     });
 
     // Event untuk menghapus baris data
     $(document).on("click", ".removeRow", function () {
         $(this).closest("tr").remove();
-        cekTabelTransaksi();
+        cekTabelTransaksi(); // Hitung ulang total harga setelah penghapusan
     });
-
 
     // **Memuat data barang ke dalam select barcode**
     function loadBarang() {
@@ -106,8 +120,12 @@ $(document).ready(function () {
         });
     }
 
-    loadBarang(); // Panggil saat halaman pertama kali dimuat// Panggil saat halaman pertama kali dimuat
+    loadBarang(); // Panggil saat halaman pertama kali dimuat
+
+    // Hitung total harga saat halaman pertama kali dimuat
+    hitungTotalHarga();
 });
+
 
 function autofill() {
     var kode = $('#barcode').val();

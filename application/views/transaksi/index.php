@@ -14,7 +14,7 @@
         /* font-size: 50px; */
     }
 
-    .total {
+    .total-harga {
         float: right;
         font-size: 80px;
         font-weight: bold;
@@ -73,8 +73,9 @@
                     </div>
                 </div>
                 <div class="col-md-6 text-end">
-                    <div class="nota">Nota: X92AZMY66283B2W</div>
-                    <div class="total">Rp. 0,-</div>
+                    <div class="nota">Nota: <?= $kd_trans ?></div>
+                    <input type="hidden" name="kd_trans" id="kd_trans" value="<?= $kd_trans ?>">
+                    <div class="total-harga">Rp. 0,-</div>
                 </div>
             </div>
             <!-- </div> -->
