@@ -32,8 +32,8 @@
     }
 
     .input-group-text {
-        background-color: #f8f9fa; 
-    border: 1px solid #ced4da;
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
         padding: 0.375rem 0.75rem;
         font-weight: bold;
     }
@@ -89,3 +89,45 @@
     </div>
 </div>
 <!-- /.container-fluid -->
+
+
+<!-- Modal Pembayaran -->
+<div class="modal fade" id="modalPembayaran" tabindex="-1" role="dialog" aria-labelledby="modalPembayaranLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalPembayaranLabel">Pembayaran</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formPembayaran">
+                    <div class="form-group">
+                        <label for="tanggal">Tanggal</label>
+                        <input type="datetime-local" class="form-control" id="tanggal" name="tanggal" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nama_pelanggan">Nama Pelanggan</label>
+                        <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="uang_dibayarkan">Uang yang Dibayarkan</label>
+                        <input type="number" class="form-control" id="uang_dibayarkan" name="uang_dibayarkan" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="diskon">Diskon (%)</label>
+                        <input type="number" class="form-control" id="diskon" name="diskon" value="0">
+                    </div>
+                    <span>Total Bayar : Rp. xxx</span>
+                    <br>
+                    <span>Total Pengembalian : Rp. xxx</span>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="prosesBayar">Bayar</button>
+            </div>
+        </div>
+    </div>
+</div>

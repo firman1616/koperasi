@@ -42,30 +42,57 @@ class Transaksi extends CI_Controller
     }
 
     public function get_barang()
-{
-    $barcode = $this->input->get('barcode'); // Ambil barcode dari request
-    $this->db->where('kode_barang', $barcode);
-    $barang = $this->db->get('tbl_barang')->row_array();
+    {
+        $barcode = $this->input->get('barcode'); // Ambil barcode dari request
+        $this->db->where('kode_barang', $barcode);
+        $barang = $this->db->get('tbl_barang')->row_array();
 
-    if ($barang) {
-        echo json_encode([
-            'kode_barang' => $barang['kode_barang'],
-            'nama_barang' => $barang['nama_barang'],
-            'harga_jual' => $barang['harga_jual'], // Pastikan harga ikut diambil
-            'qty' => $barang['qty']
-        ]);
-    } else {
-        echo json_encode([]);
+        if ($barang) {
+            echo json_encode([
+                'kode_barang' => $barang['kode_barang'],
+                'nama_barang' => $barang['nama_barang'],
+                'harga_jual' => $barang['harga_jual'], // Pastikan harga ikut diambil
+                'qty' => $barang['qty']
+            ]);
+        } else {
+            echo json_encode([]);
+        }
     }
-}
 
-public function get_all_barang()
-{
-    $this->db->select('id, kode_barang, nama_barang, qty');
-    $this->db->from('tbl_barang');
-    $this->db->where('status', 1); // Filter hanya barang dengan status = 1
-    $barang = $this->db->get()->result();
+    public function get_all_barang()
+    {
+        $this->db->select('id, kode_barang, nama_barang, qty');
+        $this->db->from('tbl_barang');
+        $this->db->where('status', 1); // Filter hanya barang dengan status = 1
+        $barang = $this->db->get()->result();
 
-    echo json_encode($barang);
-}
+        echo json_encode($barang);
+    }
+
+    public function proses_pembayaran()
+    {
+        $tanggal = $this->input->post('tanggal');
+        $nama_pelanggan = $this->input->post('nama_pelanggan');
+        $uang_dibayarkan = $this->input->post('uang_dibayarkan');
+        $diskon = $this->input->post('diskon');
+        $total_setelah_diskon = $this->input->post('total_setelah_diskon');
+
+        // Simpan transaksi ke database
+        $data_transaksi = [
+            'tanggal' => $tanggal,
+            'nama_pelanggan' => $nama_pelanggan,
+            'total' => $total_setelah_diskon,
+            'diskon' => $diskon,
+            'uang_dibayarkan' => $uang_dibayarkan,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+
+        $this->db->insert('transaksi', $data_transaksi);
+
+        if ($this->db->affected_rows() > 0) {
+            echo json_encode(['status' => 'success']);
+        } else {
+            echo json_encode(['status' => 'error']);
+        }
+    }
 }
