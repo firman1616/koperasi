@@ -119,9 +119,8 @@
                         <label for="diskon">Diskon (%)</label>
                         <input type="number" class="form-control" id="diskon" name="diskon" value="0">
                     </div>
-                    <span>Total Bayar : Rp. xxx</span>
-                    <br>
-                    <span>Total Pengembalian : Rp. xxx</span>
+                    <p>Total Bayar: <span id="total_bayar" data-total="">Rp. 0</span></p>
+                    <p>Total Pengembalian: <span id="total_kembalian">Rp. 0</span></p>
                 </form>
             </div>
             <div class="modal-footer">

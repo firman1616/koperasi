@@ -3,6 +3,8 @@ $(document).ready(function () {
     $('#id').val('');
     $('#modulForm').trigger("reset");
     $('.transelect2').select2();
+
+    // Tombol Bayar ditekan
     $("#bayarBtn").click(function () {
         $("#tanggal").val(getCurrentDateTime());
         $("#modalPembayaran").modal("show");
@@ -11,21 +13,12 @@ $(document).ready(function () {
     function cekInput() {
         var barcode = $("#barcode").val().trim();
         var jumlah = $("#jumlah").val().trim();
-
-        if (barcode !== "" && jumlah !== "" && parseInt(jumlah) > 0) {
-            $("#tambahBtn").prop("disabled", false);
-        } else {
-            $("#tambahBtn").prop("disabled", true);
-        }
+        $("#tambahBtn").prop("disabled", barcode === "" || jumlah === "" || parseInt(jumlah) <= 0);
     }
 
     function cekTabelTransaksi() {
-        if ($("#tableTransaksi tbody tr").length > 0) {
-            $("#bayarBtn").prop("disabled", false);
-        } else {
-            $("#bayarBtn").prop("disabled", true);
-        }
-        hitungTotalHarga(); // Hitung total harga setiap ada perubahan di tabel
+        $("#bayarBtn").prop("disabled", $("#tableTransaksi tbody tr").length === 0);
+        hitungTotalHarga();
     }
 
     function hitungTotalHarga() {
@@ -33,18 +26,15 @@ $(document).ready(function () {
         $("#tableTransaksi tbody tr").each(function () {
             var hargaText = $(this).find("td:nth-child(3)").text(); // Kolom Harga
             var qty = parseInt($(this).find("td:nth-child(4)").text()); // Kolom Qty
-            
+
             // Ambil angka dari format "Rp. xxx.xxx,yy"
-            var harga = parseFloat(hargaText.replace(/Rp. |,/g, "").replace(".", "")); 
-            
+            var harga = parseFloat(hargaText.replace(/Rp. |,/g, "").replace(".", ""));
             total += harga * qty;
         });
-    
-        // Tampilkan hasil dalam elemen total harga
+
         $(".total-harga").text(`Rp. ${total.toLocaleString("id-ID")}`);
     }
 
-    // Saat barcode dipilih, ambil data barang dari database
     $("#barcode").change(function () {
         var barcode = $(this).val();
         if (barcode !== "") {
@@ -56,7 +46,7 @@ $(document).ready(function () {
                 success: function (data) {
                     if (data) {
                         $("#tambahBtn").data("barang", data);
-                        $("#qty-tersedia").text(data.qty); // Menampilkan stok barang
+                        $("#qty-tersedia").text(data.qty);
                     }
                 }
             });
@@ -64,10 +54,8 @@ $(document).ready(function () {
         cekInput();
     });
 
-    // Event listener saat input jumlah berubah
     $("#jumlah").on("keyup change", cekInput);
 
-    // Saat tombol tambah ditekan
     $("#tambahBtn").click(function () {
         var jumlah = parseInt($("#jumlah").val());
         var barang = $(this).data("barang");
@@ -91,24 +79,19 @@ $(document).ready(function () {
         </tr>`;
 
         $("#tableTransaksi tbody").append(newRow);
-
-        // Reset form input
         $("#barcode").val("").trigger("change");
         $("#jumlah").val("");
-        $("#qty-tersedia").text("-"); // Kosongkan stok
+        $("#qty-tersedia").text("-");
         $("#tambahBtn").prop("disabled", true);
 
-        // Perbarui total harga setelah menambahkan barang
         cekTabelTransaksi();
     });
 
-    // Event untuk menghapus baris data
     $(document).on("click", ".removeRow", function () {
         $(this).closest("tr").remove();
-        cekTabelTransaksi(); // Hitung ulang total harga setelah penghapusan
+        cekTabelTransaksi();
     });
 
-    // **Memuat data barang ke dalam select barcode**
     function loadBarang() {
         $.ajax({
             url: BASE_URL + "Transaksi/get_all_barang",
@@ -123,9 +106,7 @@ $(document).ready(function () {
         });
     }
 
-    loadBarang(); // Panggil saat halaman pertama kali dimuat
-
-    // Hitung total harga saat halaman pertama kali dimuat
+    loadBarang();
     hitungTotalHarga();
 
     function getCurrentDateTime() {
@@ -138,44 +119,63 @@ $(document).ready(function () {
         return `${year}-${month}-${day}T${hours}:${minutes}`;
     }
 
-    $("#prosesBayar").click(function () {
-        
-        var tanggal = $("#tanggal").val();
-        var nama_pelanggan = $("#nama_pelanggan").val();
-        var uang_dibayarkan = parseFloat($("#uang_dibayarkan").val());
-        var diskon = parseFloat($("#diskon").val()) || 0;
-        var total_harga = parseFloat($(".total-harga").text().replace(/Rp. |,/g, "").replace(".", ""));
+    // **Mengambil total harga saat modal pembayaran ditampilkan**
+    $("#modalPembayaran").on("shown.bs.modal", function () {
+        var totalHarga = parseFloat($(".total-harga").text().replace(/Rp. |,/g, "").replace(".", ""));
+        $("#total_bayar").text("Rp. " + totalHarga.toLocaleString("id-ID"));
+        $("#total_bayar").data("total", totalHarga);
+        $("#total_kembalian").text("Rp. 0");
+    });
 
-        if (!tanggal || !nama_pelanggan || uang_dibayarkan <= 0) {
+    // **Menghitung total bayar & kembalian saat input berubah**
+    $("#uang_dibayarkan, #diskon").on("input", function () {
+        var totalHarga = parseFloat($("#total_bayar").data("total")) || 0;
+        var uangDibayarkan = parseFloat($("#uang_dibayarkan").val()) || 0;
+        var diskon = parseFloat($("#diskon").val()) || 0;
+
+        var totalSetelahDiskon = totalHarga - (totalHarga * (diskon / 100));
+        var kembalian = uangDibayarkan - totalSetelahDiskon;
+
+        $("#total_bayar").text("Rp. " + totalSetelahDiskon.toLocaleString("id-ID"));
+        $("#total_kembalian").text("Rp. " + (kembalian >= 0 ? kembalian.toLocaleString("id-ID") : "0"));
+    });
+
+    // **Proses Pembayaran**
+    $("#prosesBayar").click(function () {
+        var tanggal = $("#tanggal").val();
+        var namaPelanggan = $("#nama_pelanggan").val();
+        var uangDibayarkan = parseFloat($("#uang_dibayarkan").val());
+        var diskon = parseFloat($("#diskon").val()) || 0;
+        var totalHarga = parseFloat($("#total_bayar").data("total")) || 0;
+
+        if (!tanggal || !namaPelanggan || uangDibayarkan <= 0) {
             alert("Silakan isi semua data pembayaran!");
             return;
         }
 
-        // Hitung total setelah diskon
-        var total_setelah_diskon = total_harga - (total_harga * (diskon / 100));
-        var kembalian = uang_dibayarkan - total_setelah_diskon;
+        var totalSetelahDiskon = totalHarga - (totalHarga * (diskon / 100));
+        var kembalian = uangDibayarkan - totalSetelahDiskon;
 
-        if (uang_dibayarkan < total_setelah_diskon) {
+        if (uangDibayarkan < totalSetelahDiskon) {
             alert("Uang yang dibayarkan kurang!");
             return;
         }
 
-        // Kirim data ke server
         $.ajax({
             url: BASE_URL + "Transaksi/proses_pembayaran",
             type: "POST",
             data: {
                 tanggal: tanggal,
-                nama_pelanggan: nama_pelanggan,
-                uang_dibayarkan: uang_dibayarkan,
+                nama_pelanggan: namaPelanggan,
+                uang_dibayarkan: uangDibayarkan,
                 diskon: diskon,
-                total_setelah_diskon: total_setelah_diskon
+                total_setelah_diskon: totalSetelahDiskon
             },
             dataType: "json",
             success: function (response) {
                 if (response.status === "success") {
                     alert("Pembayaran berhasil! Kembalian: Rp. " + kembalian.toLocaleString("id-ID"));
-                    location.reload(); // Refresh halaman setelah transaksi berhasil
+                    location.reload();
                 } else {
                     alert("Terjadi kesalahan saat memproses pembayaran!");
                 }
@@ -185,10 +185,10 @@ $(document).ready(function () {
             }
         });
 
-        // Tutup modal setelah pembayaran
         $("#modalPembayaran").modal("hide");
     });
 });
+
 
 
 function autofill() {
