@@ -121,7 +121,10 @@ $(document).ready(function () {
 
     // **Mengambil total harga saat modal pembayaran ditampilkan**
     $("#modalPembayaran").on("shown.bs.modal", function () {
-        var totalHarga = parseFloat($(".total-harga").text().replace(/Rp. |,/g, "").replace(".", ""));
+        var totalHarga = $(".total-harga").text().replace(/[^\d]/g, ""); // Ambil angka tanpa karakter non-digit
+        totalHarga = parseFloat(totalHarga) || 0; // Konversi ke angka
+    
+        // Format ulang dalam bentuk rupiah yang benar
         $("#total_bayar").text("Rp. " + totalHarga.toLocaleString("id-ID"));
         $("#total_bayar").data("total", totalHarga);
         $("#total_kembalian").text("Rp. 0");
@@ -143,33 +146,41 @@ $(document).ready(function () {
     // **Proses Pembayaran**
     $("#prosesBayar").click(function () {
         var tanggal = $("#tanggal").val();
-        var namaPelanggan = $("#nama_pelanggan").val();
         var uangDibayarkan = parseFloat($("#uang_dibayarkan").val());
         var diskon = parseFloat($("#diskon").val()) || 0;
         var totalHarga = parseFloat($("#total_bayar").data("total")) || 0;
-
-        if (!tanggal || !namaPelanggan || uangDibayarkan <= 0) {
+    
+        if (!tanggal || uangDibayarkan <= 0) {
             alert("Silakan isi semua data pembayaran!");
             return;
         }
-
+    
         var totalSetelahDiskon = totalHarga - (totalHarga * (diskon / 100));
         var kembalian = uangDibayarkan - totalSetelahDiskon;
-
+    
         if (uangDibayarkan < totalSetelahDiskon) {
             alert("Uang yang dibayarkan kurang!");
             return;
         }
-
+    
+        var barang = [];
+        $("#tableTransaksi tbody tr").each(function () {
+            barang.push({
+                barcode: $(this).find("td:nth-child(1)").text(),
+                jumlah: parseInt($(this).find("td:nth-child(4)").text()),
+                harga: parseFloat($(this).find("td:nth-child(3)").text().replace(/Rp. |,/g, "").replace(".", ""))
+            });
+        });
+    
         $.ajax({
             url: BASE_URL + "Transaksi/proses_pembayaran",
             type: "POST",
             data: {
                 tanggal: tanggal,
-                nama_pelanggan: namaPelanggan,
                 uang_dibayarkan: uangDibayarkan,
                 diskon: diskon,
-                total_setelah_diskon: totalSetelahDiskon
+                total_setelah_diskon: totalSetelahDiskon,
+                barang: barang
             },
             dataType: "json",
             success: function (response) {
@@ -184,7 +195,7 @@ $(document).ready(function () {
                 alert("Terjadi kesalahan dalam pengiriman data!");
             }
         });
-
+    
         $("#modalPembayaran").modal("hide");
     });
 });

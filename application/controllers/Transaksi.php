@@ -69,27 +69,41 @@ class Transaksi extends CI_Controller
         echo json_encode($barang);
     }
 
-    public function proses_pembayaran()
-    {
+    public function proses_pembayaran() {
+        $this->load->model('Transaksi_model');
+    
         $tanggal = $this->input->post('tanggal');
-        $nama_pelanggan = $this->input->post('nama_pelanggan');
-        $uang_dibayarkan = $this->input->post('uang_dibayarkan');
         $diskon = $this->input->post('diskon');
-        $total_setelah_diskon = $this->input->post('total_setelah_diskon');
-
-        // Simpan transaksi ke database
+        $total_bayar = $this->input->post('total_setelah_diskon');
+        $uang_dibayarkan = $this->input->post('uang_dibayarkan');
+        $uang_kembali = $uang_dibayarkan - $total_bayar;
+        
+        // Data transaksi utama
         $data_transaksi = [
-            'tanggal' => $tanggal,
-            'nama_pelanggan' => $nama_pelanggan,
-            'total' => $total_setelah_diskon,
+            'nota' => NULL, // Sementara NULL, nanti diperbarui dengan ID
             'diskon' => $diskon,
-            'uang_dibayarkan' => $uang_dibayarkan,
-            'created_at' => date('Y-m-d H:i:s')
+            'grand_total' => $total_bayar,
+            'uang_bayar' => $uang_dibayarkan,
+            'uang_kembali' => $uang_kembali,
+            'tgl_transaksi' => $tanggal
         ];
-
-        $this->db->insert('transaksi', $data_transaksi);
-
-        if ($this->db->affected_rows() > 0) {
+    
+        // Ambil data barang dari frontend
+        $barang = $this->input->post('barang'); // Array barang yang dikirim dari frontend
+        $data_detail = [];
+    
+        foreach ($barang as $item) {
+            $data_detail[] = [
+                'kode_barang' => $item['barcode'],
+                'qty' => $item['jumlah'],
+                'harga' => $item['harga']
+            ];
+        }
+    
+        // Simpan transaksi dan detailnya
+        $result = $this->Transaksi_model->insert_transaksi($data_transaksi, $data_detail);
+    
+        if ($result) {
             echo json_encode(['status' => 'success']);
         } else {
             echo json_encode(['status' => 'error']);

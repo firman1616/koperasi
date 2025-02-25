@@ -25,8 +25,30 @@ class M_transaksi extends CI_Model
     }
     $date = date('ym');
     $batas = str_pad($kode, 4, "0", STR_PAD_LEFT);
-    $kodetampil = "TRX-".$date."-". $batas;
+    $kodetampil = "TRX-" . $date . "-" . $batas;
     return $kodetampil;
   }
 
+  public function insert_transaksi($data_transaksi, $data_detail)
+  {
+    $this->db->trans_start(); // Memulai transaksi database
+
+    // Insert ke tbl_transaksi
+    $this->db->insert('tbl_transaksi', $data_transaksi);
+    $id_transaksi = $this->db->insert_id(); // Ambil ID transaksi yang baru dibuat
+
+    // Update nota dengan ID transaksi yang sama
+    $this->db->where('id', $id_transaksi);
+    $this->db->update('tbl_transaksi', ['nota' => $id_transaksi]);
+
+    // Insert ke tbl_dtl_trans
+    foreach ($data_detail as &$detail) {
+      $detail['head_trans'] = $id_transaksi; // Tambahkan ID transaksi ke setiap detail
+    }
+    $this->db->insert_batch('tbl_dtl_trans', $data_detail); // Insert banyak data sekaligus
+
+    $this->db->trans_complete(); // Selesaikan transaksi
+
+    return $this->db->trans_status(); // Mengembalikan status transaksi (true/false)
+  }
 }
