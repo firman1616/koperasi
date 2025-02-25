@@ -39,7 +39,7 @@ class M_transaksi extends CI_Model
 
     // Update nota dengan ID transaksi yang sama
     $this->db->where('id', $id_transaksi);
-    $this->db->update('tbl_transaksi', ['nota' => $id_transaksi]);
+    $this->db->update('tbl_transaksi', ['id' => $id_transaksi]);
 
     // Insert ke tbl_dtl_trans
     foreach ($data_detail as &$detail) {

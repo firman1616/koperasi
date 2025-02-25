@@ -107,10 +107,10 @@
                         <label for="tanggal">Tanggal</label>
                         <input type="datetime-local" class="form-control" id="tanggal" name="tanggal" required>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="nama_pelanggan">Nama Pelanggan</label>
                         <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" required>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="uang_dibayarkan">Uang yang Dibayarkan</label>
                         <input type="number" class="form-control" id="uang_dibayarkan" name="uang_dibayarkan" required>

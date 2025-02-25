@@ -145,12 +145,13 @@ $(document).ready(function () {
 
     // **Proses Pembayaran**
     $("#prosesBayar").click(function () {
+        var kd_trans = $("#kd_trans").val(); // Ambil nilai kd_trans dari index.php
         var tanggal = $("#tanggal").val();
         var uangDibayarkan = parseFloat($("#uang_dibayarkan").val());
         var diskon = parseFloat($("#diskon").val()) || 0;
         var totalHarga = parseFloat($("#total_bayar").data("total")) || 0;
     
-        if (!tanggal || uangDibayarkan <= 0) {
+        if (!tanggal || !kd_trans || uangDibayarkan <= 0) {
             alert("Silakan isi semua data pembayaran!");
             return;
         }
@@ -176,6 +177,7 @@ $(document).ready(function () {
             url: BASE_URL + "Transaksi/proses_pembayaran",
             type: "POST",
             data: {
+                kd_trans: kd_trans, // Kirim no transaksi
                 tanggal: tanggal,
                 uang_dibayarkan: uangDibayarkan,
                 diskon: diskon,

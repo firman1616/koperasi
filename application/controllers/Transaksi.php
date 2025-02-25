@@ -70,7 +70,6 @@ class Transaksi extends CI_Controller
     }
 
     public function proses_pembayaran() {
-        $this->load->model('Transaksi_model');
     
         $tanggal = $this->input->post('tanggal');
         $diskon = $this->input->post('diskon');
@@ -80,7 +79,7 @@ class Transaksi extends CI_Controller
         
         // Data transaksi utama
         $data_transaksi = [
-            'nota' => NULL, // Sementara NULL, nanti diperbarui dengan ID
+            'no_transaksi' => $this->input->post('kd_trans'), // Sementara NULL, nanti diperbarui dengan ID
             'diskon' => $diskon,
             'grand_total' => $total_bayar,
             'uang_bayar' => $uang_dibayarkan,
@@ -96,12 +95,12 @@ class Transaksi extends CI_Controller
             $data_detail[] = [
                 'kode_barang' => $item['barcode'],
                 'qty' => $item['jumlah'],
-                'harga' => $item['harga']
+                'total_harga' => $item['harga']
             ];
         }
     
         // Simpan transaksi dan detailnya
-        $result = $this->Transaksi_model->insert_transaksi($data_transaksi, $data_detail);
+        $result = $this->trans->insert_transaksi($data_transaksi, $data_detail);
     
         if ($result) {
             echo json_encode(['status' => 'success']);
