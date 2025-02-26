@@ -58,4 +58,12 @@ class M_transaksi extends CI_Model
     $this->db->where('kode_barang', $barcode);
     $this->db->update('tbl_barang');
   }
+
+  public function get_all_anggota()
+  {
+    return $this->db->select('id, name')
+      ->from('tbl_anggota')
+      ->get()
+      ->result();
+  }
 }

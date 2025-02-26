@@ -112,6 +112,16 @@
                         <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" required>
                     </div> -->
                     <div class="form-group">
+                        <label for="anggota">Pilih Anggota</label>
+                        <select id="anggota" name="anggota" class="form-control" style="width: 100%;">
+                            <option value="">Pilih Anggota</option>
+                        </select>
+                    </div>
+                    <div id="formTambahan" style="display: none;">
+                        <label for="extraField">Pelanggan Lainnya</label>
+                        <input type="text" id="extraField" name="extraField" class="form-control" placeholder="Pelanggan Lainnya">
+                    </div>
+                    <div class="form-group">
                         <label for="uang_dibayarkan">Uang yang Dibayarkan</label>
                         <input type="number" class="form-control" id="uang_dibayarkan" name="uang_dibayarkan" required>
                     </div>

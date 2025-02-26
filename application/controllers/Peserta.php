@@ -10,7 +10,7 @@ class Peserta extends CI_Controller {
         //     redirect(base_url("Login"));
         // }
         // $this->load->library('Pdf');
-        // $this->load->model('M_dashboard', 'dash');
+        $this->load->model('M_anggota', 'anggota');
     }
 	
 	public function index()
@@ -26,7 +26,7 @@ class Peserta extends CI_Controller {
 
     function tablePeserta()
     {
-        $data['anggota'] = $this->m_data->get_data('tbl_anggota')->result();
+        $data['anggota'] = $this->anggota->get_data()->result();
 
         echo json_encode($this->load->view('peserta/peserta-table',$data,false));
     }

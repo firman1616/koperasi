@@ -119,11 +119,50 @@ $(document).ready(function () {
         return `${year}-${month}-${day}T${hours}:${minutes}`;
     }
 
+    function loadAnggota() {
+        $.ajax({
+            url: BASE_URL + "Transaksi/get_anggota",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.log("Data diterima:", data); // Debugging
+    
+                $("#anggota").empty().append('<option value="">Pilih Anggota</option>');
+    
+                $.each(data, function (index, item) {
+                    $("#anggota").append(`<option value="${item.id}">${item.name}</option>`);
+                });
+    
+                // Inisialisasi Select2 setelah data dimuat
+                $("#anggota").select2({
+                    dropdownParent: $("#modalPembayaran"),
+                    width: "100%",
+                    placeholder: "Pilih Anggota",
+                    allowClear: true
+                });
+    
+                // Event listener untuk menampilkan form tambahan jika ID = 117
+                $("#anggota").on("change", function () {
+                    var selectedID = $(this).val();
+    
+                    if (selectedID === "117") {
+                        $("#formTambahan").show();  // Tampilkan form tambahan
+                    } else {
+                        $("#formTambahan").hide();  // Sembunyikan jika bukan ID 117
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
     // **Mengambil total harga saat modal pembayaran ditampilkan**
     $("#modalPembayaran").on("shown.bs.modal", function () {
         var totalHarga = $(".total-harga").text().replace(/[^\d]/g, ""); // Ambil angka tanpa karakter non-digit
         totalHarga = parseFloat(totalHarga) || 0; // Konversi ke angka
-    
+        loadAnggota();
         // Format ulang dalam bentuk rupiah yang benar
         $("#total_bayar").text("Rp. " + totalHarga.toLocaleString("id-ID"));
         $("#total_bayar").data("total", totalHarga);
@@ -135,9 +174,9 @@ $(document).ready(function () {
         var totalHarga = parseFloat($("#total_bayar").data("total")) || 0;
         var uangDibayarkan = parseFloat($("#uang_dibayarkan").val()) || 0;
         var diskon = parseFloat($("#diskon").val()) || 0;
-
         var totalSetelahDiskon = totalHarga - (totalHarga * (diskon / 100));
         var kembalian = uangDibayarkan - totalSetelahDiskon;
+        
 
         $("#total_bayar").text("Rp. " + totalSetelahDiskon.toLocaleString("id-ID"));
         $("#total_kembalian").text("Rp. " + (kembalian >= 0 ? kembalian.toLocaleString("id-ID") : "0"));
@@ -150,20 +189,22 @@ $(document).ready(function () {
         var uangDibayarkan = parseFloat($("#uang_dibayarkan").val());
         var diskon = parseFloat($("#diskon").val()) || 0;
         var totalHarga = parseFloat($("#total_bayar").data("total")) || 0;
-    
+        var anggotaID = $("#anggota").val();
+        var extraFieldValue = $("#extraField").val();
+
         if (!tanggal || !kd_trans || uangDibayarkan <= 0) {
             alert("Silakan isi semua data pembayaran!");
             return;
         }
-    
+
         var totalSetelahDiskon = totalHarga - (totalHarga * (diskon / 100));
         var kembalian = uangDibayarkan - totalSetelahDiskon;
-    
+
         if (uangDibayarkan < totalSetelahDiskon) {
             alert("Uang yang dibayarkan kurang!");
             return;
         }
-    
+
         var barang = [];
         $("#tableTransaksi tbody tr").each(function () {
             barang.push({
@@ -172,7 +213,7 @@ $(document).ready(function () {
                 harga: parseFloat($(this).find("td:nth-child(3)").text().replace(/Rp. |,/g, "").replace(".", ""))
             });
         });
-    
+
         $.ajax({
             url: BASE_URL + "Transaksi/proses_pembayaran",
             type: "POST",
@@ -182,6 +223,8 @@ $(document).ready(function () {
                 uang_dibayarkan: uangDibayarkan,
                 diskon: diskon,
                 total_setelah_diskon: totalSetelahDiskon,
+                anggota_id: anggotaID,
+                extra_value: extraFieldValue,
                 barang: barang
             },
             dataType: "json",
@@ -197,7 +240,7 @@ $(document).ready(function () {
                 alert("Terjadi kesalahan dalam pengiriman data!");
             }
         });
-    
+
         $("#modalPembayaran").modal("hide");
     });
 });

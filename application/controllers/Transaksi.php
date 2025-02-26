@@ -41,6 +41,12 @@ class Transaksi extends CI_Controller
         echo json_encode($cari);
     }
 
+    public function get_anggota()
+    {
+        $anggota = $this->trans->get_all_anggota();
+        echo json_encode($anggota);
+    }
+
     public function get_barang()
     {
         $barcode = $this->input->get('barcode'); // Ambil barcode dari request
@@ -77,6 +83,8 @@ class Transaksi extends CI_Controller
         $total_bayar = $this->input->post('total_setelah_diskon');
         $uang_dibayarkan = $this->input->post('uang_dibayarkan');
         $uang_kembali = $uang_dibayarkan - $total_bayar;
+        $anggota_id = $this->input->post('anggota_id');
+        $extra_value = $this->input->post('extra_value');
 
         // Data transaksi utama
         $data_transaksi = [
@@ -85,7 +93,9 @@ class Transaksi extends CI_Controller
             'grand_total' => $total_bayar,
             'uang_bayar' => $uang_dibayarkan,
             'uang_kembali' => $uang_kembali,
-            'tgl_transaksi' => $tanggal
+            'tgl_transaksi' => $tanggal,
+            'pelanggan_id' => $anggota_id,
+            'lainnya' => ($anggota_id == 117) ? $extra_value : null
         ];
 
         // Ambil data barang dari frontend
