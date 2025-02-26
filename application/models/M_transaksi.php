@@ -51,4 +51,11 @@ class M_transaksi extends CI_Model
 
     return $this->db->trans_status(); // Mengembalikan status transaksi (true/false)
   }
+
+  public function kurangi_stok($barcode, $jumlah)
+  {
+    $this->db->set('qty', 'qty - ' . (int) $jumlah, FALSE);
+    $this->db->where('kode_barang', $barcode);
+    $this->db->update('tbl_barang');
+  }
 }

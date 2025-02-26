@@ -69,14 +69,15 @@ class Transaksi extends CI_Controller
         echo json_encode($barang);
     }
 
-    public function proses_pembayaran() {
-    
+    public function proses_pembayaran()
+    {
+
         $tanggal = $this->input->post('tanggal');
         $diskon = $this->input->post('diskon');
         $total_bayar = $this->input->post('total_setelah_diskon');
         $uang_dibayarkan = $this->input->post('uang_dibayarkan');
         $uang_kembali = $uang_dibayarkan - $total_bayar;
-        
+
         // Data transaksi utama
         $data_transaksi = [
             'no_transaksi' => $this->input->post('kd_trans'), // Sementara NULL, nanti diperbarui dengan ID
@@ -86,11 +87,11 @@ class Transaksi extends CI_Controller
             'uang_kembali' => $uang_kembali,
             'tgl_transaksi' => $tanggal
         ];
-    
+
         // Ambil data barang dari frontend
         $barang = $this->input->post('barang'); // Array barang yang dikirim dari frontend
         $data_detail = [];
-    
+
         foreach ($barang as $item) {
             $data_detail[] = [
                 'kode_barang' => $item['barcode'],
@@ -98,10 +99,15 @@ class Transaksi extends CI_Controller
                 'total_harga' => $item['harga']
             ];
         }
-    
+
         // Simpan transaksi dan detailnya
         $result = $this->trans->insert_transaksi($data_transaksi, $data_detail);
-    
+
+        // Kurangi stok barang
+        foreach ($barang as $item) {
+            $this->trans->kurangi_stok($item['barcode'], $item['jumlah']);
+        }
+
         if ($result) {
             echo json_encode(['status' => 'success']);
         } else {
