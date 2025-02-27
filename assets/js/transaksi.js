@@ -324,8 +324,6 @@ $(document).ready(function () {
     
 });
 
-
-
 function autofill() {
     var kode = $('#barcode').val();
     // console.log(kode);
