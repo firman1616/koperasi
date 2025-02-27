@@ -11,7 +11,7 @@
  Target Server Version : 100428 (10.4.28-MariaDB)
  File Encoding         : 65001
 
- Date: 27/02/2025 09:14:15
+ Date: 27/02/2025 15:32:41
 */
 
 SET NAMES utf8mb4;
@@ -181,9 +181,9 @@ CREATE TABLE `tbl_barang`  (
 -- ----------------------------
 -- Records of tbl_barang
 -- ----------------------------
-INSERT INTO `tbl_barang` VALUES (1, 'BRG-2502-0001', 'Beras @50KG', 1, 640000, 650000, 10, 'Kg', NULL, '2025-02-27 08:53:35', '2025-02-27 08:53:35', 1);
+INSERT INTO `tbl_barang` VALUES (1, 'BRG-2502-0001', 'Beras @50KG', 1, 640000, 650000, 5, 'Kg', NULL, '2025-02-27 08:53:35', '2025-02-27 08:53:35', 1);
 INSERT INTO `tbl_barang` VALUES (2, 'BRG-2502-0002', 'Gula GMP @50 Kg', 1, 860000, 900000, 10, 'Kg', 40000, '2025-02-27 08:57:23', '2025-02-27 08:57:23', 1);
-INSERT INTO `tbl_barang` VALUES (3, 'BRG-2502-0003', 'Gula GMP', 1, 18000, 20000, 10, 'Kg', 2000, '2025-02-27 08:57:49', '2025-02-27 08:57:49', 1);
+INSERT INTO `tbl_barang` VALUES (3, 'BRG-2502-0003', 'Gula GMP', 1, 18000, 20000, 8, 'Kg', 2000, '2025-02-27 08:57:49', '2025-02-27 08:57:49', 1);
 INSERT INTO `tbl_barang` VALUES (4, 'BRG-2502-0004', 'INDOMIE AYAM SPESIAL @DOS', 1, 103000, 105000, 10, 'DOS', 2000, '2025-02-27 08:58:11', '2025-02-27 08:58:11', 1);
 INSERT INTO `tbl_barang` VALUES (5, 'BRG-2502-0005', 'INDOMIE GORENG DOS', 1, 111000, 115000, 10, 'DOS', 4000, '2025-02-27 08:58:37', '2025-02-27 08:58:37', 1);
 INSERT INTO `tbl_barang` VALUES (6, 'BRG-2502-0006', 'INDOMIE GORENG ', 1, 3000, 3500, 10, 'Pcs', 500, '2025-02-27 08:58:54', '2025-02-27 08:58:54', 1);
@@ -193,11 +193,11 @@ INSERT INTO `tbl_barang` VALUES (9, 'BRG-2502-0009', 'Minyak Kita @1L', 1, 0, 0,
 INSERT INTO `tbl_barang` VALUES (10, 'BRG-2502-0010', 'MIKA TELOR PACK', 1, 45000, 50000, 10, 'Pack', 5000, '2025-02-27 09:02:49', '2025-02-27 09:02:49', 1);
 INSERT INTO `tbl_barang` VALUES (11, 'BRG-2502-0011', 'MIKA TELOR @pcs', 1, 1000, 2000, 10, 'Pcs', 1000, '2025-02-27 09:03:19', '2025-02-27 09:03:19', 1);
 INSERT INTO `tbl_barang` VALUES (12, 'BRG-2502-0012', 'TELOR PETI @15Kg', 1, 360000, 380000, 10, 'Kg', 20000, '2025-02-27 09:03:49', '2025-02-27 09:03:49', 1);
-INSERT INTO `tbl_barang` VALUES (13, 'BRG-2502-0013', 'TELOR', 1, 10000, 12000, 10, 'Kg', 2000, '2025-02-27 09:04:17', '2025-02-27 09:04:17', 1);
+INSERT INTO `tbl_barang` VALUES (13, 'BRG-2502-0013', 'TELOR', 1, 10000, 12000, 7, 'Kg', 2000, '2025-02-27 09:04:17', '2025-02-27 09:04:17', 1);
 INSERT INTO `tbl_barang` VALUES (14, 'BRG-2502-0014', 'TERIGU LENCANA MERAH', 1, 110000, 115000, 10, 'Kg', 5000, '2025-02-27 09:05:22', '2025-02-27 09:05:22', 1);
 INSERT INTO `tbl_barang` VALUES (15, 'BRG-2502-0015', 'TERIGU LENCANA MERAH', 1, 128000, 130000, 10, 'Kg', 2000, '2025-02-27 09:05:36', '2025-02-27 09:05:36', 1);
 INSERT INTO `tbl_barang` VALUES (16, 'BRG-2502-0016', 'TROPICAL @ 6Krat', 1, 215000, 220000, 10, 'KRAT', 5000, '2025-02-27 09:06:03', '2025-02-27 09:06:03', 1);
-INSERT INTO `tbl_barang` VALUES (17, 'BRG-2502-0017', 'TROPICAL @2L', 1, 40000, 45000, 10, 'L', 5000, '2025-02-27 09:06:27', '2025-02-27 09:06:27', 1);
+INSERT INTO `tbl_barang` VALUES (17, 'BRG-2502-0017', 'TROPICAL @2L', 1, 40000, 45000, 9, 'L', 5000, '2025-02-27 09:06:27', '2025-02-27 09:06:27', 1);
 INSERT INTO `tbl_barang` VALUES (18, 'BRG-2502-0018', 'BERAS SYATHIBI @ 5 KG', 1, 74000, 77000, 10, 'Kg', 3000, '2025-02-27 09:12:50', '2025-02-27 09:12:50', 1);
 
 -- ----------------------------
@@ -211,16 +211,15 @@ CREATE TABLE `tbl_dtl_trans`  (
   `qty` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `total_harga` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_dtl_trans
 -- ----------------------------
-INSERT INTO `tbl_dtl_trans` VALUES (1, 1, 'BR.002', '11', '261500');
-INSERT INTO `tbl_dtl_trans` VALUES (2, 2, 'BR.005', '1', '248500');
-INSERT INTO `tbl_dtl_trans` VALUES (3, 3, 'BR.002', '5', '261500');
-INSERT INTO `tbl_dtl_trans` VALUES (4, 4, 'BR.003', '6', '261500');
-INSERT INTO `tbl_dtl_trans` VALUES (5, 5, 'BR.003', '1', '261500');
+INSERT INTO `tbl_dtl_trans` VALUES (1, 1, 'BRG-2502-0001', '5', '650000');
+INSERT INTO `tbl_dtl_trans` VALUES (2, 1, 'BRG-2502-0003', '2', '20000');
+INSERT INTO `tbl_dtl_trans` VALUES (3, 1, 'BRG-2502-0013', '3', '12000');
+INSERT INTO `tbl_dtl_trans` VALUES (4, 2, 'BRG-2502-0017', '1', '45000');
 
 -- ----------------------------
 -- Table structure for tbl_transaksi
@@ -236,17 +235,15 @@ CREATE TABLE `tbl_transaksi`  (
   `tgl_transaksi` datetime NULL DEFAULT NULL,
   `pelanggan_id` int NULL DEFAULT NULL,
   `lainnya` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `kasir_id` int NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_transaksi
 -- ----------------------------
-INSERT INTO `tbl_transaksi` VALUES (1, 'TRX-2502-0001', '0', '2876500', '3000000', '123500', '2025-02-26 12:09:00', NULL, NULL);
-INSERT INTO `tbl_transaksi` VALUES (2, 'TRX-2502-0002', '0', '248500', '250000', '1500', '2025-02-26 12:09:00', NULL, NULL);
-INSERT INTO `tbl_transaksi` VALUES (3, 'TRX-2502-0003', '0', '1307500', '1310000', '2500', '2025-02-26 13:58:00', NULL, NULL);
-INSERT INTO `tbl_transaksi` VALUES (4, 'TRX-2502-0004', '0', '1569000', '1570000', '1000', '2025-02-26 15:05:00', NULL, NULL);
-INSERT INTO `tbl_transaksi` VALUES (5, 'TRX-2502-0005', '0', '261500', '265000', '3500', '2025-02-26 15:24:00', 117, 'firman');
+INSERT INTO `tbl_transaksi` VALUES (1, 'TRX-2502-0001', '0', '3326000', '3330000', '4000', '2025-02-27 15:05:00', 117, 'Firman', NULL);
+INSERT INTO `tbl_transaksi` VALUES (2, 'TRX-2502-0002', '0', '45000', '50000', '5000', '2025-02-27 15:05:00', 3, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tbl_uom

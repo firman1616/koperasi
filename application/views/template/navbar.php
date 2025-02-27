@@ -9,9 +9,9 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <i class="fas fa-store"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">KOPERASI </div>
             </a>
 
             <!-- Divider -->
@@ -28,6 +28,12 @@
                 <a class="nav-link" href="<?= site_url('Transaksi') ?>">
                     <i class="fas fa-fw fa-exchange-alt"></i>
                     <span>Transaksi</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="<?= site_url('Transaksi/list_trans') ?>">
+                    <i class="fas fa-fw fa-list"></i>
+                    <span>Daftar Transaksi</span></a>
             </li>
 
             <li class="nav-item">
@@ -74,33 +80,9 @@
             <i class="fa fa-bars"></i>
         </button>
 
-        <!-- Topbar Search -->
-        <form
-            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-            <div class="input-group">
-                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                    aria-label="Search" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button">
-                        <i class="fas fa-search fa-sm"></i>
-                    </button>
-                </div>
-            </div>
-        </form>
 
         <!-- Topbar Navbar -->
-        <ul class="navbar-nav ml-auto">
-
-            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-            
-
-            <!-- Nav Item - Alerts -->
-            
-
-            <!-- Nav Item - Messages -->
-            
-
-            
+        <ul class="navbar-nav ml-auto">            
 
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">

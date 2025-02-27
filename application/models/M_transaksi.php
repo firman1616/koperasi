@@ -66,4 +66,49 @@ class M_transaksi extends CI_Model
       ->get()
       ->result();
   }
+
+  function list_trans()
+  {
+    return $this->db->query("SELECT
+      tt.id,
+      tt.no_transaksi,
+      tt.grand_total,
+      tt.tgl_transaksi,
+      tt.pelanggan_id,
+      tt.lainnya,
+      ta.name
+    from
+      tbl_transaksi tt
+    left join tbl_anggota ta  on ta.id = tt.pelanggan_id");
+  }
+
+  function head_trans($id)  {
+    return $this->db->query("SELECT
+      tt.id,
+      tt.no_transaksi,
+      tt.grand_total,
+      tt.tgl_transaksi,
+      tt.pelanggan_id,
+      tt.lainnya,
+      ta.name,
+      tt.uang_bayar,
+      tt.uang_kembali
+    from
+      tbl_transaksi tt
+    left join tbl_anggota ta  on ta.id = tt.pelanggan_id
+    where tt.id = '$id'");
+  }
+
+  function detail_trans($id) {
+    return $this->db->query("SELECT
+      tdt.head_trans,
+      tdt.kode_barang,
+      tdt.qty,
+      tdt.total_harga,
+      tb.nama_barang 
+    from
+      tbl_dtl_trans tdt
+    left join tbl_barang tb on tb.kode_barang = tdt.kode_barang 
+    where tdt.head_trans = '$id'");
+  }
 }
