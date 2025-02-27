@@ -64,13 +64,13 @@ foreach ($header as $row) {
     <table width="30%" style="border-top: 1px dashed black; border-bottom: 1px dashed black; border-left: none; border-right: none; border-collapse: collapse;">
       <tbody>
         <tr>
-          <td width="11%">Ref</td>
+          <td width="10%">Ref</td>
           <td width="3%">:</td>
-          <td width="18%"><?= $no_trans ?></td>
-          <td width="40%">&nbsp;</td>
-          <td width="8%">Kasir</td>
-          <td width="2%">:</td>
-          <td width="18%">Nama Kasir</td>
+          <td width="31%"><?= $no_trans ?></td>
+          <td width="17%">&nbsp;</td>
+          <td width="11%">Kasir</td>
+          <td width="4%">:</td>
+          <td width="24%">Nama Kasir</td>
         </tr>
       </tbody>
     </table>

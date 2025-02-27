@@ -29,6 +29,21 @@ class M_transaksi extends CI_Model
     return $kodetampil;
   }
 
+  public function id_akhir()
+  {
+    $this->db->select('id as id_akhir', FALSE);
+    $this->db->order_by('id', 'DESC');
+    $this->db->limit(1);
+    $query = $this->db->get('tbl_transaksi');
+    if ($query->num_rows() <> 0) {
+      $data = $query->row();
+      $kode = intval($data->id_akhir) + 1;
+    } else {
+      $kode = 1;
+    }
+    return $kode;
+  }
+
   public function insert_transaksi($data_transaksi, $data_detail)
   {
     $this->db->trans_start(); // Memulai transaksi database

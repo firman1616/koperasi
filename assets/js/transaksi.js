@@ -243,6 +243,85 @@ $(document).ready(function () {
 
         $("#modalPembayaran").modal("hide");
     });
+
+    $("#bayarCetakBtn").click(function () {
+        var kd_trans = $("#kd_trans").val(); 
+        var tanggal = $("#tanggal").val();
+        var uangDibayarkan = parseFloat($("#uang_dibayarkan").val());
+        var diskon = parseFloat($("#diskon").val()) || 0;
+        var totalHarga = parseFloat($("#total_bayar").data("total")) || 0;
+        var anggotaID = $("#anggota").val();
+        var id_akhir = $("#id_akhir").val(); // Ambil ID transaksi dari form
+    
+        if (!tanggal || !kd_trans || uangDibayarkan <= 0) {
+            alert("Silakan isi semua data pembayaran!");
+            return;
+        }
+    
+        var totalSetelahDiskon = totalHarga - (totalHarga * (diskon / 100));
+        var kembalian = uangDibayarkan - totalSetelahDiskon;
+    
+        if (uangDibayarkan < totalSetelahDiskon) {
+            alert("Uang yang dibayarkan kurang!");
+            return;
+        }
+    
+        var barang = [];
+        $("#tableTransaksi tbody tr").each(function () {
+            barang.push({
+                barcode: $(this).find("td:nth-child(1)").text(),
+                jumlah: parseInt($(this).find("td:nth-child(4)").text()),
+                harga: parseFloat($(this).find("td:nth-child(3)").text().replace(/Rp. |,/g, "").replace(".", ""))
+            });
+        });
+    
+        $.ajax({
+            url: BASE_URL + "Transaksi/proses_pembayaran",
+            type: "POST",
+            data: {
+                kd_trans: kd_trans, 
+                tanggal: tanggal,
+                uang_dibayarkan: uangDibayarkan,
+                diskon: diskon,
+                total_setelah_diskon: totalSetelahDiskon,
+                anggota_id: anggotaID,
+                barang: barang
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log("Response dari server:", response); // Debugging
+    
+                // alert("Pembayaran berhasil! Kembalian: Rp. " + kembalian.toLocaleString("id-ID"));
+                if (id_akhir) { // Cek apakah id_akhir tersedia di form
+                    var printWindow = window.open(BASE_URL + "Transaksi/cetak_struk/" + id_akhir, "_blank");
+    
+                    // Tunggu hingga halaman cetak terbuka, lalu jalankan autoPrint
+                    if (printWindow) {
+                        printWindow.onload = function () {
+                            printWindow.print();
+                            setTimeout(() => {
+                                printWindow.close(); // Tutup tab setelah cetak selesai
+                            }, 1000);
+                        };
+                    } else {
+                        alert("Pop-up terblokir! Izinkan pop-up untuk mencetak struk.");
+                    }
+                } else {
+                    alert("ID transaksi tidak ditemukan!");
+                }
+                // location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                console.log("Response Text:", xhr.responseText);
+                alert("Terjadi kesalahan dalam pengiriman data!");
+            }
+        });
+    
+        $("#modalPembayaran").modal("hide");
+    });
+    
+    
 });
 
 

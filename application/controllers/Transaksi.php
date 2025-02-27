@@ -22,6 +22,7 @@ class Transaksi extends CI_Controller
             'conten' => 'transaksi/index',
             'footer_js' => array('assets/js/transaksi.js'),
             'kd_trans' => $this->trans->kd_trans(),
+            'id_akhir' => $this->trans->id_akhir(),
             'barang' => $this->m_data->get_data('tbl_barang')->result()
         ];
         $this->load->view('template/conten', $data);
@@ -125,27 +126,32 @@ class Transaksi extends CI_Controller
         }
     }
 
-    function list_trans() {
+    
+
+
+    function list_trans()
+    {
         $data = [
             'title' => 'Daftar Transaksi',
             'subtitle' => 'Lits',
             'conten' => 'list-transaksi/index',
             'footer_js' => array('assets/js/list-trans.js'),
         ];
-        $this->load->view('template/conten',$data);
+        $this->load->view('template/conten', $data);
     }
 
     function tableListTrans()
     {
         $data['list'] = $this->trans->list_trans()->result();
-        echo json_encode($this->load->view('list-transaksi/list-trans-table',$data, false));
+        echo json_encode($this->load->view('list-transaksi/list-trans-table', $data, false));
     }
 
-    function cetak_struk($id) {
+    function cetak_struk($id)
+    {
         $data = [
             'header' => $this->trans->head_trans($id)->result(),
             'detail' => $this->trans->detail_trans($id)->result()
         ];
-        $this->load->view('transaksi/cetak_trans',$data);
+        $this->load->view('transaksi/cetak_trans', $data);
     }
 }
