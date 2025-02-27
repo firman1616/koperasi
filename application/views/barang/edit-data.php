@@ -21,7 +21,7 @@
         <div class="card-body">
             <form action="<?= base_url('Barang/update_data/' . $id) ?>" method="post">
             <label class="form-label">Kode Barang</label>
-                <input type="text" class="form-control" id="kode_barang" name="kode_barang" value="<?= $a; ?>">
+                <input type="text" class="form-control" id="kode_barang" name="kode_barang" value="<?= $a; ?>" readonly>
 
                 <label class="form-label">Nama Barang</label>
                 <input type="text" class="form-control" id="nama_barang" name="nama_barang" value="<?= $b ?>">
@@ -35,17 +35,10 @@
                         <label class="form-label">Harga Jual</label>
                         <input type="number" class="form-control" id="harga_jual" name="harga_jual" value="<?= $d ?>">
                     </div>
-                    <div class="col">
+                    <!-- <div class="col">
                         <label class="form-label">Margin</label>
                         <input type="number" class="form-control" id="margin" name="margin" value="<?= $g ?>">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <label class="form-label">QTY</label>
-                        <input type="text" class="form-control" id="qty" name="qty" value="<?= $e ?>">
-                    </div>
+                    </div> -->
                     <div class="col">
                         <label class="form-label">UoM</label>
                         <select name="uom" id="uom" class="form-control" required>
@@ -58,6 +51,14 @@
                         </select>
                     </div>
                 </div>
+
+                <!-- <div class="row"> -->
+                    <!-- <div class="col">
+                        <label class="form-label">QTY</label>
+                        <input type="text" class="form-control" id="qty" name="qty" value="<?= $e ?>">
+                    </div> -->
+                    
+                <!-- </div> -->
                 <button type="submit" class="btn btn-primary" style="margin-top: 10px;"><i class="fa fa-upload"></i> | Update Data</button>
             </form>
         </div>

@@ -8,7 +8,7 @@
             <th>Margin</th>
             <th>Qty</th>
             <th>UoM</th>
-            <th>Tgl Update</th>
+            <th>Tgl Update Stock</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -24,6 +24,7 @@
             <td><?= $row->uom ?></td>
             <td><?= date('d-m-y h:i:s', strtotime($row->tgl_update_stock)) ?></td>
             <td>
+                <a href="#" class="btn btn-success" title="update stock"><i class="fa fa-sync-alt"></i></a>
                 <a href="<?= site_url('Barang/vedit/'.$row->id) ?>" class="btn btn-warning"><i class="fa fa-edit"></i></a>
                 <a href="<?= site_url('Barang/update_status/'.$row->id) ?>" class="btn btn-danger" title="update status barang" ><i class="fa fa-power-off"></i></a>
             </td>

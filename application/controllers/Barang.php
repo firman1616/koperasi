@@ -87,9 +87,9 @@ class Barang extends CI_Controller {
             'harga_beli' => $this->input->post('harga_beli'),
             'harga_jual' => $this->input->post('harga_jual'),
             'margin' => $margin,
-            'qty' => $this->input->post('qty'),
+            // 'qty' => $this->input->post('qty'),
             'uom' => $this->input->post('uom'),
-            'tgl_update' => date('Y-m-d H:i:s'),
+            // 'tgl_update' => date('Y-m-d H:i:s'),
             // 'jenis' => '1'
         ];
         $where = array('id' => $id);
