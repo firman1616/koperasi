@@ -22,7 +22,7 @@
             <td><?= number_format($row->margin) ?></td>
             <td><?= $row->qty ?></td>
             <td><?= $row->uom ?></td>
-            <td><?= date('d-m-y h:i:s', strtotime($row->tgl_update)) ?></td>
+            <td><?= date('d-m-y h:i:s', strtotime($row->tgl_update_stock)) ?></td>
             <td>
                 <a href="<?= site_url('Barang/vedit/'.$row->id) ?>" class="btn btn-warning"><i class="fa fa-edit"></i></a>
                 <a href="<?= site_url('Barang/update_status/'.$row->id) ?>" class="btn btn-danger" title="update status barang" ><i class="fa fa-power-off"></i></a>

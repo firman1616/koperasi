@@ -37,7 +37,9 @@ class Barang extends CI_Controller {
             'subtitle' => 'Form Tambah Data',
 			'conten' => 'barang/tambah-data',
             'uom' => $this->m_data->get_data('tbl_uom')->result(),
-            // 'footer_js' => array('assets/js/peserta.js')
+            'kd_barang' => $this->barang->kd_barang(),
+            'footer_js' => array('assets/js/barang.js')
+            
 		];
 		$this->load->view('template/conten',$data);
     }
@@ -50,10 +52,11 @@ class Barang extends CI_Controller {
             'nama_barang' => $this->input->post('nama_barang'),
             'harga_beli' => $this->input->post('harga_beli'),
             'harga_jual' => $this->input->post('harga_jual'),
-            'margin' => $this->input->post('margin'),
+            'margin' => $this->input->post('harga_jual') - $this->input->post('harga_beli'),
             'qty' => $this->input->post('qty'),
             'uom' => $this->input->post('uom'),
-            'tgl_update' => date('Y-m-d H:i:s'),
+            'create_at' => date('Y-m-d H:i:s'),
+            'tgl_update_stock' => date('Y-m-d H:i:s'),
             'jenis' => '1'
         ];
         $this->m_data->simpan_data($table,$data);

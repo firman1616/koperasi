@@ -1,6 +1,10 @@
 $(document).ready(function() {
     tableBarang();
-    // tableDetailLot();
+    $('.select2').select2({
+        placeholder: "Pilih satuan",
+        allowClear: true,
+        width: '100%',
+    });
     $('#id').val('');
     $('#modulForm').trigger("reset");
 });

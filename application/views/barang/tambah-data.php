@@ -10,7 +10,7 @@
         <div class="card-body">
             <form action="<?= site_url('Barang/tambah_data') ?>" method="post">
                 <label class="form-label">Kode Barang</label>
-                <input type="text" class="form-control" id="kode_barang" name="kode_barang" required>
+                <input type="text" class="form-control" id="kode_barang" name="kode_barang" readonly value="<?= $kd_barang ?>">
 
                 <label class="form-label">Nama Barang</label>
                 <input type="text" class="form-control" id="nama_barang" name="nama_barang" required>
@@ -18,32 +18,31 @@
                 <div class="row">
                     <div class="col">
                         <label class="form-label">Harga Beli</label>
-                        <input type="number" class="form-control" id="harga_beli" name="harga_beli" required>
+                        <input type="number" class="form-control" id="harga_beli" name="harga_beli" value="0">
                     </div>
                     <div class="col">
                         <label class="form-label">Harga Jual</label>
-                        <input type="number" class="form-control" id="harga_jual" name="harga_jual" required>
+                        <input type="number" class="form-control" id="harga_jual" name="harga_jual" value="0">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col">
                         <label class="form-label">QTY</label>
-                        <input type="text" class="form-control" id="qty" name="qty" required>
+                        <input type="text" class="form-control" id="qty" name="qty" value="0">
                     </div>
                     <div class="col">
                         <label class="form-label">UoM</label>
-                        <select name="uom" id="uom" class="form-control" required>
+                        <select name="uom" id="uom" class="form-control select2" required>
                             <option value="" disabled selected>Pilih satuan</option>
                             <?php foreach ($uom as $row) { ?>
-
-                                <option value="<?= $row->kode ?>"><?= $row->uom ?></option>
+                                <option value="<?= $row->kode ?>"><?= $row->kode ?> - <?= $row->uom ?></option>
                             <?php } ?>
                         </select>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary" style="margin-top: 10px;"><i class="fa fa-save"></i> | Simpan Data</button>
-                
+
             </form>
         </div>
     </div>
