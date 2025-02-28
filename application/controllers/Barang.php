@@ -129,23 +129,34 @@ class Barang extends CI_Controller {
     }
     
     public function update_stok() {
-        $id = $this->input->post('id');
-        $qty = $this->input->post('qty');
-        $tgl_update = date('Y-m-d H:i:s'); // Format timestamp terbaru
+        $id = $this->input->post('id');  // ID barang
+        $qty = $this->input->post('qty'); // Qty yang diinput user
+        $history_date = date('Y-m-d H:i:s'); // Waktu transaksi
     
-        // Debugging: Cek apakah data diterima oleh controller
         if (!$id || !$qty) {
             echo "Data tidak lengkap! (ID: $id, QTY: $qty)";
             return;
         }
     
-        // $this->load->model('Barang_model');
-        $update = $this->barang->update_stok($id, $qty, $tgl_update);
+        // Simpan ke tabel history
+        $history_data = [
+            'barang_id' => $id,
+            'qty' => $qty,
+            'history_date' => $history_date
+        ];
+        $insert_history = $this->barang->insert_history($history_data);
     
-        if ($update) {
-            echo "Stok berhasil diperbarui!";
+        if ($insert_history) {
+            // Jika berhasil simpan history, update stok barang
+            $update_stok = $this->barang->update_qty_barang($id, $qty);
+            if ($update_stok) {
+                echo "Stok berhasil diperbarui!";
+            } else {
+                echo "Gagal memperbarui stok.";
+            }
         } else {
-            echo "Gagal memperbarui stok.";
+            echo "Gagal menyimpan ke history.";
         }
     }
+    
 }

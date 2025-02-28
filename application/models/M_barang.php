@@ -34,10 +34,15 @@ class M_barang extends CI_Model
     return $this->db->where('id', $id)->get('tbl_barang')->row_array();
   }
 
-  public function update_stok($id, $qty, $tgl_update)
+  public function insert_history($data)
   {
-    $this->db->set('qty', $qty);
-    $this->db->set('tgl_update_stock', $tgl_update);
+    return $this->db->insert('tbl_history_barang', $data);
+  }
+
+  // Tambahkan qty ke tbl_barang berdasarkan barang_id
+  public function update_qty_barang($id, $qty)
+  {
+    $this->db->set('qty', 'qty + ' . (int)$qty, FALSE); // Menambahkan qty
     $this->db->where('id', $id);
     return $this->db->update('tbl_barang');
   }
