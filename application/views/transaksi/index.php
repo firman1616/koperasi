@@ -75,7 +75,7 @@
                 <div class="col-md-6 text-end">
                     <div class="nota">Nota: <?= $kd_trans ?></div>
                     <input type="hidden" name="kd_trans" id="kd_trans" value="<?= $kd_trans ?>">
-                    <input type="text" name="id_akhir" id="id_akhir" value="<?= $id_akhir ?>">
+                    <input type="hidden" name="id_akhir" id="id_akhir" value="<?= $id_akhir ?>">
                     <div class="total-harga">Rp. 0,-</div>
                 </div>
             </div>
