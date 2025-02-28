@@ -24,7 +24,7 @@
             <td><?= $row->uom ?></td>
             <td><?= date('d-m-y h:i:s', strtotime($row->tgl_update_stock)) ?></td>
             <td>
-                <a href="#" class="btn btn-success" title="update stock"><i class="fa fa-sync-alt"></i></a>
+                <button type="button" class="btn btn-success btn-update-stok" data-id="<?= $row->id; ?>" title="update stock"><i class="fa fa-sync-alt"></i></button>
                 <a href="<?= site_url('Barang/vedit/'.$row->id) ?>" class="btn btn-warning"><i class="fa fa-edit"></i></a>
                 <a href="<?= site_url('Barang/update_status/'.$row->id) ?>" class="btn btn-danger" title="update status barang" ><i class="fa fa-power-off"></i></a>
             </td>

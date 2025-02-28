@@ -5,8 +5,9 @@ class M_barang extends CI_Model
   {
     parent::__construct();
   }
-  
-  function get_data()  {
+
+  function get_data()
+  {
     return $this->db->query("SELECT * FROM tbl_barang WHERE status = '1'");
   }
 
@@ -27,6 +28,17 @@ class M_barang extends CI_Model
     $kodetampil = "BRG-" . $date . "-" . $batas;
     return $kodetampil;
   }
-  
 
+  public function get_barang_by_id($id)
+  {
+    return $this->db->where('id', $id)->get('tbl_barang')->row_array();
+  }
+
+  public function update_stok($id, $qty, $tgl_update)
+  {
+    $this->db->set('qty', $qty);
+    $this->db->set('tgl_update_stock', $tgl_update);
+    $this->db->where('id', $id);
+    return $this->db->update('tbl_barang');
+  }
 }

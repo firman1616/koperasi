@@ -17,3 +17,32 @@
 
 </div>
 <!-- /.container-fluid -->
+
+<div class="modal fade" id="modalUpdateStok" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Update Stok Barang</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formUpdateStok">
+                    <input type="hidden" id="id_barang" name="id_barang">
+                    <div class="mb-3">
+                        <label for="kode_barang" class="form-label">Kode Barang</label>
+                        <input type="text" class="form-control" id="kode_barang" name="kode_barang" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nama_barang" class="form-label">Nama Barang</label>
+                        <input type="text" class="form-control" id="nama_barang" name="nama_barang" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="qty" class="form-label">Qty</label>
+                        <input type="number" class="form-control" id="qty" name="qty" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Update Stok</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

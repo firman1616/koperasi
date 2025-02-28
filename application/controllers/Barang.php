@@ -111,4 +111,41 @@ class Barang extends CI_Controller {
         $this->m_data->hapus_data($table,$where);
         redirect('Peserta');
     }
+
+    public function get_barang_by_id() {
+        $id = $this->input->post('id');
+        if (!$id) {
+            echo json_encode(["error" => "ID tidak ditemukan"]);
+            return;
+        }
+
+        $barang = $this->barang->get_barang_by_id($id);
+    
+        if ($barang) {
+            echo json_encode($barang);
+        } else {
+            echo json_encode(["error" => "Barang tidak ditemukan"]);
+        }
+    }
+    
+    public function update_stok() {
+        $id = $this->input->post('id');
+        $qty = $this->input->post('qty');
+        $tgl_update = date('Y-m-d H:i:s'); // Format timestamp terbaru
+    
+        // Debugging: Cek apakah data diterima oleh controller
+        if (!$id || !$qty) {
+            echo "Data tidak lengkap! (ID: $id, QTY: $qty)";
+            return;
+        }
+    
+        // $this->load->model('Barang_model');
+        $update = $this->barang->update_stok($id, $qty, $tgl_update);
+    
+        if ($update) {
+            echo "Stok berhasil diperbarui!";
+        } else {
+            echo "Gagal memperbarui stok.";
+        }
+    }
 }
