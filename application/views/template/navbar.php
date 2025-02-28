@@ -43,6 +43,21 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#laporan"
+                    aria-expanded="true" aria-controls="laporan">
+                    <i class="fas fa-fw fa-book"></i>
+                    <span>Laporan</span>
+                </a>
+                <div id="laporan" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="#">Laporan Penjualan</a>
+                        <a class="collapse-item" href="#">Laporan Barang</a>
+                        <a class="collapse-item" href="#">Laporan Iuran</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
