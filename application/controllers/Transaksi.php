@@ -86,6 +86,7 @@ class Transaksi extends CI_Controller
         $uang_kembali = $uang_dibayarkan - $total_bayar;
         $anggota_id = $this->input->post('anggota_id');
         $extra_value = $this->input->post('extra_value');
+        $metode_bayar = $this->input->post('metode_bayar');
 
         // Data transaksi utama
         $data_transaksi = [
@@ -96,7 +97,8 @@ class Transaksi extends CI_Controller
             'uang_kembali' => $uang_kembali,
             'tgl_transaksi' => $tanggal,
             'pelanggan_id' => $anggota_id,
-            'lainnya' => ($anggota_id == 117) ? $extra_value : null
+            'lainnya' => ($anggota_id == 117) ? $extra_value : null,
+            'metode_bayar' => $metode_bayar
         ];
 
         // Ambil data barang dari frontend

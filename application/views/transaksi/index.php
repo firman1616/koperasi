@@ -122,10 +122,18 @@
                         <label for="extraField">Pelanggan Lainnya</label>
                         <input type="text" id="extraField" name="extraField" class="form-control" placeholder="Pelanggan Lainnya">
                     </div>
-                    <div class="form-group">
+                    <label for="metode_bayar">Metode Pembayaran</label>
+                    <select id="metode_bayar" name="metode_bayar" class="form-control">
+                        <option value="1">Cash</option>
+                        <option value="2">Tempo</option>
+                    </select>
+
+                    <label for="uang_dibayarkan">Uang yang Dibayarkan</label>
+                    <input type="number" id="uang_dibayarkan" name="uang_dibayarkan" class="form-control" required>
+                    <!-- <div class="form-group">
                         <label for="uang_dibayarkan">Uang yang Dibayarkan</label>
                         <input type="number" class="form-control" id="uang_dibayarkan" name="uang_dibayarkan" required>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="diskon">Diskon (%)</label>
                         <input type="number" class="form-control" id="diskon" name="diskon" value="0">

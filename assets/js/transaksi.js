@@ -126,13 +126,13 @@ $(document).ready(function () {
             dataType: "json",
             success: function (data) {
                 console.log("Data diterima:", data); // Debugging
-    
+
                 $("#anggota").empty().append('<option value="">Pilih Anggota</option>');
-    
+
                 $.each(data, function (index, item) {
                     $("#anggota").append(`<option value="${item.id}">${item.name}</option>`);
                 });
-    
+
                 // Inisialisasi Select2 setelah data dimuat
                 $("#anggota").select2({
                     dropdownParent: $("#modalPembayaran"),
@@ -140,11 +140,11 @@ $(document).ready(function () {
                     placeholder: "Pilih Anggota",
                     allowClear: true
                 });
-    
+
                 // Event listener untuk menampilkan form tambahan jika ID = 117
                 $("#anggota").on("change", function () {
                     var selectedID = $(this).val();
-    
+
                     if (selectedID === "117") {
                         $("#formTambahan").show();  // Tampilkan form tambahan
                     } else {
@@ -176,7 +176,7 @@ $(document).ready(function () {
         var diskon = parseFloat($("#diskon").val()) || 0;
         var totalSetelahDiskon = totalHarga - (totalHarga * (diskon / 100));
         var kembalian = uangDibayarkan - totalSetelahDiskon;
-        
+
 
         $("#total_bayar").text("Rp. " + totalSetelahDiskon.toLocaleString("id-ID"));
         $("#total_kembalian").text("Rp. " + (kembalian >= 0 ? kembalian.toLocaleString("id-ID") : "0"));
@@ -191,16 +191,36 @@ $(document).ready(function () {
         var totalHarga = parseFloat($("#total_bayar").data("total")) || 0;
         var anggotaID = $("#anggota").val();
         var extraFieldValue = $("#extraField").val();
+        var metodeBayar = $("#metode_bayar").val();
 
-        if (!tanggal || !kd_trans || uangDibayarkan <= 0) {
+        // if (!tanggal || !kd_trans || uangDibayarkan <= 0) {
+        //     alert("Silakan isi semua data pembayaran!");
+        //     return;
+        // }
+        if (!tanggal || !kd_trans) {
             alert("Silakan isi semua data pembayaran!");
             return;
+        }
+
+        // Jika metode pembayaran adalah "Cash", pastikan uang dibayarkan cukup
+        if (metodeBayar == "1" && uangDibayarkan <= 0) {
+            alert("Silakan isi jumlah uang yang dibayarkan!");
+            return;
+        }
+
+        // Jika metode "Tempo", pastikan uang dibayarkan tetap 0
+        if (metodeBayar == "2") {
+            uangDibayarkan = 0; // Pastikan tetap 0
         }
 
         var totalSetelahDiskon = totalHarga - (totalHarga * (diskon / 100));
         var kembalian = uangDibayarkan - totalSetelahDiskon;
 
-        if (uangDibayarkan < totalSetelahDiskon) {
+        // if (uangDibayarkan < totalSetelahDiskon) {
+        //     alert("Uang yang dibayarkan kurang!");
+        //     return;
+        // }
+        if (metodeBayar == "1" && uangDibayarkan < totalSetelahDiskon) {
             alert("Uang yang dibayarkan kurang!");
             return;
         }
@@ -225,6 +245,7 @@ $(document).ready(function () {
                 total_setelah_diskon: totalSetelahDiskon,
                 anggota_id: anggotaID,
                 extra_value: extraFieldValue,
+                metode_bayar: metodeBayar,
                 barang: barang
             },
             dataType: "json",
@@ -245,27 +266,27 @@ $(document).ready(function () {
     });
 
     $("#bayarCetakBtn").click(function () {
-        var kd_trans = $("#kd_trans").val(); 
+        var kd_trans = $("#kd_trans").val();
         var tanggal = $("#tanggal").val();
         var uangDibayarkan = parseFloat($("#uang_dibayarkan").val());
         var diskon = parseFloat($("#diskon").val()) || 0;
         var totalHarga = parseFloat($("#total_bayar").data("total")) || 0;
         var anggotaID = $("#anggota").val();
         var id_akhir = $("#id_akhir").val(); // Ambil ID transaksi dari form
-    
+
         if (!tanggal || !kd_trans || uangDibayarkan <= 0) {
             alert("Silakan isi semua data pembayaran!");
             return;
         }
-    
+
         var totalSetelahDiskon = totalHarga - (totalHarga * (diskon / 100));
         var kembalian = uangDibayarkan - totalSetelahDiskon;
-    
+
         if (uangDibayarkan < totalSetelahDiskon) {
             alert("Uang yang dibayarkan kurang!");
             return;
         }
-    
+
         var barang = [];
         $("#tableTransaksi tbody tr").each(function () {
             barang.push({
@@ -274,12 +295,12 @@ $(document).ready(function () {
                 harga: parseFloat($(this).find("td:nth-child(3)").text().replace(/Rp. |,/g, "").replace(".", ""))
             });
         });
-    
+
         $.ajax({
             url: BASE_URL + "Transaksi/proses_pembayaran",
             type: "POST",
             data: {
-                kd_trans: kd_trans, 
+                kd_trans: kd_trans,
                 tanggal: tanggal,
                 uang_dibayarkan: uangDibayarkan,
                 diskon: diskon,
@@ -290,11 +311,11 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 console.log("Response dari server:", response); // Debugging
-    
+
                 // alert("Pembayaran berhasil! Kembalian: Rp. " + kembalian.toLocaleString("id-ID"));
                 if (id_akhir) { // Cek apakah id_akhir tersedia di form
                     var printWindow = window.open(BASE_URL + "Transaksi/cetak_struk/" + id_akhir, "_blank");
-    
+
                     // Tunggu hingga halaman cetak terbuka, lalu jalankan autoPrint
                     if (printWindow) {
                         printWindow.onload = function () {
@@ -317,11 +338,19 @@ $(document).ready(function () {
                 alert("Terjadi kesalahan dalam pengiriman data!");
             }
         });
-    
+
         $("#modalPembayaran").modal("hide");
     });
-    
-    
+
+    $("#metode_bayar").change(function () {
+        var metode = $(this).val();
+        if (metode == "2") {
+            $("#uang_dibayarkan").val(0).prop("readonly", true);
+            $("#bayarCetakBtn").prop("disabled", true);
+        } else {
+            $("#uang_dibayarkan").val("").prop("readonly", false);
+        }
+    });
 });
 
 function autofill() {
