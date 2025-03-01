@@ -7,6 +7,8 @@
     $f = $row->uom;
     $g = $row->margin;
     $id  = $row->id;
+    $h = $row->set_diskon;
+    $i = $row->min_qty;
 } ?>
 
 <!-- Begin Page Content -->
@@ -49,6 +51,17 @@
                                 } ?> ><?= $rop->uom ?></option>
                             <?php } ?>
                         </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label class="form-label">Set Diskon <small>3000</small></label>
+                        <input type="number" class="form-control" id="set_diskon" name="set_diskon" value="<?= $h ?>">
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Min Qty </label>
+                        <input type="number" class="form-control" id="min_qty" name="min_qty" value="<?= $i ?>">
                     </div>
                 </div>
 

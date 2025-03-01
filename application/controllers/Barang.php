@@ -57,7 +57,9 @@ class Barang extends CI_Controller {
             'uom' => $this->input->post('uom'),
             'create_at' => date('Y-m-d H:i:s'),
             'tgl_update_stock' => date('Y-m-d H:i:s'),
-            'jenis' => '1'
+            'jenis' => '1',
+            'set_diskon' => $this->input->post('set_diskon'),
+            'min_qty' => $this->input->post('min_qty')
         ];
         $this->m_data->simpan_data($table,$data);
         redirect('Barang');
@@ -89,8 +91,10 @@ class Barang extends CI_Controller {
             'margin' => $margin,
             // 'qty' => $this->input->post('qty'),
             'uom' => $this->input->post('uom'),
-            // 'tgl_update' => date('Y-m-d H:i:s'),
+            'tgl_update_stock' => date('Y-m-d H:i:s'),
             // 'jenis' => '1'
+            'set_diskon' => $this->input->post('set_diskon'),
+            'min_qty' => $this->input->post('min_qty')
         ];
         $where = array('id' => $id);
         $this->m_data->update_data($table,$data,$where);
