@@ -10,14 +10,17 @@ class Dashboard extends CI_Controller {
         //     redirect(base_url("Login"));
         // }
         // $this->load->library('Pdf');
-        // $this->load->model('M_dashboard', 'dash');
+        $this->load->model('M_dashboard', 'dash');
     }
 
 	public function index()
 	{
 		$data = [
 			'title' => 'Dashboard',
-			'conten' => 'conten/dashboard'
+			'conten' => 'conten/dashboard',
+			'trans_month' => $this->dash->trans_month(),
+			'trans_day' => $this->dash->trans_day(),
+			'count_anggota' => $this->dash->count_anggota(),
 		];
 		$this->load->view('template/conten',$data);
 	}
