@@ -18,7 +18,7 @@
         <tr>
             <td><?= $row->kode_barang ?></td>
             <td><?= $row->nama_barang ?></td>
-            <td>Harga Beli <?= number_format($row->harga_beli,2) ?> <br> Harga Jual <?= number_format($row->harga_jual,2) ?></td>
+            <td><?= number_format($row->harga_jual,2) ?></td>
             <td><?= number_format($row->margin) ?></td>
             <td><?= $row->qty ?></td>
             <td><?= $row->uom ?></td>
