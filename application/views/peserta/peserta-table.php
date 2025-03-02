@@ -14,35 +14,47 @@
         </tr>
     </thead>
     <tbody>
-        <?php 
+        <?php
         // $x=1;
-        foreach ($anggota as $row) { 
-        $kelamin = $row->jk;
+        foreach ($anggota as $row) {
+            $kelamin = $row->jk;
         ?>
-        <tr>
-            <!-- <td><?= $x++; ?></td> -->
-            <td><?= $row->no_agt ?></td>
-            <td><?= $row->name ?></td>
-            <td>
-                <?php 
-                if ($kelamin == 'laki') {
-                    echo 'Laki-laki';
-                }else {
-                    echo 'Perempuan';
-                }
-                ?>
-            </td>
-            <td><?= $row->no_telp ?></td>
-            <td><?= $row->nik ?></td>
-            <td><?= $row->alamat ?></td>
-            <td><?= $row->tmp_lahir.", ". date('d-m-Y', strtotime($row->tgl_lahir)) ?></td>
-            <td><?= $row->binbinti ?></td>
-            <td>
-                <!-- <button type="button" class="btn btn-primary" title="detail"><i class="fa fa-list"></i></button> -->
-                <a href="<?= site_url('Peserta/vedit/'.$row->id) ?>" class="btn btn-warning" title="edit data" ><i class="fa fa-edit"></i></a>
-                <a href="<?= site_url('Peserta/delete_data/'.$row->id) ?>" class="btn btn-danger" title="hapus" ><i class="fa fa-trash"></i></a>
-            </td>
-        </tr>
+            <tr>
+                <!-- <td><?= $x++; ?></td> -->
+                <td><?= $row->no_agt ?></td>
+                <td><?= $row->name ?></td>
+                <td>
+                    <?php
+                    if ($kelamin == 'laki') {
+                        echo 'Laki-laki';
+                    } else {
+                        echo 'Perempuan';
+                    }
+                    ?>
+                </td>
+                <td><?= $row->no_telp ?></td>
+                <td><?= $row->nik ?></td>
+                <td><?= $row->alamat ?></td>
+                <td><?= $row->tmp_lahir . ", " . date('d-m-Y', strtotime($row->tgl_lahir)) ?></td>
+                <td><?= $row->binbinti ?></td>
+                <td>
+                    <?php
+                    if ($row->status_iuran == '1') { ?>
+                        <button type="button" class="btn btn-primary iuran-btn" title="iuran" data-id="<?= $row->id ?>">
+                            <i class="fa fa-coins"></i>
+                        </button>
+                    <?php }
+                    ?>
+
+                    <a href="<?= site_url('Peserta/vedit/' . $row->id) ?>" class="btn btn-warning" title="edit data"><i class="fa fa-edit"></i></a>
+                    <a href="<?= site_url('Peserta/delete_data/' . $row->id) ?>"
+                        class="btn btn-danger delete-btn"
+                        title="hapus"
+                        data-id="<?= $row->id ?>">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
         <?php }
         ?>
     </tbody>

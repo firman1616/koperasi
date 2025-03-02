@@ -134,10 +134,10 @@
                         <label for="uang_dibayarkan">Uang yang Dibayarkan</label>
                         <input type="number" class="form-control" id="uang_dibayarkan" name="uang_dibayarkan" required>
                     </div> -->
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="diskon">Diskon (%)</label>
                         <input type="number" class="form-control" id="diskon" name="diskon" value="0">
-                    </div>
+                    </div> -->
                     <p>Total Bayar: <span id="total_bayar" data-total="">Rp. 0</span></p>
                     <p>Total Pengembalian: <span id="total_kembalian">Rp. 0</span></p>
                 </form>

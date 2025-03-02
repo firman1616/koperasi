@@ -99,4 +99,29 @@ class Peserta extends CI_Controller {
         $this->m_data->hapus_data($table,$where);
         redirect('Peserta');
     }
+
+    public function simpanIuran() {
+        $anggota_id = $this->input->post('anggota_id');
+    
+        if (!$anggota_id) {
+            echo json_encode(["message" => "ID Anggota tidak ditemukan"]);
+            return;
+        }
+    
+        $data_iuran = [
+            'anggota_id' => $anggota_id,
+            'nominal' => 200000,
+            'date' => date('Y-m-d H:i:s')
+        ];
+    
+        // Insert data ke tbl_iuran
+        $this->db->insert('tbl_iuran', $data_iuran);
+    
+        // Update status iuran di tbl_anggota menjadi 2
+        $this->db->where('id', $anggota_id);
+        $this->db->update('tbl_anggota', ['status_iuran' => 2]);
+    
+        echo json_encode(["message" => "Iuran berhasil disimpan"]);
+    }
+    
 }
