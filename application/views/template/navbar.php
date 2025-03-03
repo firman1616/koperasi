@@ -31,6 +31,12 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link" href="<?= site_url('Transaksi') ?>">
+                    <i class="fas fa-fw fa-arrow-left"></i>
+                    <span>Pengeluaran</span></a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link" href="<?= site_url('Peserta/iuran') ?>">
                     <i class="fas fa-fw fa-user"></i>
                     <span>Iuran Anggota</span></a>
