@@ -57,8 +57,9 @@ foreach ($header as $row) {
 </head>
 
 <body>
-  <h3>Koperasi Sejahtera Sekali</h3>
-  <p>Jl. Pahlawan Kesiangan No 10<br>Jakarta Barat
+<!--  <h3>Koperasi Sejahtera Sekali</h3>-->
+  <img src="<?= base_url('assets/image/nota.png') ?>" width="163" height="56">
+<p style="margin-top: 0px">Jl. Pahlawan Kesiangan No 10<br>Jakarta Barat
   </p>
   <center>
     <table width="30%" style="border-top: 1px dashed black; border-bottom: 1px dashed black; border-left: none; border-right: none; border-collapse: collapse;">

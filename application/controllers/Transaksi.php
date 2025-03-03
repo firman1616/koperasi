@@ -127,10 +127,7 @@ class Transaksi extends CI_Controller
             echo json_encode(['status' => 'error']);
         }
     }
-
     
-
-
     function list_trans()
     {
         $data = [
