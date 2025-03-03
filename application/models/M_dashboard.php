@@ -5,8 +5,9 @@ class M_dashboard extends CI_Model
   {
     parent::__construct();
   }
-  
-  function trans_month() {
+
+  function trans_month()
+  {
     return $this->db->query("SELECT
       SUM(grand_total) as total
     FROM
@@ -17,17 +18,21 @@ class M_dashboard extends CI_Model
       AND uang_bayar <> '0'")->row();
   }
 
-  function trans_day() {
-        return $this->db->query("SELECT
-      SUM(grand_total) as total
-    FROM
-      tbl_transaksi
-    WHERE
-      DATE(tgl_transaksi) BETWEEN DATE_FORMAT(NOW(), '%Y-%m-01') AND CURDATE()
-      AND uang_bayar <> 0")->row();
+  function trans_day()
+  {
+    return $this->db->query("SELECT SUM(grand_total) AS total
+    FROM tbl_transaksi
+    WHERE DATE(tgl_transaksi) = CURDATE()
+    AND uang_bayar <> 0; ")->row();
   }
 
-  function count_anggota() {
+  function count_anggota()
+  {
     return $this->db->query("SELECT id from tbl_anggota")->num_rows();
+  }
+
+  function count_tempo()
+  {
+    return $this->db->query("SELECT * FROM `tbl_transaksi` WHERE metode_bayar ='2'")->num_rows();
   }
 }

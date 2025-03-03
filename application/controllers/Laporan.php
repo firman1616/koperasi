@@ -33,9 +33,18 @@
 
         public function export_excel()
         {
-            $data = $this->lap->lap_trans()->result(); // Ambil data dari model
+            // Ambil tanggal dari input form
+            $date_start = $this->input->get('date_start'); // Bisa pakai $this->input->post() jika pakai method POST
+            $date_end = $this->input->get('date_end');
 
-            $spreadsheet = new Spreadsheet();
+            // Gunakan default jika kosong
+            if (!$date_start) $date_start = date('Y-m-d', strtotime('-7 days'));
+            if (!$date_end) $date_end = date('Y-m-d');
+
+            // Ambil data dari model berdasarkan tanggal input
+            $data = $this->lap->lap_trans($date_start, $date_end)->result();
+
+            $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
 
             // Header kolom
@@ -70,7 +79,8 @@
             header('Cache-Control: max-age=0');
 
             ob_end_clean();
-            $writer = new Xlsx($spreadsheet);
+            $writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
             $writer->save('php://output');
+            exit;
         }
     }

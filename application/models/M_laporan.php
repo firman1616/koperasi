@@ -5,9 +5,10 @@ class M_laporan extends CI_Model
   {
     parent::__construct();
   }
-  
-  function lap_trans() {
-    return $this->db->query("SELECT
+
+  public function lap_trans($date_start, $date_end)
+  {
+    $query = $this->db->query("SELECT
         tt.no_transaksi,
         tt.grand_total,
         tt.tgl_transaksi,
@@ -19,7 +20,8 @@ class M_laporan extends CI_Model
     LEFT JOIN 
         tbl_anggota ta ON ta.id = tt.pelanggan_id
     WHERE
-        tt.tgl_transaksi BETWEEN '2025-02-28' AND '2025-03-03'
-");
+        DATE(tt.tgl_transaksi) >= '$date_start'
+        AND DATE(tt.tgl_transaksi) <= '$date_end'");
+    return $query;
   }
 }
