@@ -83,4 +83,14 @@
             $writer->save('php://output');
             exit;
         }
+
+        function lap_iuran()  {
+            $data = [
+                'title' => 'Laporan Iuran Anggota',
+                'subtitle' => 'Report',
+                'conten' => 'laporan/iuran/index',
+                'footer_js' => array('assets/js/lap_iuran.js')
+            ];
+            $this->load->view('template/conten', $data);
+        }
     }

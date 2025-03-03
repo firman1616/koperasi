@@ -52,7 +52,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="<?= site_url('Laporan') ?>">Laporan Penjualan</a>
                         <a class="collapse-item" href="#">Laporan Barang</a>
-                        <a class="collapse-item" href="#">Laporan Iuran</a>
+                        <a class="collapse-item" href="<?= site_url('Laporan/lap_iuran') ?>">Laporan Iuran</a>
                     </div>
                 </div>
             </li>
