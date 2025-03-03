@@ -123,5 +123,22 @@ class Peserta extends CI_Controller {
     
         echo json_encode(["message" => "Iuran berhasil disimpan"]);
     }
+
+    function iuran() {
+        $data = [
+			'title' => 'Iuran',
+            'subtitle' => 'List',
+			'conten' => 'iuran/index',
+            'footer_js' => array('assets/js/peserta.js')
+		];
+		$this->load->view('template/conten',$data);
+    }
+    
+    function tableIuran()
+    {
+        $data['iuran'] = $this->anggota->get_data()->result();
+
+        echo json_encode($this->load->view('iuran/iuran-table',$data,false));
+    }
     
 }

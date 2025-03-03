@@ -30,11 +30,11 @@
                     <span>Transaksi</span></a>
             </li>
 
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="<?= site_url('Transaksi/list_trans') ?>">
-                    <i class="fas fa-fw fa-list"></i>
-                    <span>Daftar Transaksi</span></a>
-            </li> -->
+            <li class="nav-item">
+                <a class="nav-link" href="<?= site_url('Peserta/iuran') ?>">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Iuran Anggota</span></a>
+            </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="<?= site_url('Peserta') ?>">

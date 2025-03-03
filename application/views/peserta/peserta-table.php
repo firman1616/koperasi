@@ -38,13 +38,6 @@
                 <td><?= $row->tmp_lahir . ", " . date('d-m-Y', strtotime($row->tgl_lahir)) ?></td>
                 <td><?= $row->binbinti ?></td>
                 <td>
-                    <?php
-                    if ($row->status_iuran == '1') { ?>
-                        <button type="button" class="btn btn-primary iuran-btn" title="iuran" data-id="<?= $row->id ?>">
-                            <i class="fa fa-coins"></i>
-                        </button>
-                    <?php }
-                    ?>
 
                     <a href="<?= site_url('Peserta/vedit/' . $row->id) ?>" class="btn btn-warning" title="edit data"><i class="fa fa-edit"></i></a>
                     <a href="<?= site_url('Peserta/delete_data/' . $row->id) ?>"

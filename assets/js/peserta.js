@@ -1,5 +1,6 @@
 $(document).ready(function() {
     tablePeserta();
+    tableIuran();
 });
 
 function tablePeserta() {
@@ -9,6 +10,20 @@ function tablePeserta() {
         success: function (data) {
             $('#div-table-peserta').html(data);
             $('#tablePeserta').DataTable({
+                "processing": true,
+                "responsive": true,
+            });
+        }
+    });
+}
+
+function tableIuran() {
+    $.ajax({
+        url: BASE_URL + "Peserta/tableIuran",
+        type: "POST",
+        success: function (data) {
+            $('#div-table-iuran').html(data);
+            $('#tableIuran').DataTable({
                 "processing": true,
                 "responsive": true,
             });
@@ -29,7 +44,7 @@ $(document).on('click', '.iuran-btn', function() {
         },
         success: function(response) {
             alert("Iuran sudah dibayar"); // Menampilkan alert setelah klik
-            setTimeout(tablePeserta, 100); // Refresh otomatis setelah klik
+            setTimeout(tableIuran, 100); // Refresh otomatis setelah klik
         },
         error: function() {
             alert("Terjadi kesalahan, coba lagi!");
