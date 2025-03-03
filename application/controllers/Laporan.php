@@ -31,6 +31,16 @@
             $this->load->view('template/conten', $data);
         }
 
+        function tableLapTrans()
+    {
+        $date_start = $this->input->post('date_start');
+        $date_end = $this->input->post('date_end');
+        
+        $data['lap_trans'] = $this->lap->lap_trans($date_start, $date_end)->result();
+
+        echo json_encode($this->load->view('laporan/penjualan/lap-trans-table',$data,false));
+    }
+
         public function export_excel()
         {
             // Ambil tanggal dari input form

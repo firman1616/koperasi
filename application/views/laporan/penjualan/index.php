@@ -18,21 +18,21 @@
                     <input type="date" class="form-control" name="date_end" id="date_end">
                 </div>
             </div>
-            <button type="button" class="btn btn-primary">Lihat</button>
+            <button type="button" class="btn btn-primary" id="preview">Lihat</button>
             <button type="submit" class="btn btn-success" id="export_excel">Export</button>
             </form>
         </div>
     </div>
 
-    <!-- <div class="card shadow mb-4">
+    <div class="card shadow mb-4" id="detail_trans">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Basic Card Example</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Detail Transaksi</h6>
         </div>
         <div class="card-body">
-            The styling for this basic card example is created by using default Bootstrap
-            utility classes. By using utility classes, the style of the card component can be
-            easily modified with no need for any custom CSS!
+        <div class="table-responsive">
+                <div id="div-table-lap-trans"></div>
+            </div>
         </div>
-    </div> -->
+    </div>
 </div>
 <!-- /.container-fluid -->

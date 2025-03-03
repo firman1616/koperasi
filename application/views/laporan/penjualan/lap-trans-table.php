@@ -1,29 +1,33 @@
-<table class="table table-bordered" id="tableIuran" width="100%" cellspacing="0">
+<table class="table table-bordered" id="tableLapTrans" width="100%" cellspacing="0">
     <thead>
         <tr>
             <th>No</th>
-            <th>Nama ANggota</th>
-            <th>Action</th>
+            <th>Kode Transaksi</th>
+            <th>Pembeli</th>
+            <th>Nominal</th>
+            <th>Tanggal</th>
         </tr>
     </thead>
     <tbody>
-        <?php
-        $x = 1;
-        foreach ($iuran as $row) { ?>
+        <?php 
+        $x=1;
+        foreach ($lap_trans as $row) { ?>
             <tr>
                 <td><?= $x++; ?></td>
-                <td><?= $row->name ?></td>
+                <td><?= $row->no_transaksi ?></td>
                 <td>
-                    <?php
-                    if ($row->status_iuran == '1') { ?>
-                        <button type="button" class="btn btn-primary iuran-btn" title="iuran" data-id="<?= $row->id ?>">
-                            <i class="fa fa-coins"></i>
-                        </button>
-                    <?php }
+                    <?php 
+                    if ($row->pelanggan_id == '117') {
+                        echo $row->lainnya;
+                    }else {
+                        echo $row->cust;
+                    }
                     ?>
                 </td>
+                <td><?= 'Rp. '. number_format($row->grand_total) ?></td>
+                <td><?= date('d-m-Y', strtotime($row->tgl_transaksi)) ?></td>
             </tr>
-        <?php  }
+        <?php }
         ?>
     </tbody>
 </table>
