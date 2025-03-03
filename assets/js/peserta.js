@@ -35,22 +35,28 @@ function tableIuran() {
 // Event klik tombol "iuran"
 $(document).on('click', '.iuran-btn', function() {
     var anggota_id = $(this).data('id'); // Ambil ID anggota dari atribut data-id
+    var confirmPayment = confirm("Apakah sudah bayar?");
 
-    $.ajax({
-        url: BASE_URL + "Peserta/simpanIuran",
-        type: "POST",
-        data: {
-            anggota_id: anggota_id
-        },
-        success: function(response) {
-            alert("Iuran sudah dibayar"); // Menampilkan alert setelah klik
-            setTimeout(tableIuran, 100); // Refresh otomatis setelah klik
-        },
-        error: function() {
-            alert("Terjadi kesalahan, coba lagi!");
-        }
-    });
+    if (confirmPayment) {
+        $.ajax({
+            url: BASE_URL + "Peserta/simpanIuran",
+            type: "POST",
+            data: {
+                anggota_id: anggota_id
+            },
+            success: function(response) {
+                alert("Iuran sudah dibayar"); // Menampilkan alert setelah klik
+                setTimeout(tableIuran, 100); // Refresh otomatis setelah klik
+            },
+            error: function() {
+                alert("Terjadi kesalahan, coba lagi!");
+            }
+        });
+    } else {
+        alert("Pembayaran belum dikonfirmasi.");
+    }
 });
+
 
 $(document).on('click', '.delete-btn', function(event) {
     event.preventDefault(); // Mencegah link langsung dijalankan
