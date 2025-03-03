@@ -12,6 +12,10 @@ $(document).ready(function() {
     document.getElementById("date_end").value = todayStr;
     document.getElementById("date_start").value = pastDateStr;
 
+    $("#export_excel").click(function () {
+        window.location.href = BASE_URL + "Laporan/export_excel";
+    });
+
 });
 
 // function tableUOM() {
