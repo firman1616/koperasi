@@ -50,7 +50,7 @@
                 </a>
                 <div id="laporan" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="#">Laporan Penjualan</a>
+                        <a class="collapse-item" href="<?= site_url('Laporan') ?>">Laporan Penjualan</a>
                         <a class="collapse-item" href="#">Laporan Barang</a>
                         <a class="collapse-item" href="#">Laporan Iuran</a>
                     </div>
