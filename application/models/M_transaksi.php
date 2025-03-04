@@ -129,6 +129,7 @@ class M_transaksi extends CI_Model
 
   function get_tempo() {
     return $this->db->query("SELECT
+      tt.id,
       tt.no_transaksi,
       tt.grand_total,
       tt.uang_bayar,

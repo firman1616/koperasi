@@ -352,6 +352,29 @@ $(document).ready(function () {
             $("#uang_dibayarkan").val("").prop("readonly", false);
         }
     });
+
+    // section tempo
+    $(document).on("click", ".openModalTempo", function () {
+        var noTransaksi = $(this).data("transaksi");
+        var nominal = $(this).data("nominal");
+    
+        $("#noTransaksi").val(noTransaksi);
+        $("#nominalTransaksi").val(nominal);
+    
+        $("#modalDetailTempo").modal("show");
+    });
+
+    $(document).on("input", "#nominalBayar", function () {
+        var nominalTagihan = parseFloat($("#nominalTransaksi").val().replace(/Rp. |,/g, "")) || 0;
+        var nominalBayar = parseFloat($(this).val().replace(/Rp. |,/g, "")) || 0;
+    
+        var nominalKembali = nominalBayar - nominalTagihan;
+    
+        $("#nominalKembali").val(nominalKembali);
+    });
+    
+    
+    
 });
 
 function autofill() {

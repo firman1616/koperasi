@@ -154,6 +154,7 @@ class Transaksi extends CI_Controller
         $this->load->view('transaksi/cetak_trans', $data);
     }
 
+    // section tempo
     function trans_tempo() {
         $data = [
             'title' => 'Data Transaksi Tempo',
@@ -169,4 +170,6 @@ class Transaksi extends CI_Controller
         $data['tempo'] = $this->trans->get_tempo()->result();
         echo json_encode($this->load->view('tempo/tempo-table',$data, false));
     }
+
+    
 }
