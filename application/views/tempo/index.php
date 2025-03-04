@@ -31,6 +31,7 @@
                 </button>
             </div>
             <div class="modal-body">
+                <input type="text" name="id_transaksi" id="id_transaksi">
                 <div class="form-group">
                     <label for="noTransaksi">No Transaksi:</label>
                     <input type="text" class="form-control" id="noTransaksi" readonly>
@@ -41,15 +42,15 @@
                 </div>
                 <div class="form-group">
                     <label for="nominalTransaksi">Nominal Pembayaran:</label>
-                    <input type="text" class="form-control" id="nominalBayar">
+                    <input type="text" class="form-control" id="nominalBayar" name="uang_bayar">
                 </div>
                 <div class="form-group">
                     <label for="nominalTransaksi">Nominal Kembalian:</label>
-                    <input type="text" class="form-control" id="nominalKembali" value="0" readonly>
+                    <input type="text" class="form-control" id="nominalKembali" value="0" readonly name="uang_kembali">
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Bayar</button>
+                <button type="button" class="btn btn-primary" id="btnBayar">Bayar</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>

@@ -356,8 +356,10 @@ $(document).ready(function () {
     // section tempo
     $(document).on("click", ".openModalTempo", function () {
         var noTransaksi = $(this).data("transaksi");
+        var id = $(this).data("id");
         var nominal = $(this).data("nominal");
     
+        $("#id_transaksi").val(id);
         $("#noTransaksi").val(noTransaksi);
         $("#nominalTransaksi").val(nominal);
     
@@ -372,6 +374,47 @@ $(document).ready(function () {
     
         $("#nominalKembali").val(nominalKembali);
     });
+
+    $(document).on("click", "#btnBayar", function () {
+        var id_transaksi = $("#id_transaksi").val(); // Ambil ID transaksi dari input
+        var uang_bayar = parseFloat($("#nominalBayar").val().replace(/Rp. |,/g, "")) || 0;
+        var uang_kembali = parseFloat($("#nominalKembali").val().replace(/Rp. |,/g, "")) || 0;
+    
+        console.log("ID Transaksi:", id_transaksi); // Debugging
+        console.log("Uang Bayar:", uang_bayar);
+        console.log("Uang Kembali:", uang_kembali);
+    
+        if (!id_transaksi) {
+            alert("ID Transaksi tidak ditemukan!");
+            return;
+        }
+    
+        $.ajax({
+            url: BASE_URL + "Transaksi/updatePembayaran",
+            type: "POST",
+            data: {
+                id_transaksi: id_transaksi,
+                uang_bayar: uang_bayar,
+                uang_kembali: uang_kembali
+            },
+            dataType: "json",
+            success: function (response) {
+                if (response.status === "success") {
+                    alert(response.message);
+                    $("#modalDetailTempo").modal("hide");
+                    location.reload();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("AJAX Error:", error);
+                console.log("Response:", xhr.responseText);
+                alert("Terjadi kesalahan dalam proses pembayaran!");
+            }
+        });
+    });
+    
     
     
     

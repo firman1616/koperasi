@@ -97,7 +97,8 @@ class M_transaksi extends CI_Model
     left join tbl_anggota ta  on ta.id = tt.pelanggan_id");
   }
 
-  function head_trans($id)  {
+  function head_trans($id)
+  {
     return $this->db->query("SELECT
       tt.id,
       tt.no_transaksi,
@@ -114,7 +115,8 @@ class M_transaksi extends CI_Model
     where tt.id = '$id'");
   }
 
-  function detail_trans($id) {
+  function detail_trans($id)
+  {
     return $this->db->query("SELECT
       tdt.head_trans,
       tdt.kode_barang,
@@ -127,7 +129,8 @@ class M_transaksi extends CI_Model
     where tdt.head_trans = '$id'");
   }
 
-  function get_tempo() {
+  function get_tempo()
+  {
     return $this->db->query("SELECT
       tt.id,
       tt.no_transaksi,
@@ -144,5 +147,11 @@ class M_transaksi extends CI_Model
     left join tbl_anggota ta on ta.id = tt.pelanggan_id 
     where
       tt.metode_bayar = '2'");
+  }
+
+  public function updateTransaksi($id_transaksi, $data)
+  {
+    $this->db->where('id', $id_transaksi);
+    return $this->db->update('tbl_transaksi', $data);
   }
 }

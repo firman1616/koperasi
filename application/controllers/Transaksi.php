@@ -127,7 +127,7 @@ class Transaksi extends CI_Controller
             echo json_encode(['status' => 'error']);
         }
     }
-    
+
     function list_trans()
     {
         $data = [
@@ -155,7 +155,8 @@ class Transaksi extends CI_Controller
     }
 
     // section tempo
-    function trans_tempo() {
+    function trans_tempo()
+    {
         $data = [
             'title' => 'Data Transaksi Tempo',
             'subtitle' => 'List',
@@ -168,8 +169,32 @@ class Transaksi extends CI_Controller
     function tableTempo()
     {
         $data['tempo'] = $this->trans->get_tempo()->result();
-        echo json_encode($this->load->view('tempo/tempo-table',$data, false));
+        echo json_encode($this->load->view('tempo/tempo-table', $data, false));
     }
 
-    
+    public function updatePembayaran()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+
+        $id_transaksi = $this->input->post('id_transaksi'); // Ambil ID transaksi dari form
+        if (!$id_transaksi) {
+            echo json_encode(['status' => 'error', 'message' => 'ID Transaksi tidak ditemukan!']);
+            return;
+        }
+
+        $data = [
+            'uang_bayar'     => $this->input->post('uang_bayar'),
+            'uang_kembali'   => $this->input->post('uang_kembali'),
+            'tgl_transaksi'  => date('Y-m-d H:i:s'), // Format waktu saat ini
+            'metode_bayar'   => 1 // Set metode bayar ke 1
+        ];
+
+        $update = $this->trans->updateTransaksi($id_transaksi, $data); // Pastikan model dipanggil dengan benar
+
+        if ($update) {
+            echo json_encode(['status' => 'success', 'message' => 'Pembayaran Tempo Lunas!']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Gagal melakukan pembayaran Tempo!']);
+        }
+    }
 }

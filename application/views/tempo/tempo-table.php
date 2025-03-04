@@ -29,8 +29,8 @@
                 <td><?= date('d-m-Y', strtotime($row->tgl_transaksi)) ?></td>
                 <td>
                     <!-- <button type="button" class="btn btn-primary" id="bayarUtang"><i class="fa fa-money-bill-wave"></i></button> -->
-                    <button class="btn btn-info btn-sm openModalTempo" data-transaksi="<?= $row->no_transaksi ?>" data-nominal="<?= $row->grand_total ?>">
-                        Lihat Detail
+                    <button class="btn btn-info btn-sm openModalTempo" data-transaksi="<?= $row->no_transaksi ?>" data-nominal="<?= $row->grand_total ?>" data-id="<?= $row->id ?>">
+                        <i class="fa fa-money-bill-wave"></i>
                     </button>
                 </td>
             </tr>
