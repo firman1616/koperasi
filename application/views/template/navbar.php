@@ -43,12 +43,6 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="<?= site_url('Peserta') ?>">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Peserta</span></a>
-            </li>
-
-            <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#laporan"
                     aria-expanded="true" aria-controls="laporan">
                     <i class="fas fa-fw fa-book"></i>
@@ -59,6 +53,7 @@
                         <a class="collapse-item" href="<?= site_url('Laporan') ?>">Laporan Penjualan</a>
                         <a class="collapse-item" href="#">Laporan Barang</a>
                         <a class="collapse-item" href="<?= site_url('Laporan/lap_iuran') ?>">Laporan Iuran</a>
+                        <a class="collapse-item" href="<?= site_url('Transaksi/trans_tempo') ?>">Laporan Tempo</a>
                     </div>
                 </div>
             </li>
@@ -73,6 +68,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="<?= site_url('Barang') ?>">Master Barang</a>
                         <a class="collapse-item" href="<?= site_url('UOM') ?>">Master UoM (Satuan)</a>
+                        <a class="collapse-item" href="<?= site_url('Peserta') ?>">Anggota</a>
                     </div>
                 </div>
             </li>
