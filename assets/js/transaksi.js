@@ -1,5 +1,6 @@
 $(document).ready(function () {
     tableTransaksi();
+    tableTempo();
     $('#id').val('');
     $('#modulForm').trigger("reset");
     $('.transelect2').select2();
@@ -380,6 +381,20 @@ function tableTransaksi() {
             //     "processing": true,
             //     "responsive": true,
             // });
+        }
+    });
+}
+
+function tableTempo() {
+    $.ajax({
+        url: BASE_URL + "Transaksi/tableTempo",
+        type: "POST",
+        success: function (data) {
+            $('#div-table-tempo').html(data);
+            $('#tableTempo').DataTable({
+                "processing": true,
+                "responsive": true,
+            });
         }
     });
 }

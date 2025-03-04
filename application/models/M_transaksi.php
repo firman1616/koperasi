@@ -126,4 +126,22 @@ class M_transaksi extends CI_Model
     left join tbl_barang tb on tb.kode_barang = tdt.kode_barang 
     where tdt.head_trans = '$id'");
   }
+
+  function get_tempo() {
+    return $this->db->query("SELECT
+      tt.no_transaksi,
+      tt.grand_total,
+      tt.uang_bayar,
+      tt.uang_kembali,
+      tt.tgl_transaksi,
+      tt.pelanggan_id,
+      tt.metode_bayar,
+      ta.name,
+      tt.lainnya 
+    from
+      tbl_transaksi tt
+    left join tbl_anggota ta on ta.id = tt.pelanggan_id 
+    where
+      tt.metode_bayar = '2'");
+  }
 }

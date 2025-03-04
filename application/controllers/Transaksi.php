@@ -153,4 +153,20 @@ class Transaksi extends CI_Controller
         ];
         $this->load->view('transaksi/cetak_trans', $data);
     }
+
+    function trans_tempo() {
+        $data = [
+            'title' => 'Data Transaksi Tempo',
+            'subtitle' => 'List',
+            'conten' => 'tempo/index',
+            'footer_js' => array('assets/js/transaksi.js'),
+        ];
+        $this->load->view('template/conten', $data);
+    }
+
+    function tableTempo()
+    {
+        $data['tempo'] = $this->trans->get_tempo()->result();
+        echo json_encode($this->load->view('tempo/tempo-table',$data, false));
+    }
 }
