@@ -3,18 +3,26 @@
         <tr>
             <!-- <th>No</th> -->
             <th>No.</th>
-            <th>Kode SAtuan</th>
-            <th>Nama Satuan</th>
+            <th>Nama User</th>
+            <th>Username</th>
+            <th>Level</th>
             <th>Action</th>
         </tr>
     </thead>
     <tbody>
-    <tr>
-            <!-- <th>No</th> -->
-            <td>No.</td>
-            <td>Kode SAtuan</td>
-            <td>Nama Satuan</td>
-            <td>Action</td>
-        </tr>
+        <?php 
+        $x=1;
+        foreach ($user as $row) { ?>
+            <tr>
+                    <td><?= $x++; ?></td>
+                    <td><?= $row->nama_user ?></td>
+                    <td><?= $row->username ?></td>
+                    <td><?= $row->level_name ?></td>
+                    <td>
+                        <button class="btn btn-warning edit" data-id="<?= $row->id ?>"><i class="fa fa-edit"></i></button>
+                    </td>
+                </tr>
+        <?php }
+        ?>
     </tbody>
 </table>

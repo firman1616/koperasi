@@ -10,7 +10,7 @@ class User extends CI_Controller {
         //     redirect(base_url("Login"));
         // }
         // $this->load->library('Pdf');
-        // $this->load->model('M_dashboard', 'dash');
+        $this->load->model('M_user', 'user');
     }
 	
 	public function index()
@@ -19,34 +19,39 @@ class User extends CI_Controller {
 			'title' => 'Data User',
             'subtitle' => 'List',
 			'conten' => 'user/index',
-            'footer_js' => array('assets/js/user.js')
+            'footer_js' => array('assets/js/user.js'),
+            'level' => $this->user->get_level(),
 		];
 		$this->load->view('template/conten',$data);
 	}
 
     function tableUser()
     {
-        // $data['uom'] = $this->m_data->get_data('tbl_uom')->result();
-
-        echo json_encode($this->load->view('user/user-table',false));
+        $data['user'] = $this->user->get_user();
+        echo json_encode($this->load->view('user/user-table',$data,false));
     }
 
     function store()
     {
         $id = $this->input->post('id');
         if ($id != null) {
-            $table = 'tbl_uom';
+            $table = 'tbl_user';
             $dataupdate = [
-                'kode' => $this->input->post('kode_satuan'),
-                'uom' => $this->input->post('nama_satuan')
+                'nama_user' => $this->input->post('nama_user'),
+                'username' => $this->input->post('username'),
+                'password' => md5($this->input->post('password')),
+                'level' => $this->input->post('level')
             ];
             $where = array('id' => $id);
             $this->m_data->update_data($table, $dataupdate, $where);
         } else {
-            $table = 'tbl_uom';
+            $table = 'tbl_user';
             $data = [
-                'kode' => $this->input->post('kode_satuan'),
-                'uom' => $this->input->post('nama_satuan')
+                'nama_user' => $this->input->post('nama_user'),
+                'username' => $this->input->post('username'),
+                'password' => md5($this->input->post('password')),
+                'level' => $this->input->post('level'),
+                'status' => '1',
             ];
             // $die(var_dump($data));
             $this->m_data->simpan_data($table, $data);
@@ -55,7 +60,7 @@ class User extends CI_Controller {
 
     function vedit($id)
     {
-        $table = 'tbl_uom';
+        $table = 'tbl_user';
         $where = array('id' => $id);
         $data = $this->m_data->get_data_by_id($table, $where)->row();
         echo json_encode($data);
