@@ -65,7 +65,10 @@
             $sheet->setCellValue('C1', 'Pembeli');
             $sheet->setCellValue('D1', 'Nominal');
             $sheet->setCellValue('E1', 'Tanggal Transaksi');
-
+            $sheet->setCellValue('F1', 'Kode Barang');
+            $sheet->setCellValue('G1', 'Nama Barang');
+            $sheet->setCellValue('H1', 'Qty Beli');
+            
             // Isi data
             $row = 2;
             $x = 1;
@@ -79,6 +82,9 @@
                 $sheet->setCellValue('C' . $row, $customer);
                 $sheet->setCellValue('D' . $row, $total);
                 $sheet->setCellValue('E' . $row, $date);
+                $sheet->setCellValue('F' . $row, $d->kode_barang);
+                $sheet->setCellValue('G' . $row, $d->nama_barang);
+                $sheet->setCellValue('H' . $row, $d->qty);
                 $row++;
             }
 
@@ -95,6 +101,25 @@
             $writer->save('php://output');
             exit;
         }
+
+        public function getDetailTransaksi() {
+            $id = $this->input->post('id');
+            if (!$id) {
+                echo json_encode(["error" => "ID tidak ditemukan"]);
+                return;
+            }
+            $data = $this->lap->lap_det_trans($id)->result();
+            // Debugging: Pastikan data dari query benar
+            if (!$data) {
+                echo json_encode(["error" => "Data tidak ditemukan"]);
+                return;
+            }
+            // Pastikan output JSON valid
+            header('Content-Type: application/json');
+            echo json_encode($data);
+        }
+        
+        
 
         function lap_iuran()  {
             $data = [

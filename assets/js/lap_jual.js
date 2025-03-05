@@ -41,6 +41,44 @@ $(document).ready(function() {
         window.location.href = BASE_URL + "Laporan/export_excel";
     });
 
+    $(document).on("click", ".btn-detail", function() {
+        let idTransaksi = $(this).data("id"); // Ambil ID transaksi
+        
+        // Debugging: Pastikan ID transaksi terbaca
+        console.log("ID Transaksi: ", idTransaksi);
+        
+        // Kosongkan tabel sebelum diisi ulang
+        $("#modalDetailBody").html("");
+
+        $.ajax({
+            url: BASE_URL + "Laporan/getDetailTransaksi",
+            type: "POST",
+            data: {id: idTransaksi},
+            dataType: "json",
+            success: function(response) {
+                console.log("Response dari server:", response); // Debugging
+                
+                if (response.length > 0) {
+                    response.forEach(function(item) {
+                        let row = `<tr>
+                            <td>${item.kode_barang}</td>
+                            <td>${item.nama_barang}</td>
+                            <td>${item.qty}</td>
+                        </tr>`;
+                        $("#modalDetailBody").append(row);
+                    });
+                } else {
+                    $("#modalDetailBody").html("<tr><td colspan='3' class='text-center'>Tidak ada data</td></tr>");
+                }
+                $("#detailModal").modal("show");
+            },
+            error: function(xhr, status, error) {
+                console.log("AJAX Error: ", xhr.responseText); // Debugging
+                alert("Terjadi kesalahan saat mengambil data.");
+            }
+        });
+    });
+
 });
 
 function tableLapTrans(date_start, date_end) {
