@@ -32,17 +32,19 @@
         <!-- Outer Row -->
         <div class="row justify-content-center mt-5 mb-3">
 
-            <div class="col-xl-5 col-lg-6 col-md-9">
+            <div class="col-xl-5 col-lg-6 col-md-9" style="margin-top: 130px">
 
                 <div class="card o-hidden border-0 shadow-lg my-5">
+
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
+
                             <!-- <div class="col-lg-6 d-none d-lg-block bg-login-image"></div> -->
                             <div class="col-lg-12">
                                 <div class="p-5">
-                                    <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome to Apps !</h1>
+                                    <div class="text-center" style="margin-bottom: 7px; margin-top: 0px">
+                                        <img src="<?= base_url() ?>assets/image/login.png" alt="" width="307" height="112" srcset="">
                                     </div>
                                     <form class="user" method="POST" action="<?= base_url('Login/login_form') ?>">
                                         <div class="form-group">
