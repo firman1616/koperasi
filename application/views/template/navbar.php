@@ -33,7 +33,7 @@
             
             <?php if ($akses == 1 || $akses == 2 ) { ?>
             <li class="nav-item">
-                <a class="nav-link" href="<?= site_url('Transaksi') ?>">
+                <a class="nav-link" href="<?= site_url('#') ?>">
                     <i class="fas fa-fw fa-arrow-left"></i>
                     <span>Pengeluaran</span></a>
             </li>
