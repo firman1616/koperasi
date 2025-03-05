@@ -32,7 +32,7 @@
         <!-- Outer Row -->
         <div class="row justify-content-center mt-5 mb-3">
 
-            <div class="col-xl-5 col-lg-6 col-md-9" style="margin-top: 130px">
+            <div class="col-xl-5 col-lg-6 col-md-9" style="margin-top: 40px">
 
                 <div class="card o-hidden border-0 shadow-lg my-5">
 

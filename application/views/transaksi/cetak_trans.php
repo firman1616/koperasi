@@ -59,7 +59,7 @@ foreach ($header as $row) {
 <body>
 <!--  <h3>Koperasi Sejahtera Sekali</h3>-->
   <img src="<?= base_url('assets/image/nota.png') ?>" width="163" height="56">
-<p style="margin-top: 0px">Jl. Pahlawan Kesiangan No 10<br>Jakarta Barat
+<p style="margin-top: 0px">Jl. Kb. Dua Ratus, RT.3/RW.6, Kamal, Kec. Kalideres<br>Kota Jakarta Barat
   </p>
   <center>
     <table width="30%" style="border-top: 1px dashed black; border-bottom: 1px dashed black; border-left: none; border-right: none; border-collapse: collapse;">
@@ -69,9 +69,9 @@ foreach ($header as $row) {
           <td width="3%">:</td>
           <td width="37%"><?= $no_trans ?></td>
           <td width="9%">&nbsp;</td>
-          <td width="12%">Kasir</td>
+          <!-- <td width="12%">Kasir</td>
           <td width="3%">:</td>
-          <td width="28%">Nama Kasir</td>
+          <td width="28%">Nama Kasir</td> -->
         </tr>
       </tbody>
     </table>
