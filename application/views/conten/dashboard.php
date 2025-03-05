@@ -64,6 +64,7 @@
             </div>
 
             <!-- Pending Requests Card Example -->
+            <?php if ($akses == 1 || $akses == 3 ) { ?>
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
                     <a href="<?= site_url('Transaksi/trans_tempo') ?>">
@@ -82,6 +83,7 @@
                     </a>
                 </div>
             </div>
+            <?php } ?>
         </div>
 
     </div>

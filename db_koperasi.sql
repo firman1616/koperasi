@@ -302,10 +302,10 @@ CREATE TABLE `tbl_keuangan`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `tbl_level`;
 CREATE TABLE `tbl_level`  (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `level_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  `id` int,
+  `level_name` varchar(100),
+  PRIMARY KEY (`id`)
+);
 
 -- ----------------------------
 -- Records of tbl_level
@@ -389,13 +389,13 @@ INSERT INTO `tbl_uom` VALUES (8, NULL, NULL);
 DROP TABLE IF EXISTS `tbl_user`;
 CREATE TABLE `tbl_user`  (
   `id` int NOT NULL AUTO_INCREMENT,
-  `nama_user` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `password` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
-  `level` int NULL DEFAULT NULL,
-  `status` int NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  `nama_user` varchar(100),
+  `username` varchar(100),
+  `password` text,
+  `level` int,
+  `status` int,
+  PRIMARY KEY (`id`)
+)
 
 -- ----------------------------
 -- Records of tbl_user
