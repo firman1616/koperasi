@@ -19,6 +19,7 @@ class M_User extends CI_Model
     from
       tbl_user tu
     left join tbl_level tl on
-      tl.id = tu.level")->result();
+      tl.id = tu.level
+    where tu.level != '1'")->result();
   }
 }

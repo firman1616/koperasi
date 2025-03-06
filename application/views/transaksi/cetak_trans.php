@@ -62,7 +62,7 @@ foreach ($header as $row) {
 <p style="margin-top: 0px">Jl. Kb. Dua Ratus, RT.3/RW.6, Kamal, Kec. Kalideres<br>Kota Jakarta Barat
   </p>
   <center>
-    <table width="30%" style="border-top: 1px dashed black; border-bottom: 1px dashed black; border-left: none; border-right: none; border-collapse: collapse;">
+    <table width="27%" style="border-top: 1px dashed black; border-bottom: 1px dashed black; border-left: none; border-right: none; border-collapse: collapse;">
       <tbody>
         <tr>
           <td width="8%">Ref</td>
@@ -76,7 +76,7 @@ foreach ($header as $row) {
       </tbody>
     </table>
 
-    <table width="30%">
+    <table width="27%">
       <tbody>
         <?php 
         foreach ($detail as $row) { ?>
@@ -91,7 +91,7 @@ foreach ($header as $row) {
       </tbody>
     </table>
 
-    <table width="30%">
+    <table width="27%">
       <tbody>
         <tr>
 			<td width="30%">&nbsp;</td>

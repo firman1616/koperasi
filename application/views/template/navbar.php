@@ -11,7 +11,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                 <img src="<?= base_url('assets/image/ksua.png') ?>" alt="Logo" style="width: 40px; height: 40px;">
                 </div>
-                <div class="sidebar-brand-text mx-3">KOPERASI </div>
+                <div class="sidebar-brand-text mx-3">KSU ASY-SYATHIBIYYAH </div>
             </a>
 
             <!-- Divider -->
@@ -27,19 +27,20 @@
             <li class="nav-item">
                 <a class="nav-link" href="<?= site_url('Transaksi') ?>">
                     <i class="fas fa-fw fa-exchange-alt"></i>
-                    <span>Transaksi</span></a>
+                    <span>POS Penjualan</span></a>
             </li>
             <?php } ?>
-            
+        
+            <!--
             <?php if ($akses == 1 || $akses == 2 ) { ?>
             <li class="nav-item">
                 <a class="nav-link" href="<?= site_url('#') ?>">
                     <i class="fas fa-fw fa-arrow-left"></i>
                     <span>Pengeluaran</span></a>
             </li>
-            <?php } ?>
+            <?php } ?> -->
 
-            <?php if ($akses == 1 || $akses == 3 ) { ?>
+            <?php if ($akses == 1 || $akses == 3 || $akses == 2 ) { ?>
             <li class="nav-item">
                 <a class="nav-link" href="<?= site_url('Peserta/iuran') ?>">
                     <i class="fas fa-fw fa-user"></i>

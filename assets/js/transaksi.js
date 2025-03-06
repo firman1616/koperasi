@@ -313,25 +313,25 @@ $(document).ready(function () {
             success: function (response) {
                 console.log("Response dari server:", response); // Debugging
 
-                // alert("Pembayaran berhasil! Kembalian: Rp. " + kembalian.toLocaleString("id-ID"));
+                alert("Pembayaran berhasil! Kembalian: Rp. " + kembalian.toLocaleString("id-ID"));
                 if (id_akhir) { // Cek apakah id_akhir tersedia di form
-                    var printWindow = window.open(BASE_URL + "Transaksi/cetak_struk/" + id_akhir, "_blank");
+                    var printWindow = window.open(BASE_URL + "Transaksi/cetak_struk/" + id_akhir);
 
                     // Tunggu hingga halaman cetak terbuka, lalu jalankan autoPrint
-                    if (printWindow) {
-                        printWindow.onload = function () {
-                            printWindow.print();
-                            setTimeout(() => {
-                                printWindow.close(); // Tutup tab setelah cetak selesai
-                            }, 1000);
-                        };
-                    } else {
-                        alert("Pop-up terblokir! Izinkan pop-up untuk mencetak struk.");
-                    }
+                    // if (printWindow) {
+                    //     printWindow.onload = function () {
+                    //         printWindow.print();
+                    //         setTimeout(() => {
+                    //             printWindow.close(); // Tutup tab setelah cetak selesai
+                    //         }, 1000);
+                    //     };
+                    // } else {
+                    //     alert("Pop-up terblokir! Izinkan pop-up untuk mencetak struk.");
+                    // }
                 } else {
                     alert("ID transaksi tidak ditemukan!");
                 }
-                // location.reload();
+                location.reload();
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
