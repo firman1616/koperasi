@@ -318,16 +318,16 @@ $(document).ready(function () {
                     var printWindow = window.open(BASE_URL + "Transaksi/cetak_struk/" + id_akhir);
 
                     // Tunggu hingga halaman cetak terbuka, lalu jalankan autoPrint
-                    // if (printWindow) {
-                    //     printWindow.onload = function () {
-                    //         printWindow.print();
-                    //         setTimeout(() => {
-                    //             printWindow.close(); // Tutup tab setelah cetak selesai
-                    //         }, 1000);
-                    //     };
-                    // } else {
-                    //     alert("Pop-up terblokir! Izinkan pop-up untuk mencetak struk.");
-                    // }
+                    if (printWindow) {
+                        printWindow.onload = function () {
+                            printWindow.print();
+                            setTimeout(() => {
+                                printWindow.close(); // Tutup tab setelah cetak selesai
+                            }, 1000);
+                        };
+                    } else {
+                        alert("Pop-up terblokir! Izinkan pop-up untuk mencetak struk.");
+                    }
                 } else {
                     alert("ID transaksi tidak ditemukan!");
                 }
@@ -413,11 +413,7 @@ $(document).ready(function () {
                 alert("Terjadi kesalahan dalam proses pembayaran!");
             }
         });
-    });
-    
-    
-    
-    
+    });   
 });
 
 function autofill() {

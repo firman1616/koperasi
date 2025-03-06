@@ -130,3 +130,10 @@ Tgl. <?= date('d-m-Y',strtotime($tgl)) ?> <br>
 </body>
 
 </html>
+
+
+<script>
+    window.onload = function () {
+        window.print();
+    };
+</script>

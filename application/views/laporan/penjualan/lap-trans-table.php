@@ -32,6 +32,10 @@
                         data-id="<?= $row->id ?>">
                         <i class="fa fa-list"></i>
                     </button>
+                    <!-- <a href="javascript:void(0);" onclick="printStruk('<?= site_url('Transaksi/cetak_struk/' . $row->id) ?>')" class="btn btn-primary" title="Cetak Struk">
+                        <i class="fa fa-print"></i>
+                    </a> -->
+                    <a href="<?= site_url('Transaksi/cetak_struk/' . $row->id) ?>" class="btn btn-primary" title="cetak struk"><i class="fa fa-print"></i></a>
                 </td>
             </tr>
         <?php }
