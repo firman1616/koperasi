@@ -8,6 +8,8 @@ foreach ($header as $row) {
   $nama_cus = $row->name;
   $bayar = $row->uang_bayar;
   $kembali = $row->uang_kembali;
+  $kasir = $row->kasir;
+  $met_bayar = $row->metode_bayar;
 }
 ?>
 
@@ -21,7 +23,7 @@ foreach ($header as $row) {
   <style>
     body {
       font-family: monospace;
-      text-align: center;
+/*      text-align: center;*/
       margin: 0;
       /* padding: 0; */
       align-content: center;
@@ -58,17 +60,42 @@ foreach ($header as $row) {
 
 <body>
 <!--  <h3>Koperasi Sejahtera Sekali</h3>-->
-  <img src="<?= base_url('assets/image/nota.png') ?>" width="163" height="56">
-<p style="margin-top: 0px">Jl. Kb. Dua Ratus, RT.4/RW.6 <br> Kec. Kalideres, Kota Jakarta Barat
-  </p>
-  <center>
+<img src="<?= base_url('assets/image/nota.png') ?>" width="163" height="56" style="align-content: center">
+<p style="margin-top: 0px; text-align: ">Jl. Kb. Dua Ratus, RT.4/RW.6 <br> 
+Kec. Kalideres, Kota Jakarta Barat
+</p>
+  
     <table width="27%" style="border-top: 1px dashed black; border-bottom: 1px dashed black; border-left: none; border-right: none; border-collapse: collapse;">
       <tbody>
         <tr>
-          <td width="8%">Ref</td>
+          <td width="19%">No</td>
+          <td width="5%">:</td>
+          <td width="54%"><?= $no_trans ?></td>
+          <td width="22%">&nbsp;</td>
+          <!-- <td width="12%">Kasir</td>
           <td width="3%">:</td>
-          <td width="37%"><?= $no_trans ?></td>
-          <td width="9%">&nbsp;</td>
+          <td width="28%">Nama Kasir</td> -->
+        </tr>
+		  <tr>
+          <td width="19%">Kasir</td>
+          <td width="5%">:</td>
+          <td colspan="2"><?= $kasir ?></td>
+          <!-- <td width="12%">Kasir</td>
+          <td width="3%">:</td>
+          <td width="28%">Nama Kasir</td> -->
+        </tr>
+		  <tr>
+          <td width="19%">Pel</td>
+          <td width="5%">:</td>
+          <td colspan="2">
+            <?php 
+            if ($met_bayar =='1') {
+              echo "Cash";
+            }else {
+              echo "Tempo";
+            }
+            ?>
+          </td>
           <!-- <td width="12%">Kasir</td>
           <td width="3%">:</td>
           <td width="28%">Nama Kasir</td> -->
@@ -81,35 +108,37 @@ foreach ($header as $row) {
         <?php 
         foreach ($detail as $row) { ?>
         <tr>
-          <td width="51%"><?= $row->nama_barang ?></td>
+          <td width="51%"><?= $row->nama_barang ?><br><p><?= number_format($row->total_harga, 0, ',', '.') ?> &nbsp;&nbsp;&nbsp;&nbsp; x<?= $row->qty ?>  &nbsp;&nbsp;&nbsp; <?= number_format($row->qty * $row->total_harga, 0, ',', '.') ?></p></td>
+<!--
           <td width="6%"><?= $row->qty ?></td>
           <td width="21%"><?= $row->total_harga ?></td>
-          <td width="22%"><?= number_format($row->qty * $row->total_harga) ?></td>
+          <td width="22%"><?= number_format($row->qty * $row->total_harga, 0, ',', '.') ?></td>
+-->
         </tr>
         <?php }
         ?>
       </tbody>
-    </table>
+</table>
 
     <table width="27%">
       <tbody>
         <tr>
-			<td width="30%">&nbsp;</td>
-          <td width="45%" style="border-top: 1px dashed black; border-bottom: 1px dashed black;">Total Belanja</td>
-      <td width="3%" style="border-top: 1px dashed black; border-bottom: 1px dashed black;">:</td>
-      <td width="22%" style="border-top: 1px dashed black; border-bottom: 1px dashed black;"><?= number_format($total) ?></td>
+			<td width="49%"><span>Total Belanja</span></td>
+          <td width="5%">&nbsp;</td>
+      <td width="46%" ><?= number_format($total , 0, ',', '.') ?></td>
+<!--      <td width="22%" style="border-top: 1px dashed black; border-bottom: 1px dashed black;">&nbsp;</td>-->
         </tr>
         <tr>
-			<td>&nbsp;</td>
-          <td>Tunai</td>
-          <td>:</td>
-          <td><?= number_format($bayar) ?></td>
+			<td>Tunai</td>
+          <td align="center">=</td>
+          <td style="border-bottom: 1px dashed black;"><?= number_format($bayar , 0, ',', '.') ?></td>
+<!--          <td>&nbsp;</td>-->
         </tr>
         <tr>
-		<td>&nbsp;</td>
-          <td style="border-bottom: 1px dashed black;">Kembalian</td>
-      <td style="border-bottom: 1px dashed black;">:</td>
-      <td style="border-bottom: 1px dashed black;"><?= number_format($kembali) ?></td>
+		<td><span >Kembalian</span></td>
+          <td >&nbsp;</td>
+      <td><?= number_format($kembali, 0, ',', '.') ?></td>
+<!--      <td style="border-bottom: 1px dashed black;">&nbsp;</td>-->
         </tr>
       </tbody>
     </table>
@@ -124,9 +153,9 @@ Tgl. <?= date('d-m-Y',strtotime($tgl)) ?> <br>
     }
     ?>
 	  <br>
-	  Terimakasih Sudah Berbelanja
+	  Barang yang telah di beli <br> tidak dapat di kembalikan.
 
-  </center>
+  
 </body>
 
 </html>

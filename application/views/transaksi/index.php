@@ -76,6 +76,7 @@
                     <div class="nota">Nota: <?= $kd_trans ?></div>
                     <input type="hidden" name="kd_trans" id="kd_trans" value="<?= $kd_trans ?>">
                     <input type="hidden" name="id_akhir" id="id_akhir" value="<?= $id_akhir ?>">
+                    <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
                     <div class="total-harga">Rp. 0,-</div>
                 </div>
             </div>

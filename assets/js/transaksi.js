@@ -274,6 +274,7 @@ $(document).ready(function () {
         var totalHarga = parseFloat($("#total_bayar").data("total")) || 0;
         var anggotaID = $("#anggota").val();
         var id_akhir = $("#id_akhir").val(); // Ambil ID transaksi dari form
+        var id_user = $("#id_user").val();
 
         if (!tanggal || !kd_trans || uangDibayarkan <= 0) {
             alert("Silakan isi semua data pembayaran!");
@@ -307,7 +308,8 @@ $(document).ready(function () {
                 diskon: diskon,
                 total_setelah_diskon: totalSetelahDiskon,
                 anggota_id: anggotaID,
-                barang: barang
+                barang: barang,
+                id_user: id_user
             },
             dataType: "json",
             success: function (response) {

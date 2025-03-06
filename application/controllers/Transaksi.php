@@ -19,6 +19,7 @@ class Transaksi extends CI_Controller
         $data = [
             'akses' => $this->session->userdata('level'),
             'name' => $this->session->userdata('nama'),
+            'id_user' => $this->session->userdata('id'),
             'title' => 'Data Transaksi',
             'subtitle' => 'List',
             'conten' => 'transaksi/index',
@@ -89,6 +90,7 @@ class Transaksi extends CI_Controller
         $anggota_id = $this->input->post('anggota_id');
         $extra_value = $this->input->post('extra_value');
         $metode_bayar = $this->input->post('metode_bayar');
+        $kasir = $this->input->post('id_user');
 
         // Data transaksi utama
         $data_transaksi = [
@@ -100,7 +102,8 @@ class Transaksi extends CI_Controller
             'tgl_transaksi' => $tanggal,
             'pelanggan_id' => $anggota_id,
             'lainnya' => ($anggota_id == 117) ? $extra_value : null,
-            'metode_bayar' => $metode_bayar
+            'metode_bayar' => $metode_bayar,
+            'kasir_id' => $kasir,
         ];
 
         // Ambil data barang dari frontend
