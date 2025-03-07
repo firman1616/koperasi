@@ -148,8 +148,10 @@ $(document).ready(function () {
 
                     if (selectedID === "117") {
                         $("#formTambahan").show();  // Tampilkan form tambahan
+                        // $("#formTambahan").prop("required", true);
                     } else {
                         $("#formTambahan").hide();  // Sembunyikan jika bukan ID 117
+                        // $("#formTambahan").prop("required", false); // Hapus kewajiban input
                     }
                 });
             },
@@ -198,6 +200,13 @@ $(document).ready(function () {
         //     alert("Silakan isi semua data pembayaran!");
         //     return;
         // }
+
+        if (anggotaID === "117" && extraFieldValue === "") {
+            alert("Silakan isi 'Pelanggan Lainnya' sebelum melanjutkan pembayaran!");
+            $("#extraField").focus();
+            return;
+        } 
+
         if (!tanggal || !kd_trans) {
             alert("Silakan isi semua data pembayaran!");
             return;
