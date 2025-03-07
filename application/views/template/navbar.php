@@ -49,7 +49,7 @@
             <?php } ?>
 
 
-            <?php if ($akses == 1 || $akses == 2) { ?>
+            <?php if ($akses == 1 || $akses == 2 || $akses == 3) { ?>
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#laporan"
                         aria-expanded="true" aria-controls="laporan">
@@ -58,7 +58,7 @@
                     </a>
                     <div id="laporan" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <?php if ($akses == 1 || $akses == 3) { ?>
+                            <?php if ($akses == 1 || $akses == 3 || $akses == 2) { ?>
                                 <a class="collapse-item" href="<?= site_url('Laporan') ?>">Laporan Penjualan</a>
                             <?php } ?>
                             <?php if ($akses == 1 || $akses == 3) { ?>
