@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Peserta extends CI_Controller {
+class Peserta extends CI_Controller
+{
 
     public function __construct()
     {
@@ -12,40 +13,42 @@ class Peserta extends CI_Controller {
         // $this->load->library('Pdf');
         $this->load->model('M_anggota', 'anggota');
     }
-	
-	public function index()
-	{
-		$data = [
+
+    public function index()
+    {
+        $data = [
             'akses' => $this->session->userdata('level'),
             'name' => $this->session->userdata('nama'),
-			'title' => 'Data Peserta',
+            'title' => 'Data Peserta',
             'subtitle' => 'List',
-			'conten' => 'peserta/index',
+            'conten' => 'peserta/index',
             'footer_js' => array('assets/js/peserta.js')
-		];
-		$this->load->view('template/conten',$data);
-	}
+        ];
+        $this->load->view('template/conten', $data);
+    }
 
     function tablePeserta()
     {
         $data['anggota'] = $this->anggota->get_data()->result();
 
-        echo json_encode($this->load->view('peserta/peserta-table',$data,false));
+        echo json_encode($this->load->view('peserta/peserta-table', $data, false));
     }
 
-    function vtambah() {
+    function vtambah()
+    {
         $data = [
             'akses' => $this->session->userdata('level'),
             'name' => $this->session->userdata('nama'),
-			'title' => 'Tambah Data Peserta',
+            'title' => 'Tambah Data Peserta',
             'subtitle' => 'Form Tambah Data',
-			'conten' => 'peserta/tambah-data',
+            'conten' => 'peserta/tambah-data',
             // 'footer_js' => array('assets/js/peserta.js')
-		];
-		$this->load->view('template/conten',$data);
+        ];
+        $this->load->view('template/conten', $data);
     }
 
-    function tambah_data() {
+    function tambah_data()
+    {
         $table = 'tbl_anggota';
         $data = [
             'no_agt' => $this->input->post('no_anggota'),
@@ -61,24 +64,26 @@ class Peserta extends CI_Controller {
             'kongsi3' => $this->input->post('kongsi3'),
             'no_telp' => $this->input->post('phone')
         ];
-        $this->m_data->simpan_data($table,$data);
+        $this->m_data->simpan_data($table, $data);
         redirect('Peserta');
     }
 
-    function vedit($id)  {
+    function vedit($id)
+    {
         $data = [
             'akses' => $this->session->userdata('level'),
             'name' => $this->session->userdata('nama'),
-			'title' => 'Edit Data',
+            'title' => 'Edit Data',
             'subtitle' => 'List',
-			'conten' => 'peserta/edit-data',
+            'conten' => 'peserta/edit-data',
             'edit' => $this->m_data->get_data_by_id('tbl_anggota', array('id' => $id))
             // 'footer_js' => array('assets/js/peserta.js')
-		];
-		$this->load->view('template/conten',$data);
+        ];
+        $this->load->view('template/conten', $data);
     }
 
-    function update_data($id) {
+    function update_data($id)
+    {
         $table = 'tbl_anggota';
         $data = [
             'no_agt' => $this->input->post('no_anggota'),
@@ -95,58 +100,75 @@ class Peserta extends CI_Controller {
             'no_telp' => $this->input->post('phone')
         ];
         $where = array('id' => $id);
-        $this->m_data->update_data($table,$data,$where);
+        $this->m_data->update_data($table, $data, $where);
         redirect('Peserta');
     }
 
-    function delete_data($id)  {
+    function delete_data($id)
+    {
         $table = 'tbl_anggota';
         $where = array('id' => $id);
-        $this->m_data->hapus_data($table,$where);
+        $this->m_data->hapus_data($table, $where);
         redirect('Peserta');
     }
 
-    public function simpanIuran() {
+    public function simpanIuran()
+    {
         $anggota_id = $this->input->post('anggota_id');
-    
+
         if (!$anggota_id) {
             echo json_encode(["message" => "ID Anggota tidak ditemukan"]);
             return;
         }
-    
+
         $data_iuran = [
             'anggota_id' => $anggota_id,
             'nominal' => 200000,
             'date' => date('Y-m-d H:i:s')
         ];
-    
+
         // Insert data ke tbl_iuran
         $this->db->insert('tbl_iuran', $data_iuran);
-    
+
         // Update status iuran di tbl_anggota menjadi 2
         $this->db->where('id', $anggota_id);
         $this->db->update('tbl_anggota', ['status_iuran' => 2]);
-    
+
         echo json_encode(["message" => "Iuran berhasil disimpan"]);
     }
 
-    function iuran() {
+    function iuran()
+    {
         $data = [
             'akses' => $this->session->userdata('level'),
             'name' => $this->session->userdata('nama'),
-			'title' => 'Iuran',
+            'title' => 'Iuran',
             'subtitle' => 'List',
-			'conten' => 'iuran/index',
+            'conten' => 'iuran/index',
             'footer_js' => array('assets/js/peserta.js')
-		];
-		$this->load->view('template/conten',$data);
+        ];
+        $this->load->view('template/conten', $data);
     }
-    
+
     function tableIuran()
     {
         $data['iuran'] = $this->anggota->get_data()->result();
 
-        echo json_encode($this->load->view('iuran/iuran-table',$data,false));
+        echo json_encode($this->load->view('iuran/iuran-table', $data, false));
     }
-    
+
+    public function update_iuran()
+{
+    log_message('debug', 'Request diterima: ' . json_encode($this->input->post()));
+    $anggota_id = $this->input->post('anggota_id');
+    $periode = $this->input->post('periode');
+    $date = $this->input->post('date'); // Waktu real-time dari PC pengguna
+
+    if ($this->anggota->update_iuran($anggota_id, $periode, $date)) {
+        echo json_encode(["status" => "success"]);
+    } else {
+        echo json_encode(["status" => "error"]);
+    }
+}
+
 }

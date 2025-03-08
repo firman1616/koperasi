@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     tablePeserta();
     tableIuran();
 });
@@ -32,33 +32,70 @@ function tableIuran() {
 }
 
 
-// Event klik tombol "iuran"
-$(document).on('click', '.iuran-btn', function() {
-    var anggota_id = $(this).data('id'); // Ambil ID anggota dari atribut data-id
-    var confirmPayment = confirm("Apakah sudah bayar?");
+$(document).on("click", ".iuran-btn", function () {
+    var anggotaId = $(this).data("id");
+    var periode = new Date().toLocaleString('id-ID', { month: '2-digit', year: '2-digit' }).replace('/', '');
 
-    if (confirmPayment) {
-        $.ajax({
-            url: BASE_URL + "Peserta/simpanIuran",
-            type: "POST",
-            data: {
-                anggota_id: anggota_id
-            },
-            success: function(response) {
-                alert("Iuran sudah dibayar"); // Menampilkan alert setelah klik
-                setTimeout(tableIuran, 100); // Refresh otomatis setelah klik
-            },
-            error: function() {
-                alert("Terjadi kesalahan, coba lagi!");
-            }
-        });
-    } else {
-        alert("Pembayaran belum dikonfirmasi.");
+    // Ambil waktu dari PC dalam format Y-m-d H:i:s
+    var now = new Date();
+    var dateTime = now.getFullYear() + '-' +
+        ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
+        ('0' + now.getDate()).slice(-2) + ' ' +
+        ('0' + now.getHours()).slice(-2) + ':' +
+        ('0' + now.getMinutes()).slice(-2) + ':' +
+        ('0' + now.getSeconds()).slice(-2);
+
+    console.log("Button clicked! ID:", anggotaId, "Periode:", periode, "DateTime:", dateTime);
+    var confirmAction = confirm("Apakah sudah bayar?");
+    if (!confirmAction) {
+        return; // Jika user memilih "Batal", tidak melanjutkan request
     }
+
+    $.ajax({
+        url: BASE_URL + "Peserta/update_iuran",
+        type: "POST",
+        data: { anggota_id: anggotaId, periode: periode, date: dateTime },
+        dataType: "json",
+        success: function (response) {
+            if (response.status == "success") {
+                alert("Iuran berhasil dibayar!");
+            } else {
+                alert("Gagal memperbarui iuran.");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+        }
+    });
 });
 
+// Event klik tombol "iuran"
+// $(document).on('click', '.iuran-btn', function() {
+//     var anggota_id = $(this).data('id'); // Ambil ID anggota dari atribut data-id
+//     var confirmPayment = confirm("Apakah sudah bayar?");
 
-$(document).on('click', '.delete-btn', function(event) {
+//     if (confirmPayment) {
+//         $.ajax({
+//             url: BASE_URL + "Peserta/simpanIuran",
+//             type: "POST",
+//             data: {
+//                 anggota_id: anggota_id
+//             },
+//             success: function(response) {
+//                 alert("Iuran sudah dibayar"); // Menampilkan alert setelah klik
+//                 setTimeout(tableIuran, 100); // Refresh otomatis setelah klik
+//             },
+//             error: function() {
+//                 alert("Terjadi kesalahan, coba lagi!");
+//             }
+//         });
+//     } else {
+//         alert("Pembayaran belum dikonfirmasi.");
+//     }
+// });
+
+
+$(document).on('click', '.delete-btn', function (event) {
     event.preventDefault(); // Mencegah link langsung dijalankan
 
     var url = $(this).attr('href'); // Ambil URL dari href

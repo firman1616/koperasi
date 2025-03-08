@@ -14,13 +14,9 @@
                 <td><?= $x++; ?></td>
                 <td><?= $row->name ?></td>
                 <td>
-                    <?php
-                    if ($row->status_iuran == '1') { ?>
-                        <button type="button" class="btn btn-primary iuran-btn" title="iuran" data-id="<?= $row->id ?>">
-                            <i class="fa fa-coins"></i>
-                        </button>
-                    <?php }
-                    ?>
+                    <button type="button" class="btn btn-primary iuran-btn" title="iuran" data-id="<?= $row->id ?>">
+                        <i class="fa fa-coins"></i>
+                    </button>
                 </td>
             </tr>
         <?php  }
