@@ -97,7 +97,7 @@ foreach ($header as $row) {
         <?php
         foreach ($detail as $row) { ?>
           <tr>
-            <td width="51%"><?= $row->nama_barang ?> <br><?= number_format($row->total_harga, 0, ',', '.') ?> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; x<?= $row->qty ?> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<?= number_format($row->qty * $row->total_harga, 0, ',', '.') ?></td>
+            <td width="51%"><b><?= $row->nama_barang ?></b> <br><?= number_format($row->total_harga, 0, ',', '.') ?> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; x<?= $row->qty ?> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; <?= number_format($row->qty * $row->total_harga, 0, ',', '.') ?></td>
             <!--
           <td width="6%"><?= $row->qty ?></td>
           <td width="21%"><?= $row->total_harga ?></td>
@@ -109,31 +109,28 @@ foreach ($header as $row) {
       </tbody>
     </table>
 
-    <table width="27%">
+    <table width="27%" style="font-style: bold">
       <tbody>
         <tr>
           <td width="38%">Total Belanja</td>
           <td width="4%" align="center">&nbsp;</td>
-          <td width="58%"><?= number_format($total, 0, ',', '.') ?></td>
+          <td width="58%"><b><?= number_format($total, 0, ',', '.') ?></b></td>
 
         </tr>
         <tr>
           <td>Tunai</td>
           <td align="center">=</td>
-          <td><?= number_format($bayar, 0, ',', '.') ?></td>
+          <td><b><?= number_format($bayar, 0, ',', '.') ?></b></td>
 
         </tr>
         <tr>
           <td>Kembalian</td>
           <td align="center">&nbsp;</td>
-          <td style="border-bottom: 1px dashed black;"><?= number_format($kembali, 0, ',', '.') ?></td>
+          <td style="border-bottom: 1px dashed black;"><b><?= number_format($kembali, 0, ',', '.') ?></b></td>
 
         </tr>
       </tbody>
     </table>
-    <br>
-    Barang yang telah di beli <br>
-    tidak dapat dikembalikan.
     <br>
     Terimakasih Sudah Berbelanja di<br>
 	 KSU Asy-Syathibiyyah
