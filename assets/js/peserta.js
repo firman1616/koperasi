@@ -34,7 +34,7 @@ function tableIuran() {
 
 $(document).on("click", ".iuran-btn", function () {
     var anggotaId = $(this).data("id");
-    var periode = new Date().toLocaleString('id-ID', { month: '2-digit', year: '2-digit' }).replace('/', '');
+    var periode = $(this).data("periode"); // Ambil periode dari tombol
 
     // Ambil waktu dari PC dalam format Y-m-d H:i:s
     var now = new Date();
@@ -45,10 +45,10 @@ $(document).on("click", ".iuran-btn", function () {
         ('0' + now.getMinutes()).slice(-2) + ':' +
         ('0' + now.getSeconds()).slice(-2);
 
-    console.log("Button clicked! ID:", anggotaId, "Periode:", periode, "DateTime:", dateTime);
-    var confirmAction = confirm("Apakah sudah bayar?");
+    // Konfirmasi sebelum mengirim request
+    var confirmAction = confirm("Apakah Anda yakin ingin membayar iuran untuk periode " + periode + "?");
     if (!confirmAction) {
-        return; // Jika user memilih "Batal", tidak melanjutkan request
+        return;
     }
 
     $.ajax({
@@ -58,7 +58,7 @@ $(document).on("click", ".iuran-btn", function () {
         dataType: "json",
         success: function (response) {
             if (response.status == "success") {
-                alert("Iuran berhasil dibayar!");
+                alert("Iuran periode " + periode + " berhasil dibayar!");
             } else {
                 alert("Gagal memperbarui iuran.");
             }
@@ -68,6 +68,7 @@ $(document).on("click", ".iuran-btn", function () {
         }
     });
 });
+
 
 // Event klik tombol "iuran"
 // $(document).on('click', '.iuran-btn', function() {

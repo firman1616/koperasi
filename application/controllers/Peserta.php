@@ -150,25 +150,52 @@ class Peserta extends CI_Controller
         $this->load->view('template/conten', $data);
     }
 
+    public function get_iuran_data()
+    {
+        $this->db->select("a.id, a.name, b.periode, b.status");
+        $this->db->from("tbl_anggota a");
+        $this->db->join("tbl_iuran b", "a.id = b.anggota_id", "left");
+        $query = $this->db->get();
+        $result = $query->result();
+
+        // Ubah hasil query menjadi format yang bisa digunakan di View
+        $iuran_data = [];
+        foreach ($result as $row) {
+            if (!isset($iuran_data[$row->id])) {
+                $iuran_data[$row->id] = (object) [
+                    'id' => $row->id,
+                    'name' => $row->name,
+                    'iuran_status' => [] // Simpan status pembayaran
+                ];
+            }
+            if ($row->periode) {
+                $iuran_data[$row->id]->iuran_status[$row->periode] = $row->status;
+            }
+        }
+
+        return array_values($iuran_data);
+    }
+
+
     function tableIuran()
     {
-        $data['iuran'] = $this->anggota->get_data()->result();
+        $data['iuran'] = $this->get_iuran_data();
+        // $this->anggota->get_data()->result();
 
         echo json_encode($this->load->view('iuran/iuran-table', $data, false));
     }
 
     public function update_iuran()
-{
-    log_message('debug', 'Request diterima: ' . json_encode($this->input->post()));
-    $anggota_id = $this->input->post('anggota_id');
-    $periode = $this->input->post('periode');
-    $date = $this->input->post('date'); // Waktu real-time dari PC pengguna
+    {
+        log_message('debug', 'Request diterima: ' . json_encode($this->input->post()));
+        $anggota_id = $this->input->post('anggota_id');
+        $periode = $this->input->post('periode');
+        $date = $this->input->post('date'); // Waktu real-time dari PC pengguna
 
-    if ($this->anggota->update_iuran($anggota_id, $periode, $date)) {
-        echo json_encode(["status" => "success"]);
-    } else {
-        echo json_encode(["status" => "error"]);
+        if ($this->anggota->update_iuran($anggota_id, $periode, $date)) {
+            echo json_encode(["status" => "success"]);
+        } else {
+            echo json_encode(["status" => "error"]);
+        }
     }
-}
-
 }

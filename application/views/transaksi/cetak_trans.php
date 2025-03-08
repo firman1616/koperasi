@@ -62,20 +62,20 @@ foreach ($header as $row) {
   <p style="margin-top: 0px">Jl. Kb. Dua Ratus, RT.4/RW.6 <br> Kec. Kalideres, Kota Jakarta Barat
   </p>
   <center>
-    <table width="27%" style="border-top: 1px dashed black; border-bottom: 1px dashed black; border-left: none; border-right: none; border-collapse: collapse;">
+    <table width="85%" style="border-top: 1px dashed black; border-bottom: 1px dashed black; border-left: none; border-right: none; border-collapse: collapse;">
       <tbody>
         <tr>
-          <td width="19%">No</td>
-          <td width="5%" align="center">:</td>
-          <td width="44%"><?= $no_trans ?></td>
+          <td width="12%">No</td>
+          <td width="1%" align="center">:</td>
+          <td width="55%"><?= $no_trans ?></td>
           <td width="32%"><?= date('d-m-Y', strtotime($tgl)) ?></td>
           <!-- <td width="12%">Kasir</td>
           <td width="3%">:</td>
           <td width="28%">Nama Kasir</td> -->
         </tr>
         <tr>
-          <td width="19%">Pel</td>
-          <td width="5%" align="center">:</td>
+          <td width="12%">Pel</td>
+          <td width="1%" align="center">:</td>
           <td colspan="2">
             <?php
             if ($cus_id == '117') {
@@ -91,42 +91,45 @@ foreach ($header as $row) {
         </tr>
       </tbody>
     </table>
-
-    <table width="27%" style="border-bottom: 1px dashed black; border-left: none; border-right: none; border-collapse: collapse;">
+	  
+	  <table width="85%" style="border-bottom: 1px dashed black; border-left: none; border-right: none; border-collapse: collapse;">
       <tbody>
         <?php
         foreach ($detail as $row) { ?>
           <tr>
-            <td width="51%"><b><?= $row->nama_barang ?></b> <br><?= number_format($row->total_harga, 0, ',', '.') ?> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; x<?= $row->qty ?> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; <?= number_format($row->qty * $row->total_harga, 0, ',', '.') ?></td>
-            <!--
-          <td width="6%"><?= $row->qty ?></td>
-          <td width="21%"><?= $row->total_harga ?></td>
-          <td width="22%"><?= number_format($row->qty * $row->total_harga) ?></td>
--->
+            <td width="51%"><b><?= $row->nama_barang ?></b></td>
+            
+          <td width="11%"><?= $row->qty ?></td>
+          <td width="27%" style="text-align: right"><?= number_format($row->qty * $row->total_harga, 0, ',', '.') ?></td>
+
           </tr>
         <?php }
         ?>
+        
       </tbody>
     </table>
 
-    <table width="27%" style="font-style: bold">
+    <table width="85%" style="font-style: bold">
       <tbody>
         <tr>
-          <td width="38%">Total Belanja</td>
-          <td width="4%" align="center">&nbsp;</td>
-          <td width="58%"><b><?= number_format($total, 0, ',', '.') ?></b></td>
+          <td width="3%">&nbsp;</td>
+          <td width="57%">Total Belanja</td>
+          <td width="17%" align="center">=</td>
+          <td width="23%" align="right"><b><?= number_format($total, 0, ',', '.') ?></b></td>
 
         </tr>
         <tr>
+          <td>&nbsp;</td>
           <td>Tunai</td>
-          <td align="center">=</td>
-          <td><b><?= number_format($bayar, 0, ',', '.') ?></b></td>
+          <td align="center" style="border-bottom: 1px dashed black;">=</td>
+          <td align="right" style="border-bottom: 1px dashed black;"><b><?= number_format($bayar, 0, ',', '.') ?></b></td>
 
         </tr>
         <tr>
+          <td>&nbsp;</td>
           <td>Kembalian</td>
-          <td align="center">&nbsp;</td>
-          <td style="border-bottom: 1px dashed black;"><b><?= number_format($kembali, 0, ',', '.') ?></b></td>
+          <td align="center">=</td>
+          <td align="right"><i><?= number_format($kembali, 0, ',', '.') ?></i></td>
 
         </tr>
       </tbody>
@@ -135,7 +138,7 @@ foreach ($header as $row) {
     Terimakasih Sudah Berbelanja di<br>
 	 KSU Asy-Syathibiyyah
 
-  </center>
+</center>
 </body>
 
 </html>
