@@ -326,7 +326,7 @@ $(document).ready(function () {
 
                 alert("Pembayaran berhasil! Kembalian: Rp. " + kembalian.toLocaleString("id-ID"));
                 if (id_akhir) { // Cek apakah id_akhir tersedia di form
-                    var printWindow = window.open(BASE_URL + "Transaksi/cetak_struk/" + id_akhir);
+                    var printWindow = window.open(BASE_URL + "Transaksi/cetak_struk/" + id_akhir, "_blank");
 
                     // Tunggu hingga halaman cetak terbuka, lalu jalankan autoPrint
                     if (printWindow) {

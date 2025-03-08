@@ -1,4 +1,4 @@
-<?php 
+<?php
 foreach ($header as $row) {
   $no_trans = $row->no_transaksi;
   $tgl = $row->tgl_transaksi;
@@ -21,7 +21,7 @@ foreach ($header as $row) {
   <style>
     body {
       font-family: monospace;
-/*      text-align: center;*/
+      text-align: center;
       margin: 0;
       /* padding: 0; */
       align-content: center;
@@ -57,87 +57,95 @@ foreach ($header as $row) {
 </head>
 
 <body>
-<!--  <h3>KSU Asy-Syathibiyyah</h3>-->
-<img src="<?= base_url('assets/image/nota.png') ?>" width="163" height="56" style="align-content: center">
-<p style="margin-top: 0px; text-align: ">Jl. Kb. Dua Ratus, RT.4/RW.6 <br> 
-Kec. Kalideres, Kota Jakarta Barat
-</p>
-  
+  <!--  <h3>Koperasi Sejahtera Sekali</h3>-->
+  <img src="<?= base_url('assets/image/nota.png') ?>" width="163" height="56">
+  <p style="margin-top: 0px">Jl. Kb. Dua Ratus, RT.4/RW.6 <br> Kec. Kalideres, Kota Jakarta Barat
+  </p>
+  <center>
     <table width="27%" style="border-top: 1px dashed black; border-bottom: 1px dashed black; border-left: none; border-right: none; border-collapse: collapse;">
       <tbody>
         <tr>
-          <td width="10%">No</td>
-          <td width="5%">:</td>
-          <td width="54%"><?= $no_trans ?></td> <br>
-          <td width="54%"><?= date('d-m-Y',strtotime($tgl)) ?></td>
-          <td width="22%">&nbsp;</td>
+          <td width="19%">No</td>
+          <td width="5%" align="center">:</td>
+          <td width="44%"><?= $no_trans ?></td>
+          <td width="32%"><?= date('d-m-Y', strtotime($tgl)) ?></td>
+          <!-- <td width="12%">Kasir</td>
+          <td width="3%">:</td>
+          <td width="28%">Nama Kasir</td> -->
         </tr>
-		  <tr>
-          <td width="10%">Pel</td>
-          <td width="5%">:</td>
-          <td colspan="2"><?= $nama_cus ?></td>
+        <tr>
+          <td width="19%">Pel</td>
+          <td width="5%" align="center">:</td>
+          <td colspan="2">
+            <?php
+            if ($cus_id == '117') {
+              echo $lain;
+            } else {
+              echo $nama_cus;
+            }
+            ?>
+          </td>
+          <!-- <td width="12%">Kasir</td>
+          <td width="3%">:</td>
+          <td width="28%">Nama Kasir</td> -->
         </tr>
       </tbody>
     </table>
-    
-    <table width="27%">
+
+    <table width="27%" style="border-bottom: 1px dashed black; border-left: none; border-right: none; border-collapse: collapse;">
       <tbody>
-        <br>
-        <?php 
+        <?php
         foreach ($detail as $row) { ?>
-        <tr>
-          <td width="51%"><b><?= $row->nama_barang ?></b><br><?= number_format($row->total_harga, 0, ',', '.') ?> &nbsp;&nbsp;&nbsp;&nbsp; x<?= $row->qty ?>  &nbsp;&nbsp;&nbsp; <?= number_format($row->qty * $row->total_harga, 0, ',', '.') ?></br></td>
-<!--
+          <tr>
+            <td width="51%"><?= $row->nama_barang ?> <br><?= number_format($row->total_harga, 0, ',', '.') ?> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; x<?= $row->qty ?> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<?= number_format($row->qty * $row->total_harga, 0, ',', '.') ?></td>
+            <!--
           <td width="6%"><?= $row->qty ?></td>
           <td width="21%"><?= $row->total_harga ?></td>
-          <td width="22%"><?= number_format($row->qty * $row->total_harga, 0, ',', '.') ?></td>
+          <td width="22%"><?= number_format($row->qty * $row->total_harga) ?></td>
 -->
-        </tr>
+          </tr>
         <?php }
         ?>
       </tbody>
     </table>
-    <br>
 
-    <table width="27%" style="border-top: 1px dashed black; dashed black; border-left: none; border-right: none; border-collapse: collapse;">
+    <table width="27%">
       <tbody>
         <tr>
-			<td width="49%"><span>Total Belanja</span></td>
-          <td width="30%">&nbsp;</td>
-      <td width="46%" ><b><?= number_format($total , 0, ',', '.') ?></b></td>
-<!--      <td width="22%" style="border-top: 1px dashed black; border-bottom: 1px dashed black;">&nbsp;</td>-->
+          <td width="38%">Total Belanja</td>
+          <td width="4%" align="center">&nbsp;</td>
+          <td width="58%"><?= number_format($total, 0, ',', '.') ?></td>
+
         </tr>
         <tr>
-			<td>Tunai</td>
+          <td>Tunai</td>
           <td align="center">=</td>
-          <td style="border-bottom: 1px dashed black;"><b><?= number_format($bayar , 0, ',', '.') ?></b></td>
-<!--          <td>&nbsp;</td>-->
+          <td><?= number_format($bayar, 0, ',', '.') ?></td>
+
         </tr>
         <tr>
-		<td><span >Kembalian</span></td>
-          <td >&nbsp;</td>
-      <td><i><?= number_format($kembali, 0, ',', '.') ?></i></td>
-<!--      <td style="border-bottom: 1px dashed black;">&nbsp;</td>-->
+          <td>Kembalian</td>
+          <td align="center">&nbsp;</td>
+          <td style="border-bottom: 1px dashed black;"><?= number_format($kembali, 0, ',', '.') ?></td>
+
         </tr>
       </tbody>
     </table>
-	 <!-- Nama Pembeli : 
-    <?php 
-    if ($cus_id == '117') {
-      echo $lain;
-    }else {
-      echo $nama_cus;
-    }
-    ?> -->
-	 <br>Terimakasih sudah berbelanja di <br> KSU Asy-Syathibiyyah
-  
+    <br>
+    Barang yang telah di beli <br>
+    tidak dapat dikembalikan.
+    <br>
+    Terimakasih Sudah Berbelanja di<br>
+	 KSU Asy-Syathibiyyah
+
+  </center>
 </body>
 
 </html>
 
 
 <script>
-    window.onload = function () {
-        window.print();
-    };
+  window.onload = function() {
+    window.print();
+  };
 </script>
