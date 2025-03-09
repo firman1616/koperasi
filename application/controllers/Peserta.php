@@ -155,6 +155,7 @@ class Peserta extends CI_Controller
         $this->db->select("a.id, a.name, b.periode, b.status");
         $this->db->from("tbl_anggota a");
         $this->db->join("tbl_iuran b", "a.id = b.anggota_id", "left");
+        $this->db->where("a.id !=", 117);
         $query = $this->db->get();
         $result = $query->result();
 
