@@ -184,7 +184,7 @@
             }
 
             // Set nama file
-            $filename = 'Laporan_Iuran_Periode' . date('m-Y') . '.xlsx';
+            $filename = 'Laporan_Iuran_Periode' . $bulan.'-'.$tahun . '.xlsx';
 
             // Set header untuk download
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
