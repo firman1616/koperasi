@@ -34,14 +34,14 @@
         }
 
         function tableLapTrans()
-    {
-        $date_start = $this->input->post('date_start');
-        $date_end = $this->input->post('date_end');
-        
-        $data['lap_trans'] = $this->lap->lap_trans($date_start, $date_end)->result();
+        {
+            $date_start = $this->input->post('date_start');
+            $date_end = $this->input->post('date_end');
 
-        echo json_encode($this->load->view('laporan/penjualan/lap-trans-table',$data,false));
-    }
+            $data['lap_trans'] = $this->lap->lap_trans($date_start, $date_end)->result();
+
+            echo json_encode($this->load->view('laporan/penjualan/lap-trans-table', $data, false));
+        }
 
         public function export_excel()
         {
@@ -68,7 +68,7 @@
             $sheet->setCellValue('F1', 'Kode Barang');
             $sheet->setCellValue('G1', 'Nama Barang');
             $sheet->setCellValue('H1', 'Qty Beli');
-            
+
             // Isi data
             $row = 2;
             $x = 1;
@@ -102,7 +102,8 @@
             exit;
         }
 
-        public function getDetailTransaksi() {
+        public function getDetailTransaksi()
+        {
             $id = $this->input->post('id');
             if (!$id) {
                 echo json_encode(["error" => "ID tidak ditemukan"]);
@@ -118,10 +119,10 @@
             header('Content-Type: application/json');
             echo json_encode($data);
         }
-        
-        
 
-        function lap_iuran()  {
+        // iuran
+        function lap_iuran()
+        {
             $data = [
                 'akses' => $this->session->userdata('level'),
                 'name' => $this->session->userdata('nama'),
@@ -131,5 +132,68 @@
                 'footer_js' => array('assets/js/lap_iuran.js')
             ];
             $this->load->view('template/conten', $data);
+        }
+
+        function tableLapIuran()
+        {
+            $bulan = $this->input->post('bulan');
+            $tahun = $this->input->post('tahun');
+
+            $data['lap_iuran'] = $this->lap->lap_iuran($bulan, $tahun)->result();
+
+            echo json_encode($this->load->view('laporan/iuran/lap-iuran-table', $data, false));
+        }
+
+        public function export_excel_iuran()
+        {
+            // Ambil tanggal dari input form
+            $bulan = $this->input->get('bulan'); // Bisa pakai $this->input->post() jika pakai method POST
+            $tahun = $this->input->get('tahun');
+
+            // Gunakan default jika kosong
+            if (!$bulan) $bulan = date('m');
+            if (!$tahun) $tahun = date('y');
+
+            // Ambil data dari model berdasarkan tanggal input
+            $data = $this->lap->lap_iuran($bulan, $tahun)->result();
+
+            $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Header kolom
+            $sheet->setCellValue('A1', 'No');
+            $sheet->setCellValue('B1', 'Nama Anggota');
+            $sheet->setCellValue('C1', 'Periode Bulan');
+            $sheet->setCellValue('D1', 'Status');
+
+            // Isi data
+            $row = 2;
+            $x = 1;
+            foreach ($data as $d) {
+                if ($d->status != '1') {
+                    $sts = 'Belum bayar';
+                }else {
+                    $sts = 'Lunas';
+                }
+
+                $sheet->setCellValue('A' . $row, $x++);
+                $sheet->setCellValue('B' . $row, $d->nama_anggota);
+                $sheet->setCellValue('C' . $row, $bulan);
+                $sheet->setCellValue('D' . $row, $sts);
+                $row++;
+            }
+
+            // Set nama file
+            $filename = 'Laporan_Iuran_Periode' . date('m-Y') . '.xlsx';
+
+            // Set header untuk download
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $filename . '"');
+            header('Cache-Control: max-age=0');
+
+            ob_end_clean();
+            $writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->save('php://output');
+            exit;
         }
     }

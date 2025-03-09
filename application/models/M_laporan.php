@@ -47,4 +47,18 @@ class M_laporan extends CI_Model
     WHERE tdt.head_trans = ?", [$id]);
     return $query;
   }
+
+  function lap_iuran($bulan, $tahun)
+  {
+    return $this->db->query("SELECT 
+        ti.anggota_id, 
+        ti.date, 
+        ti.periode, 
+        ta.name AS nama_anggota, 
+        ti.status 
+    FROM tbl_iuran ti
+    LEFT JOIN tbl_anggota ta ON ta.id = ti.anggota_id
+    WHERE SUBSTRING(ti.periode, 1, 2) = '$bulan' 
+    AND SUBSTRING(ti.periode, 3, 2) = '$tahun'");
+  }
 }

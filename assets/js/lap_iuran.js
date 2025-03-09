@@ -1,33 +1,50 @@
 $(document).ready(function() {
-    // tableUOM();
-    let today = new Date();
-    let todayStr = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
+    // tableIuran();
+    $("#detail_iuran").hide();
+    $("#div-table-lap-iuran").hide();
 
-    // Mendapatkan tanggal 30 hari yang lalu
-    let pastDate = new Date();
-    pastDate.setDate(today.getDate() - 30);
-    let pastDateStr = pastDate.toISOString().split('T')[0];
+    $("#preview").click(function() {
+        let bulan = $("#bulan").val();
+        let tahun = $("#tahun").val();
 
-    // Menetapkan nilai default
-    document.getElementById("date_end").value = todayStr;
-    document.getElementById("date_start").value = pastDateStr;
+        if (bulan === "" || tahun === "") {
+            alert("Silakan pilih periode terlebih dahulu!");
+            return;
+        }
 
-    $("#export_excel").click(function () {
-        window.location.href = BASE_URL + "Laporan/export_excel";
+        $("#detail_iuran").show(); // Tampilkan div detail transaksi
+        $("#div-table-lap-iuran").show(); // Tampilkan div tabel
+
+        // Panggil fungsi untuk load tabel dengan parameter tanggal
+        tableLapIuran(bulan, tahun);
     });
 
+    $("#export_excel_iuran").click(function() {
+        let bulan = $("#bulan").val();
+        let tahun = $("#tahun").val();
+
+        if (bulan === "" || tahun === "") {
+            alert("Silakan pilih periode terlebih dahulu!");
+            return;
+        }
+
+        // Redirect ke fungsi export di controller dengan parameter bulan & tahun
+        window.location.href = BASE_URL + "Laporan/export_excel_iuran?bulan=" + bulan + "&tahun=" + tahun;
+    });
 });
 
-// function tableUOM() {
-//     $.ajax({
-//         url: BASE_URL + "UOM/tableUOM",
-//         type: "POST",
-//         success: function (data) {
-//             $('#div-table-uom').html(data);
-//             $('#tableUOM').DataTable({
-//                 "processing": true,
-//                 "responsive": true,
-//             });
-//         }
-//     });
-// }
+function tableLapIuran(bulan, tahun) {
+    $.ajax({
+        url: BASE_URL + "Laporan/tableLapIuran",
+        type: "POST",
+        data: { bulan: bulan, tahun: tahun }, // Kirim parameter
+        success: function (data) {
+            $('#div-table-lap-iuran').html(data);
+            $('#tableIuran').DataTable({
+                "processing": true,
+                "responsive": true,
+            });
+        }
+    });
+}
+
