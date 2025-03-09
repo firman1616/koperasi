@@ -59,6 +59,7 @@ $(document).on("click", ".iuran-btn", function () {
         success: function (response) {
             if (response.status == "success") {
                 alert("Iuran periode " + periode + " berhasil dibayar!");
+                location.reload();
             } else {
                 alert("Gagal memperbarui iuran.");
             }
