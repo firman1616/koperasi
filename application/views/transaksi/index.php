@@ -116,7 +116,7 @@
                     <div class="form-group">
                         <label for="anggota">Pilih Anggota</label>
                         <select id="anggota" name="anggota" class="form-control" style="width: 100%;">
-                            <option value="">Pilih Anggota</option>
+                            <option value="" disabled selected>Pilih Anggota</option>
                         </select>
                     </div>
                     <div id="formTambahan" style="display: none;">

@@ -131,7 +131,7 @@ $(document).ready(function () {
                 $("#anggota").empty().append('<option value="">Pilih Anggota</option>');
 
                 $.each(data, function (index, item) {
-                    $("#anggota").append(`<option value="${item.id}">${item.name}</option>`);
+                    $("#anggota").append(`<option value="${item.id}">${item.no_agt} - ${item.name}</option>`);
                 });
 
                 // Inisialisasi Select2 setelah data dimuat
@@ -200,6 +200,12 @@ $(document).ready(function () {
         //     alert("Silakan isi semua data pembayaran!");
         //     return;
         // }
+
+        if (!anggotaID) {
+            alert("Silakan pilih anggota sebelum melakukan pembayaran!");
+            $("#anggota").focus();
+            return;
+        }
 
         if (anggotaID === "117" && extraFieldValue === "") {
             alert("Silakan isi 'Pelanggan Lainnya' sebelum melanjutkan pembayaran!");
@@ -284,6 +290,19 @@ $(document).ready(function () {
         var anggotaID = $("#anggota").val();
         var id_akhir = $("#id_akhir").val(); // Ambil ID transaksi dari form
         var id_user = $("#id_user").val();
+        var extraFieldValue = $("#extraField").val();
+
+        if (!anggotaID) {
+            alert("Silakan pilih anggota sebelum melakukan pembayaran!");
+            $("#anggota").focus();
+            return;
+        }
+
+        if (anggotaID === "117" && extraFieldValue === "") {
+            alert("Silakan isi 'Pelanggan Lainnya' sebelum melanjutkan pembayaran!");
+            $("#extraField").focus();
+            return;
+        } 
 
         if (!tanggal || !kd_trans || uangDibayarkan <= 0) {
             alert("Silakan isi semua data pembayaran!");

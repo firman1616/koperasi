@@ -76,7 +76,7 @@ class M_transaksi extends CI_Model
 
   public function get_all_anggota()
   {
-    return $this->db->select('id, name')
+    return $this->db->select('id, name, no_agt')
       ->from('tbl_anggota')
       ->get()
       ->result();
