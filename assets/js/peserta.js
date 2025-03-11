@@ -3,6 +3,7 @@ $(document).ready(function () {
     tableIuran();
 });
 
+// Load tabel peserta
 function tablePeserta() {
     $.ajax({
         url: BASE_URL + "Peserta/tablePeserta",
@@ -17,6 +18,7 @@ function tablePeserta() {
     });
 }
 
+// Load tabel iuran
 function tableIuran() {
     $.ajax({
         url: BASE_URL + "Peserta/tableIuran",
@@ -27,60 +29,80 @@ function tableIuran() {
                 "processing": true,
                 "responsive": true,
             });
+
+            // Pastikan event handler di-bind ulang setelah tabel iuran di-load
+            bindIuranButtonClick();
         }
     });
 }
 
-function showModal(periode) {
-    // Set nilai input readonly dengan periode yang diklik
-    document.getElementById("periode").value = periode;
+// Fungsi untuk menampilkan modal pembayaran
+function showModal(anggotaId, periode) {
+    $("#periode").val(periode).data("anggota-id", anggotaId);
 
     let now = new Date();
     let formattedDate = now.toISOString().slice(0, 10); // Format YYYY-MM-DD
-    document.getElementById("tanggal").value = formattedDate;
+    $("#tanggal").val(formattedDate);
 
-    // Tampilkan modal
     let myModal = new bootstrap.Modal(document.getElementById('iuranModal'));
     myModal.show();
 }
 
+// Fungsi untuk menangani klik tombol bayar iuran
+function bindIuranButtonClick() {
+    $(document).off("click", ".iuran-btn").on("click", ".iuran-btn", function () {
+        var anggotaId = $(this).data("id");
+        var periode = $(this).data("periode");
 
-
-
-$(document).on("click", "#iuran-btn", function () {
-    var anggotaId = $(this).data("id");
-    var periode = $("#periode").val(); // Ambil dari form
-    var date = $("#tanggal").val(); // Ambil dari form
-
-    if (!periode || !date) {
-        alert("Periode dan tanggal harus diisi!");
-        return;
-    }
-
-    // Konfirmasi sebelum mengirim request
-    var confirmAction = confirm("Apakah Anda yakin ingin membayar iuran untuk periode " + periode + "?");
-    if (!confirmAction) {
-        return;
-    }
-
-    $.ajax({
-        url: BASE_URL + "Peserta/update_iuran",
-        type: "POST",
-        data: { anggota_id: anggotaId, periode: periode, date: date },
-        dataType: "json",
-        success: function (response) {
-            if (response.status == "success") {
-                alert("Iuran periode " + periode + " berhasil dibayar!");
-                location.reload();
-            } else {
-                alert("Gagal memperbarui iuran.");
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error(xhr.responseText);
-        }
+        showModal(anggotaId, periode);
     });
-});
+
+    $(document).off("click", ".iuran").on("click", ".iuran", function () {
+        var anggotaId = $("#periode").data("anggota-id"); // Ambil anggota_id dari modal
+        var periode = $("#periode").val();
+        var date = $("#tanggal").val();
+
+        if (!anggotaId) {
+            alert("Data anggota tidak ditemukan!");
+            return;
+        }
+
+        if (!periode || !date) {
+            alert("Periode dan tanggal harus diisi!");
+            return;
+        }
+
+        var confirmAction = confirm("Apakah Anda yakin ingin membayar iuran untuk periode " + periode + "?");
+        if (!confirmAction) {
+            return;
+        }
+
+        $.ajax({
+            url: BASE_URL + "Peserta/update_iuran",
+            type: "POST",
+            data: { anggota_id: anggotaId, periode: periode, date: date },
+            dataType: "json",
+            success: function (response) {
+                if (response.status == "success") {
+                    alert("Iuran periode " + periode + " berhasil dibayar!");
+
+                    $("#iuranModal").modal("hide");
+                    location.reload();
+                    tableIuran();
+                } else {
+                    alert("Gagal memperbarui iuran.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+}
+
+// Panggil fungsi untuk binding event setelah halaman dimuat
+bindIuranButtonClick();
+
 
 
 

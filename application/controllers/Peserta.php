@@ -187,16 +187,20 @@ class Peserta extends CI_Controller
     }
 
     public function update_iuran()
-    {
-        log_message('debug', 'Request diterima: ' . json_encode($this->input->post()));
-        $anggota_id = $this->input->post('anggota_id');
-        $periode = $this->input->post('periode');
-        $date = $this->input->post('date'); // Waktu real-time dari PC pengguna
+{
+    $anggota_id = $this->input->post('anggota_id');
+    $periode = $this->input->post('periode');
+    $date = $this->input->post('date');
 
-        if ($this->anggota->update_iuran($anggota_id, $periode, $date)) {
-            echo json_encode(["status" => "success"]);
-        } else {
-            echo json_encode(["status" => "error"]);
-        }
+    if (empty($anggota_id) || empty($periode) || empty($date)) {
+        echo json_encode(["status" => "error", "message" => "Data tidak lengkap!"]);
+        return;
     }
+
+    if ($this->anggota->update_iuran($anggota_id, $periode, $date)) {
+        echo json_encode(["status" => "success"]);
+    } else {
+        echo json_encode(["status" => "error"]);
+    }
+}
 }

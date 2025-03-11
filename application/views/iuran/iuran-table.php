@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th>No</th>
-            <th>Nama ANggota</th>
+            <th>Nama Anggota</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -22,21 +22,16 @@
 
                         if ($status != 1): ?>
                             <button type="button" class="btn btn-primary iuran-btn"
-                                title="Iuran <?= $periode ?>"
+                                title="Bayar Iuran <?= $periode ?>"
                                 data-id="<?= $row->id ?>"
-                                data-periode="<?= $periode ?>"
-                                onclick="showModal('<?= $periode ?>')">
+                                data-periode="<?= $periode ?>">
                                 <i class="fa fa-coins"></i> <?= $periode ?>
                             </button>
                     <?php endif;
                     endfor; ?>
-                    <!-- <button type="button" class="btn btn-primary iuran-btn" title="iuran <?= date('my') ?>" data-id="<?= $row->id ?>">
-                        <i class="fa fa-coins"></i>
-                    </button> -->
                 </td>
             </tr>
-        <?php  }
-        ?>
+        <?php } ?>
     </tbody>
 </table>
 
@@ -61,8 +56,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-secondary" id="closeModalBtn">Tutup</button> -->
-        <button type="submit" class="btn btn-primary" id="iuran-btn">Bayar</button>
+        <button type="submit" class="btn btn-primary iuran">Bayar</button>
       </div>
     </div>
   </div>
