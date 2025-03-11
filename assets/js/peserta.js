@@ -31,19 +31,31 @@ function tableIuran() {
     });
 }
 
+function showModal(periode) {
+    // Set nilai input readonly dengan periode yang diklik
+    document.getElementById("periode").value = periode;
 
-$(document).on("click", ".iuran-btn", function () {
+    let now = new Date();
+    let formattedDate = now.toISOString().slice(0, 10); // Format YYYY-MM-DD
+    document.getElementById("tanggal").value = formattedDate;
+
+    // Tampilkan modal
+    let myModal = new bootstrap.Modal(document.getElementById('iuranModal'));
+    myModal.show();
+}
+
+
+
+
+$(document).on("click", "#iuran-btn", function () {
     var anggotaId = $(this).data("id");
-    var periode = $(this).data("periode"); // Ambil periode dari tombol
+    var periode = $("#periode").val(); // Ambil dari form
+    var date = $("#tanggal").val(); // Ambil dari form
 
-    // Ambil waktu dari PC dalam format Y-m-d H:i:s
-    var now = new Date();
-    var dateTime = now.getFullYear() + '-' +
-        ('0' + (now.getMonth() + 1)).slice(-2) + '-' +
-        ('0' + now.getDate()).slice(-2) + ' ' +
-        ('0' + now.getHours()).slice(-2) + ':' +
-        ('0' + now.getMinutes()).slice(-2) + ':' +
-        ('0' + now.getSeconds()).slice(-2);
+    if (!periode || !date) {
+        alert("Periode dan tanggal harus diisi!");
+        return;
+    }
 
     // Konfirmasi sebelum mengirim request
     var confirmAction = confirm("Apakah Anda yakin ingin membayar iuran untuk periode " + periode + "?");
@@ -54,7 +66,7 @@ $(document).on("click", ".iuran-btn", function () {
     $.ajax({
         url: BASE_URL + "Peserta/update_iuran",
         type: "POST",
-        data: { anggota_id: anggotaId, periode: periode, date: dateTime },
+        data: { anggota_id: anggotaId, periode: periode, date: date },
         dataType: "json",
         success: function (response) {
             if (response.status == "success") {
@@ -69,6 +81,7 @@ $(document).on("click", ".iuran-btn", function () {
         }
     });
 });
+
 
 
 // Event klik tombol "iuran"
