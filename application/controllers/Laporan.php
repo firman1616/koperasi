@@ -54,7 +54,7 @@
             if (!$date_end) $date_end = date('Y-m-d');
 
             // Ambil data dari model berdasarkan tanggal input
-            $data = $this->lap->lap_trans($date_start, $date_end)->result();
+            $data = $this->lap->export_excel_penjualan($date_start, $date_end)->result();
 
             $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
