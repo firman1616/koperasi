@@ -102,11 +102,18 @@ function bindIuranButtonClick() {
 }
 
 function bindDepositButtonClick() {
+    // Ketika tombol "Deposit" diklik, simpan ID anggota di modal
+    $(document).on("click", ".deposit-btn", function () {
+        var anggota_id = $(this).data("id");
+        $("#depositModal").data("id", anggota_id); // Simpan di modal
+    });
+
+    // Saat tombol "Submit" diklik, ambil ID anggota dari modal
     $(document).off("click", "#submitDeposit").on("click", "#submitDeposit", function () {
-        var anggota_id = $('#anggota_id').val();
+        var anggota_id = $("#depositModal").data("id"); // Ambil ID yang tersimpan di modal
         var nominal = $('#depositAmount').val();
         var date = new Date().toISOString().slice(0, 10); // Format YYYY-MM-DD
-        
+
         if (!anggota_id) {
             alert("Data anggota tidak ditemukan!");
             return;
@@ -137,6 +144,7 @@ function bindDepositButtonClick() {
         });
     });
 }
+
 
 // Panggil fungsi untuk binding event setelah halaman dimuat
 bindIuranButtonClick();

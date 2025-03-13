@@ -15,7 +15,17 @@
         foreach ($iuran as $row) { ?>
             <tr>
                 <td><?= $x++; ?></td>
-                <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#depositModal">Deposit</button></td>
+                <td> <?php if ($row->status_deposit != 1) : ?>
+                <button type="button" class="btn btn-info deposit-btn" 
+                        data-toggle="modal" 
+                        data-target="#depositModal" 
+                        data-id="<?= $row->id ?>">
+                    Deposit
+                </button>
+            <?php else : ?>
+                <span class="badge badge-success">Deposit Sudah Lunas</span>
+            <?php endif; ?>
+                </td>
                 <td><?= $row->name ?></td>
                 <td>
                     <?php for ($bulan = 1; $bulan <= $bulanSekarang; $bulan++):
@@ -77,7 +87,7 @@
       </div>
       <div class="modal-body">
         <form id="depositForm">
-          <input type="hidden" id="anggota_id" name="anggota_id" value="123"> <!-- Gantilah dengan ID anggota yang sesuai -->
+          <!-- <input type="hidden" id="anggota_id" name="anggota_id" value="123"> -->
           <div class="form-group">
             <label for="depositAmount">Jumlah Deposit</label>
             <input type="number" class="form-control" id="depositAmount" name="depositAmount" value="500000">
