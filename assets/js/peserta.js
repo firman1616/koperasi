@@ -1,6 +1,7 @@
 $(document).ready(function () {
     tablePeserta();
     tableIuran();
+    bindDepositButtonClick();
 });
 
 // Load tabel peserta
@@ -100,8 +101,46 @@ function bindIuranButtonClick() {
     });
 }
 
+function bindDepositButtonClick() {
+    $(document).off("click", "#submitDeposit").on("click", "#submitDeposit", function () {
+        var anggota_id = $('#anggota_id').val();
+        var nominal = $('#depositAmount').val();
+        var date = new Date().toISOString().slice(0, 10); // Format YYYY-MM-DD
+        
+        if (!anggota_id) {
+            alert("Data anggota tidak ditemukan!");
+            return;
+        }
+
+        var confirmAction = confirm("Apakah Anda yakin ingin menyimpan deposit?");
+        if (!confirmAction) {
+            return;
+        }
+
+        $.ajax({
+            url: BASE_URL + "Peserta/deposit",
+            type: "POST",
+            data: { anggota_id: anggota_id, nominal: nominal, date: date, status: 1 },
+            dataType: "json",
+            success: function (response) {
+                if (response.status == "success") {
+                    alert("Deposit berhasil disimpan!");
+                    $('#depositModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert("Gagal menyimpan deposit.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+}
+
 // Panggil fungsi untuk binding event setelah halaman dimuat
 bindIuranButtonClick();
+bindDepositButtonClick();
 
 
 

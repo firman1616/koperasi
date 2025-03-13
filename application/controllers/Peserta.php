@@ -187,20 +187,35 @@ class Peserta extends CI_Controller
     }
 
     public function update_iuran()
-{
-    $anggota_id = $this->input->post('anggota_id');
-    $periode = $this->input->post('periode');
-    $date = $this->input->post('date');
+    {
+        $anggota_id = $this->input->post('anggota_id');
+        $periode = $this->input->post('periode');
+        $date = $this->input->post('date');
 
-    if (empty($anggota_id) || empty($periode) || empty($date)) {
-        echo json_encode(["status" => "error", "message" => "Data tidak lengkap!"]);
-        return;
+        if (empty($anggota_id) || empty($periode) || empty($date)) {
+            echo json_encode(["status" => "error", "message" => "Data tidak lengkap!"]);
+            return;
+        }
+
+        if ($this->anggota->update_iuran($anggota_id, $periode, $date)) {
+            echo json_encode(["status" => "success"]);
+        } else {
+            echo json_encode(["status" => "error"]);
+        }
     }
 
-    if ($this->anggota->update_iuran($anggota_id, $periode, $date)) {
-        echo json_encode(["status" => "success"]);
-    } else {
-        echo json_encode(["status" => "error"]);
+    public function deposit() {
+        $data = [
+            'anggota_id' => $this->input->post('anggota_id'),
+            'nominal' => $this->input->post('nominal'),
+            'date' => date('Y-m-d'),
+            'status' => 1
+        ];
+
+        if ($this->anggota->insert_deposit($data)) {
+            echo json_encode(['status' => 'success']);
+        } else {
+            echo json_encode(['status' => 'error']);
+        }
     }
-}
 }

@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th>No</th>
+            <th>Deposit</th>
             <th>Nama Anggota</th>
             <th>Action</th>
         </tr>
@@ -14,6 +15,7 @@
         foreach ($iuran as $row) { ?>
             <tr>
                 <td><?= $x++; ?></td>
+                <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#depositModal">Deposit</button></td>
                 <td><?= $row->name ?></td>
                 <td>
                     <?php for ($bulan = 1; $bulan <= $bulanSekarang; $bulan++):
@@ -57,6 +59,34 @@
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary iuran">Bayar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- deposit -->
+<div class="modal fade" id="depositModal" tabindex="-1" role="dialog" aria-labelledby="depositModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="depositModalLabel">Deposit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="depositForm">
+          <input type="hidden" id="anggota_id" name="anggota_id" value="123"> <!-- Gantilah dengan ID anggota yang sesuai -->
+          <div class="form-group">
+            <label for="depositAmount">Jumlah Deposit</label>
+            <input type="number" class="form-control" id="depositAmount" name="depositAmount" value="500000">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-primary" id="submitDeposit">Submit</button>
       </div>
     </div>
   </div>

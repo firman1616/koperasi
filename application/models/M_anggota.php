@@ -33,4 +33,9 @@ class M_anggota extends CI_Model
       ]);
     }
   }
+
+  public function insert_deposit($data)
+  {
+    return $this->db->insert('tbl_deposit', $data);
+  }
 }
