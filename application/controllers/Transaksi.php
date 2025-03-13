@@ -88,9 +88,9 @@ class Transaksi extends CI_Controller
         $uang_dibayarkan = $this->input->post('uang_dibayarkan');
         $uang_kembali = $uang_dibayarkan - $total_bayar;
         $anggota_id = $this->input->post('anggota_id');
-        $extra_value = $this->input->post('extra_value');
+        $extra_value = $this->input->post('extraField');
         $metode_bayar = $this->input->post('metode_bayar');
-        $kasir = $this->input->post('id_user');
+        $id_user = $this->input->post('id_user');
 
         // Data transaksi utama
         $data_transaksi = [
@@ -103,8 +103,10 @@ class Transaksi extends CI_Controller
             'pelanggan_id' => $anggota_id,
             'lainnya' => ($anggota_id == 117) ? $extra_value : null,
             'metode_bayar' => $metode_bayar,
-            'kasir_id' => $kasir,
+            'kasir_id' => $id_user,
         ];
+
+        log_message('error', 'Data Transaksi: ' . print_r($data_transaksi, true));
 
         // Ambil data barang dari frontend
         $barang = $this->input->post('barang'); // Array barang yang dikirim dari frontend

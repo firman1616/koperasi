@@ -195,6 +195,7 @@ $(document).ready(function () {
         var anggotaID = $("#anggota").val();
         var extraFieldValue = $("#extraField").val();
         var metodeBayar = $("#metode_bayar").val();
+        var id_user = $("#id_user").val();
 
         // if (!tanggal || !kd_trans || uangDibayarkan <= 0) {
         //     alert("Silakan isi semua data pembayaran!");
@@ -254,15 +255,16 @@ $(document).ready(function () {
             url: BASE_URL + "Transaksi/proses_pembayaran",
             type: "POST",
             data: {
-                kd_trans: kd_trans, // Kirim no transaksi
+                kd_trans: kd_trans, 
                 tanggal: tanggal,
                 uang_dibayarkan: uangDibayarkan,
                 diskon: diskon,
                 total_setelah_diskon: totalSetelahDiskon,
                 anggota_id: anggotaID,
-                extra_value: extraFieldValue,
+                extraField: extraFieldValue, // Perbaikan nama agar sesuai dengan Controller
                 metode_bayar: metodeBayar,
-                barang: barang
+                barang: barang,
+                id_user: id_user
             },
             dataType: "json",
             success: function (response) {
@@ -277,6 +279,7 @@ $(document).ready(function () {
                 alert("Terjadi kesalahan dalam pengiriman data!");
             }
         });
+        
 
         $("#modalPembayaran").modal("hide");
     });
@@ -291,6 +294,7 @@ $(document).ready(function () {
         var id_akhir = $("#id_akhir").val(); // Ambil ID transaksi dari form
         var id_user = $("#id_user").val();
         var extraFieldValue = $("#extraField").val();
+        var metodeBayar = $("#metode_bayar").val();
 
         if (!anggotaID) {
             alert("Silakan pilih anggota sebelum melakukan pembayaran!");
@@ -337,7 +341,9 @@ $(document).ready(function () {
                 total_setelah_diskon: totalSetelahDiskon,
                 anggota_id: anggotaID,
                 barang: barang,
-                id_user: id_user
+                id_user: id_user,
+                extraField: extraFieldValue,
+                metode_bayar: metodeBayar,
             },
             dataType: "json",
             success: function (response) {
