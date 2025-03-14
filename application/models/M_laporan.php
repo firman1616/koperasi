@@ -34,7 +34,7 @@ class M_laporan extends CI_Model
         tt.tgl_transaksi,
         tt.lainnya,
         ta.name
-    order by tt.no_transaksi desc");
+    order by date(tt.tgl_transaksi) desc");
     return $query;
   }
 
