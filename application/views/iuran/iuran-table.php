@@ -1,50 +1,70 @@
 <table class="table table-bordered" id="tableIuran" width="100%" cellspacing="0">
-    <thead>
-        <tr>
-            <th>No</th>
-            <th>Deposit</th>
-            <th>Nama Anggota</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        $x = 1;
-        $tahun = date('y');
-        $bulanSekarang = date('n');
-        foreach ($iuran as $row) { ?>
-            <tr>
-                <td><?= $x++; ?></td>
-                <td> <?php if ($row->status_deposit != 1) : ?>
-                <button type="button" class="btn btn-info deposit-btn" 
-                        data-toggle="modal" 
-                        data-target="#depositModal" 
-                        data-id="<?= $row->id ?>">
-                    Deposit
-                </button>
-            <?php else : ?>
-                <span class="badge badge-success">Deposit Sudah Lunas</span>
-            <?php endif; ?>
-                </td>
-                <td><?= $row->name ?></td>
-                <td>
-                    <?php for ($bulan = 1; $bulan <= $bulanSekarang; $bulan++):
-                        $periode = sprintf('%02d', $bulan) . $tahun; // Format MMYY
-                        $status = isset($row->iuran_status[$periode]) ? $row->iuran_status[$periode] : 0;
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Nama Anggota</th>
+      <th>Simpanan</th>
+      <th>Iuran Bulanan</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php
+    $x = 1;
+    $tahun = date('y');
+    $bulanSekarang = date('n');
+    foreach ($iuran as $row) { ?>
+      <tr>
+        <td><?= $x++; ?></td>
+        <td><?= $row->name ?></td>
+        <td> <?php if ($row->deposit_status != 1) : ?>
+            <button type="button" class="btn btn-info deposit-btn"
+              data-toggle="modal"
+              data-target="#depositModal"
+              data-id="<?= $row->id ?>">
+              Simpanan
+            </button>
+          <?php else : ?>
+            <span class="badge badge-success">Lunas</span>
+          <?php endif; ?>
+        </td>
+        <td>
+          <?php
+          $periodeStart = 1124; // Periode awal: November 2024 (MMYY)
+          $bulanStart = 11; // November
+          $tahunStart = 2024; // Tahun 2024
+          $tahunSekarang = date('Y'); // Tahun saat ini
+          $bulanSekarang = date('n'); // Bulan saat ini
 
-                        if ($status != 1): ?>
-                            <button type="button" class="btn btn-primary iuran-btn"
-                                title="Bayar Iuran <?= $periode ?>"
-                                data-id="<?= $row->id ?>"
-                                data-periode="<?= $periode ?>">
-                                <i class="fa fa-coins"></i> <?= $periode ?>
-                            </button>
-                    <?php endif;
-                    endfor; ?>
-                </td>
-            </tr>
-        <?php } ?>
-    </tbody>
+          // Loop dari periode 1124 hingga bulan saat ini
+          $periode = $periodeStart;
+          while (true):
+            $bulan = (int) substr($periode, 0, 2); // Ambil MM
+            $tahun = (int) ('20' . substr($periode, 2, 2)); // Ambil YYYY
+            if ($tahun > $tahunSekarang || ($tahun == $tahunSekarang && $bulan > $bulanSekarang)) {
+              break;
+            }
+            $status = isset($row->iuran_status[$periode]) ? $row->iuran_status[$periode] : 0;
+
+            if ($status != 1): ?>
+              <button type="button" class="btn btn-primary iuran-btn"
+                title="Bayar Iuran <?= $periode ?>"
+                data-id="<?= $row->id ?>"
+                data-periode="<?= $periode ?>">
+                <i class="fa fa-coins"></i> <?= $periode ?>
+              </button>
+          <?php endif;
+
+            $bulan++;
+            if ($bulan > 12) {
+              $bulan = 1;
+              $tahun++;
+            }
+            $periode = sprintf('%02d', $bulan) . substr($tahun, 2, 2); // Format MMYY
+          endwhile; ?>
+        </td>
+      </tr>
+    <?php } ?>
+  </tbody>
 </table>
 
 <!-- Modal -->

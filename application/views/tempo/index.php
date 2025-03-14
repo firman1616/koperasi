@@ -31,7 +31,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <input type="text" name="id_transaksi" id="id_transaksi">
+                <input type="hidden" name="id_transaksi" id="id_transaksi">
                 <div class="form-group">
                     <label for="noTransaksi">No Transaksi:</label>
                     <input type="text" class="form-control" id="noTransaksi" readonly>

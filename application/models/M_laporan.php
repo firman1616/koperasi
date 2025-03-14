@@ -15,7 +15,8 @@ class M_laporan extends CI_Model
         tt.pelanggan_id,
         tt.tgl_transaksi,
         tt.lainnya,
-        ta.name AS cust
+        ta.name AS cust,
+        tt.metode_bayar
     FROM
         tbl_transaksi tt
     LEFT JOIN 
@@ -25,13 +26,15 @@ class M_laporan extends CI_Model
     WHERE
         DATE(tt.tgl_transaksi) >= '$date_start'
         AND DATE(tt.tgl_transaksi) <= '$date_end'
+        and tt.metode_bayar = '1'
     group by
         tt.id,
         tt.no_transaksi,
         tt.grand_total,
         tt.tgl_transaksi,
         tt.lainnya,
-        ta.name");
+        ta.name
+    order by tt.no_transaksi desc");
     return $query;
   }
 
@@ -55,7 +58,8 @@ class M_laporan extends CI_Model
     left join tbl_barang tb on tb.kode_barang  = tdt.kode_barang
     WHERE
         DATE(tt.tgl_transaksi) >= '$date_start'
-        AND DATE(tt.tgl_transaksi) <= '$date_end'");
+        AND DATE(tt.tgl_transaksi) <= '$date_end'
+        and tt.metode_bayar = '1'");
     return $query;
   }
 

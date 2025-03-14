@@ -150,33 +150,63 @@ class Peserta extends CI_Controller
         $this->load->view('template/conten', $data);
     }
 
+    // public function get_iuran_data()
+    // {
+    //     $this->db->select("a.id, a.name, b.periode, b.status");
+    //     $this->db->from("tbl_anggota a");
+    //     $this->db->join("tbl_iuran b", "a.id = b.anggota_id", "left");
+    //     $this->db->where("a.id !=", 117);
+    //     $query = $this->db->get();
+    //     $result = $query->result();
+
+    //     // Ubah hasil query menjadi format yang bisa digunakan di View
+    //     $iuran_data = [];
+    //     foreach ($result as $row) {
+    //         if (!isset($iuran_data[$row->id])) {
+    //             $iuran_data[$row->id] = (object) [
+    //                 'id' => $row->id,
+    //                 'name' => $row->name,
+    //                 'iuran_status' => [] // Simpan status pembayaran
+    //             ];
+    //         }
+    //         if ($row->periode) {
+    //             $iuran_data[$row->id]->iuran_status[$row->periode] = $row->status;
+    //         }
+    //     }
+
+    //     return array_values($iuran_data);
+    // }
+
     public function get_iuran_data()
-    {
-        $this->db->select("a.id, a.name, b.periode, b.status, c.status as status_deposit");
-        $this->db->from("tbl_anggota a");
-        $this->db->join("tbl_iuran b", "a.id = b.anggota_id", "left");
-        $this->db->join("tbl_deposit c", "a.id = c.anggota_id", "left");
-        $this->db->where("a.id !=", 117);
-        $query = $this->db->get();
-        $result = $query->result();
+{
+    $this->db->select("a.id, a.name, b.periode, b.status, d.status as deposit_status");
+    $this->db->from("tbl_anggota a");
+    $this->db->join("tbl_iuran b", "a.id = b.anggota_id", "left");
+    $this->db->join("tbl_deposit d", "a.id = d.anggota_id", "left"); // Gabungkan dengan tbl_deposit
+    $this->db->where("a.id !=", 117);
+    $query = $this->db->get();
+    $result = $query->result();
 
-        // Ubah hasil query menjadi format yang bisa digunakan di View
-        $iuran_data = [];
-        foreach ($result as $row) {
-            if (!isset($iuran_data[$row->id])) {
-                $iuran_data[$row->id] = (object) [
-                    'id' => $row->id,
-                    'name' => $row->name,
-                    'iuran_status' => [] // Simpan status pembayaran
-                ];
-            }
-            if ($row->periode) {
-                $iuran_data[$row->id]->iuran_status[$row->periode] = $row->status;
-            }
+    // Ubah hasil query menjadi format yang bisa digunakan di View
+    $iuran_data = [];
+    foreach ($result as $row) {
+        if (!isset($iuran_data[$row->id])) {
+            $iuran_data[$row->id] = (object) [
+                'id' => $row->id,
+                'name' => $row->name,
+                'deposit_status' => $row->deposit_status, // Status deposit
+                'iuran_status' => [] // Simpan status pembayaran iuran
+            ];
         }
-
-        return array_values($iuran_data);
+        if ($row->periode) {
+            $iuran_data[$row->id]->iuran_status[$row->periode] = $row->status;
+        }
     }
+
+    return array_values($iuran_data);
+}
+
+    
 
 
     function tableIuran()
