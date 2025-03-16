@@ -223,13 +223,23 @@ class Laporan extends CI_Controller
     public function getHistoryBarang()
     {
         $id = $this->input->post('id');
-        $history = $this->lap->history_barang($id)->result();
+        $date_start = $this->input->post('date_start');
+        $date_end = $this->input->post('date_end');
 
-        // Ambil nama_barang
+        // Pastikan tanggal tidak kosong, jika kosong ambil 30 hari ke belakang
+        if (empty($date_start)) {
+            $date_start = date('Y-m-d', strtotime('-30 days'));
+        }
+        if (empty($date_end)) {
+            $date_end = date('Y-m-d');
+        }
+
+        $history = $this->lap->history_barang($id, $date_start, $date_end)->result();
+
+        // Ambil nama_barang jika ada data
         $nama_barang = !empty($history) ? $history[0]->nama_barang : "Unknown";
 
         foreach ($history as $row) {
-            // Pastikan history_date tidak NULL sebelum diformat
             $row->history_date = !empty($row->history_date) ? date('Y-m-d', strtotime($row->history_date)) : null;
         }
 

@@ -1,15 +1,44 @@
 $(document).ready(function () {
+    $("#detailLaporan").hide();
+
+    // Event handler untuk tombol "Lihat"
+    $("#preview").on("click", function () {
+        $("#detailLaporan").slideToggle(); // Tampilkan/sembunyikan dengan efek slide
+    });
+
     tableLapBarang();
 
+    // Fungsi untuk mendapatkan tanggal dalam format YYYY-MM-DD
+    function getFormattedDate(offsetDays = 0) {
+        let date = new Date();
+        date.setDate(date.getDate() + offsetDays);
+        return date.toISOString().split('T')[0]; // Format YYYY-MM-DD
+    }
+
+    // Set default value ke input tanggal (30 hari lalu - hari ini)
+    $("#date_start").val(getFormattedDate(-30)); // 30 hari yang lalu
+    $("#date_end").val(getFormattedDate(0)); // Hari ini
+
+    // Event klik tombol detail
     $(document).on("click", ".btn-detail", function () {
         var barang_id = $(this).data("id");
+        var date_start = $("#date_start").val();
+        var date_end = $("#date_end").val();
+
+        // Pastikan input tanggal tidak kosong
+        date_start = date_start ? date_start : getFormattedDate(-30);
+        date_end = date_end ? date_end : getFormattedDate(0);
 
         $("#detailTableBody").empty();
 
         $.ajax({
             url: BASE_URL + "Laporan/getHistoryBarang",
             type: "POST",
-            data: { id: barang_id },
+            data: {
+                id: barang_id,
+                date_start: date_start,
+                date_end: date_end
+            },
             dataType: "json",
             success: function (response) {
                 $("#detailModalLabel").text("Detail History Barang - " + response.nama_barang);
@@ -35,18 +64,12 @@ $(document).ready(function () {
         });
     });
 
-    // Fungsi perbaikan untuk format tanggal
+    // Fungsi perbaikan untuk format tanggal ke format DD-MM-YYYY
     function formatDate(dateString) {
         if (!dateString || dateString === "0000-00-00") return "-"; // Jika tanggal kosong atau invalid
 
-        let dateParts = dateString.split("-");
-        if (dateParts.length !== 3) return "-"; // Pastikan ada 3 bagian (YYYY-MM-DD)
-
-        let day = dateParts[2]; // Ambil bagian tanggal
-        let month = dateParts[1]; // Ambil bagian bulan
-        let year = dateParts[0]; // Ambil bagian tahun
-
-        return `${day}-${month}-${year}`;
+        let [year, month, day] = dateString.split("-");
+        return `${day}-${month}-${year}`; // Format DD-MM-YYYY
     }
 
 });

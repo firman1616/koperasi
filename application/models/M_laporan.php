@@ -96,7 +96,7 @@ class M_laporan extends CI_Model
     return $this->db->query("SELECT tb.id, tb.kode_barang, tb.nama_barang, tb.qty  from tbl_barang tb");
   }
 
-  function history_barang($id)
+  function history_barang($id, $date_start, $date_end)
   {
     return $this->db->query("SELECT
       tb.id,
@@ -111,6 +111,6 @@ class M_laporan extends CI_Model
     left join tbl_history_barang thb on
       thb.barang_id = tb.id
     where
-      tb.id = '$id'");
+      tb.id = '$id' and date(thb.history_date) >= '$date_start' and date(thb.history_date) <= '$date_end'");
   }
 }

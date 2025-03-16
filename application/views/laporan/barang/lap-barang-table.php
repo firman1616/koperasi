@@ -28,8 +28,6 @@
     </tbody>
 </table>
 
-
-<!-- Modal -->
 <!-- Modal -->
 <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
