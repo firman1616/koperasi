@@ -38,7 +38,8 @@ class M_laporan extends CI_Model
     return $query;
   }
 
-  function export_excel_penjualan($date_start, $date_end) {
+  function export_excel_penjualan($date_start, $date_end)
+  {
     $query = $this->db->query("SELECT
         tt.id,
         tt.no_transaksi,
@@ -88,5 +89,28 @@ class M_laporan extends CI_Model
     LEFT JOIN tbl_anggota ta ON ta.id = ti.anggota_id
     WHERE SUBSTRING(ti.periode, 1, 2) = '$bulan' 
     AND SUBSTRING(ti.periode, 3, 2) = '$tahun'");
+  }
+
+  function lap_barang()
+  {
+    return $this->db->query("SELECT tb.id, tb.kode_barang, tb.nama_barang, tb.qty  from tbl_barang tb");
+  }
+
+  function history_barang($id)
+  {
+    return $this->db->query("SELECT
+      tb.id,
+      tb.kode_barang,
+      tb.nama_barang,
+      tb.qty,
+      thb.barang_id,
+      thb.qty,
+      thb.history_date
+    from
+      tbl_barang tb
+    left join tbl_history_barang thb on
+      thb.barang_id = tb.id
+    where
+      tb.id = '$id'");
   }
 }

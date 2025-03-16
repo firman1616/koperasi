@@ -78,7 +78,7 @@
                                 <a class="collapse-item" href="<?= site_url('Laporan') ?>">Laporan Penjualan</a>
                             <?php } ?>
                             <?php if ($akses == 1 || $akses == 3) { ?>
-                                <a class="collapse-item" href="#">Laporan Barang</a>
+                                <a class="collapse-item" href="<?= site_url('Laporan/lap_barang') ?>">Laporan Barang</a>
                             <?php } ?>
                             <?php if ($akses == 1 || $akses == 3) { ?>
                                 <a class="collapse-item" href="<?= site_url('Laporan/lap_iuran') ?>">Laporan Iuran</a>
