@@ -10,7 +10,7 @@
         <div class="card-body">
             <!-- <label class="label">Tanggal Transaksi</label> -->
             <label class="label">Tanggal Transaksi</label>
-            <form method="GET" action="<?= base_url('Laporan/export_excel') ?>">
+            <form method="GET" action="<?= base_url('Laporan/export_barang') ?>">
                 <div class="row" style="margin-bottom: 5px;">
                     <div class="col">
                         <input type="date" class="form-control" name="date_start" id="date_start">

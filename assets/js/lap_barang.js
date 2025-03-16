@@ -64,6 +64,10 @@ $(document).ready(function () {
         });
     });
 
+    $("#export_excel").click(function () {
+        window.location.href = BASE_URL + "Laporan/export_barang";
+    });
+
     // Fungsi perbaikan untuk format tanggal ke format DD-MM-YYYY
     function formatDate(dateString) {
         if (!dateString || dateString === "0000-00-00") return "-"; // Jika tanggal kosong atau invalid

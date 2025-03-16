@@ -113,4 +113,22 @@ class M_laporan extends CI_Model
     where
       tb.id = '$id' and date(thb.history_date) >= '$date_start' and date(thb.history_date) <= '$date_end'");
   }
+
+  function export_barang($date_start, $date_end)
+  {
+    return $this->db->query("SELECT
+      tb.id,
+      tb.kode_barang,
+      tb.nama_barang,
+      tb.qty,
+      thb.barang_id,
+      thb.qty as qty_history,
+      thb.history_date
+    from
+      tbl_barang tb
+    left join tbl_history_barang thb on
+      thb.barang_id = tb.id
+    where
+      date(thb.history_date) >= '$date_start' and date(thb.history_date) <= '$date_end'");
+  }
 }
