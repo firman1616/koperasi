@@ -48,6 +48,22 @@
                 </li>
             <?php } ?>
 
+            <?php if ($akses == 1 || $akses == 2) { ?>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#trans_lain"
+                        aria-expanded="true" aria-controls="trans_lain">
+                        <i class="fas fa-fw fa-wallet"></i>
+                        <span>Transaksi Lain - lain</span>
+                    </a>
+                    <div id="trans_lain" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="<?= site_url('PemasukanLain') ?>">Pemasukan Lain - lain</a>
+                            <a class="collapse-item" href="<?= site_url('PengeluaranLain') ?>">Pengeluaran Lain - lain</a>
+                        </div>
+                    </div>
+                </li>
+            <?php } ?>
+
 
             <?php if ($akses == 1 || $akses == 2 || $akses == 3) { ?>
                 <li class="nav-item">
@@ -87,6 +103,7 @@
                             <a class="collapse-item" href="<?= site_url('Barang') ?>">Master Barang</a>
                             <a class="collapse-item" href="<?= site_url('UOM') ?>">Master UoM (Satuan)</a>
                             <a class="collapse-item" href="<?= site_url('Peserta') ?>">Anggota</a>
+                            <a class="collapse-item" href="<?= site_url('Kategori') ?>">Kategori</a>
                             <a class="collapse-item" href="<?= site_url('User') ?>">User</a>
                         </div>
                     </div>
