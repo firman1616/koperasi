@@ -53,12 +53,12 @@
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#trans_lain"
                         aria-expanded="true" aria-controls="trans_lain">
                         <i class="fas fa-fw fa-wallet"></i>
-                        <span>Transaksi Lain - lain</span>
+                        <span>Transaksi Keuangan</span>
                     </a>
                     <div id="trans_lain" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="<?= site_url('PemasukanLain') ?>">Pemasukan Lain - lain</a>
-                            <a class="collapse-item" href="<?= site_url('PengeluaranLain') ?>">Pengeluaran Lain - lain</a>
+                            <a class="collapse-item" href="<?= site_url('PemasukanLain') ?>">Pemasukan Keuangan</a>
+                            <a class="collapse-item" href="<?= site_url('PengeluaranLain') ?>">Pengeluaran Keuangan</a>
                         </div>
                     </div>
                 </li>

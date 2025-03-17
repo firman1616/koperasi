@@ -120,15 +120,18 @@ class M_laporan extends CI_Model
       tb.id,
       tb.kode_barang,
       tb.nama_barang,
-      tb.qty,
-      thb.barang_id,
-      thb.qty as qty_history,
+      sum(thb.qty) as qty_history,
       thb.history_date
     from
       tbl_barang tb
     left join tbl_history_barang thb on
       thb.barang_id = tb.id
     where
-      date(thb.history_date) >= '$date_start' and date(thb.history_date) <= '$date_end'");
+      date(thb.history_date) >= '$date_start' and date(thb.history_date) <= '$date_end'
+    group by 
+    tb.id,
+      tb.kode_barang,
+      tb.nama_barang,
+      month(thb.history_date)");
   }
 }

@@ -271,14 +271,11 @@ class Laporan extends CI_Controller
         $sheet->setCellValue('C1', 'Nama Barang');
         $sheet->setCellValue('D1', 'QTY History');
         $sheet->setCellValue('E1', 'Date History');
-        $sheet->setCellValue('F1', 'Total QTY');
 
         // Isi data
         $row = 2;
         $x = 1;
         foreach ($data as $d) {
-            $customer = ($d->pelanggan_id == '117') ? $d->lainnya : $d->cust;
-            $total = number_format($d->grand_total);
             $date = date('d-m-Y', strtotime($d->history_date));
 
             $sheet->setCellValue('A' . $row, $x++);
@@ -286,7 +283,6 @@ class Laporan extends CI_Controller
             $sheet->setCellValue('C' . $row, $d->nama_barang);
             $sheet->setCellValue('D' . $row, $d->qty_history);
             $sheet->setCellValue('E' . $row, $date);
-            $sheet->setCellValue('F' . $row, $d->qty);
             $row++;
         }
 
