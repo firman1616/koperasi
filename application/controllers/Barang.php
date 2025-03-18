@@ -63,7 +63,8 @@ class Barang extends CI_Controller {
             'tgl_update_stock' => date('Y-m-d H:i:s'),
             'jenis' => '1',
             'set_diskon' => $this->input->post('set_diskon'),
-            'min_qty' => $this->input->post('min_qty')
+            'min_qty' => $this->input->post('min_qty'),
+            'status_barang' => $this->input->post('jenis_barang')
         ];
         $this->m_data->simpan_data($table,$data);
         redirect('Barang');
@@ -100,7 +101,8 @@ class Barang extends CI_Controller {
             'tgl_update_stock' => date('Y-m-d H:i:s'),
             // 'jenis' => '1'
             'set_diskon' => $this->input->post('set_diskon'),
-            'min_qty' => $this->input->post('min_qty')
+            'min_qty' => $this->input->post('min_qty'),
+            'status_barang' => $this->input->post('jenis_barang')
         ];
         $where = array('id' => $id);
         $this->m_data->update_data($table,$data,$where);

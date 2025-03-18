@@ -32,7 +32,7 @@
                         <input type="number" class="form-control" id="qty" name="qty" value="0">
                     </div>
                     <div class="col">
-                        <label class="form-label">Set Diskon <small>3000</small></label>
+                        <label class="form-label">Satuan</label>
                         <select name="uom" id="uom" class="form-control select2" required>
                             <option value="" disabled selected>Pilih satuan</option>
                             <?php foreach ($uom as $row) { ?>
@@ -40,9 +40,17 @@
                             <?php } ?>
                         </select>
                     </div>
+                    <div class="col">
+                        <label class="form-label">Jenis Barang</label>
+                        <select name="jenis_barang" id="jenis_barang" class="form-control" required>
+                            <option value="" disabled selected>Pilih Satu</option>
+                            <option value="1">Raw Material</option>
+                            <option value="2">Siap Jual</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col">
                         <label class="form-label">Set Diskon <small>3000</small></label>
                         <input type="number" class="form-control" id="set_diskon" name="set_diskon" value="0">
@@ -51,7 +59,7 @@
                         <label class="form-label">Min Qty </label>
                         <input type="number" class="form-control" id="min_qty" name="min_qty" value="0">
                     </div>
-                </div>
+                </div> -->
                 <button type="submit" class="btn btn-primary" style="margin-top: 10px;"><i class="fa fa-save"></i> | Simpan Data</button>
 
             </form>

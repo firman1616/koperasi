@@ -9,6 +9,7 @@
     $id  = $row->id;
     $h = $row->set_diskon;
     $i = $row->min_qty;
+    $j = $row->status_barang;
 } ?>
 
 <!-- Begin Page Content -->
@@ -52,9 +53,19 @@
                             <?php } ?>
                         </select>
                     </div>
+                    <div class="col">
+                        <label class="form-label">Jenis Barang</label>
+                        <select name="jenis_barang" id="jenis_barang" class="form-control" required>
+                            <option value="" disabled selected>Pilih Satu</option>
+                            <option value="1" <?= ($j == '1') ? 'selected' : '' ?>>Raw Material</option>
+                            <option value="2" <?= ($j == '2') ? 'selected' : '' ?>>Siap Jual</option>
+                            
+                            
+                        </select>
+                    </div>
                 </div>
 
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col">
                         <label class="form-label">Set Diskon <small>3000</small></label>
                         <input type="number" class="form-control" id="set_diskon" name="set_diskon" value="<?= $h ?>">
@@ -63,7 +74,7 @@
                         <label class="form-label">Min Qty </label>
                         <input type="number" class="form-control" id="min_qty" name="min_qty" value="<?= $i ?>">
                     </div>
-                </div>
+                </div> -->
 
                 <!-- <div class="row"> -->
                     <!-- <div class="col">
