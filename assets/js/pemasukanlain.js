@@ -1,87 +1,48 @@
 $(document).ready(function () {
     tablePemasukanLain();
+    $('#id').val('');
+    $('#pemasukanForm').trigger("reset");
     
-    $("#btnTambah").click(function () {
-        $("#modalTambah").modal("show"); // Menampilkan modal
-    });
+    
+    $('#save-data').click(function (e) { 
+        e.preventDefault();
+        let id = $('#id').val(); // Cek apakah #id memiliki nilai
+        let message = id ? "Data Berhasil Diupdate!" : "Data Berhasil Ditambahkan!";
 
-    $("#formTambah").submit(function (e) {
-        e.preventDefault(); // Mencegah reload halaman
-
-        // Ambil nilai input
-        var kategori_id = $("#kategori").val();
-        var nominal = $("#nominal").val();
-        var keterangan = $("#keterangan").val();
-
-        // Kirim data via AJAX
         $.ajax({
+            data: $('#pemasukanForm').serialize(),
+            url: BASE_URL + "PemasukanLain/store",
             type: "POST",
-            url: BASE_URL + "PemasukanLain/simpan", // Ganti dengan controller yang sesuai
-            data: {
-                kategori_id: kategori_id,
-                nominal: nominal,
-                keterangan: keterangan
+            datatype: 'json',
+            success: function(data) {
+                $('#pemasukanForm').trigger("reset");
+                $('#id').val(''); // Reset ID setelah submit
+                alert(message);
+                tablePemasukanLain();
             },
-            success: function (response) {
-                alert("Transaksi berhasil disimpan!");
-                $("#modalTambah").modal("hide"); // Tutup modal
-                $("#formTambah")[0].reset(); // Reset form
-                tablePemasukanLain(); // Refresh tabel
-            },
-            error: function () {
-                alert("Gagal menyimpan transaksi.");
+            error: function(data) {
+                console.log('Error:', data);
+                $('$save-data').html('Simpan Data');
             }
         });
-    });
+     })
 
-    $(document).on("click", ".btnEdit", function () {
-        let id = $(this).data("id");
-        let kategori = $(this).data("kategori");
-        let nominal = $(this).data("nominal");
-        let keterangan = $(this).data("keterangan");
-
-        // console.log("ID:", id, "Kategori:", kategori, "Nominal:", nominal, "Keterangan:", keterangan); // Debugging
-
-        // Isi modal dengan data dari tombol edit
-        $("#edit_id").val(id);
-        $("#edit_kategori").val(kategori);
-        $("#edit_nominal").val(nominal);
-        $("#edit_keterangan").val(keterangan);
-
-        // Tampilkan modal edit
-        $("#modalEdit").modal("show");
-    });
-
-    // Simpan perubahan melalui AJAX
-    $("#formEdit").submit(function (e) {
-        e.preventDefault(); // Mencegah reload halaman
-
-        // Ambil nilai input
-        var id = $("#edit_id").val();
-        var kategori_id = $("#edit_kategori").val();
-        var nominal = $("#edit_nominal").val();
-        var keterangan = $("#edit_keterangan").val();
-
-        // Kirim data via AJAX
+     $('body').on('click','.edit',function (e) {
+        var id = $(this).data('id');
         $.ajax({
-            type: "POST",
-            url: BASE_URL + "PemasukanLain/update", // Ganti dengan controller yang sesuai
-            data: {
-                id: id,
-                kategori_id: kategori_id,
-                nominal: nominal,
-                keterangan: keterangan
-            },
-            success: function (response) {
-                alert("Transaksi berhasil diperbarui!");
-                $("#modalEdit").modal("hide"); // Tutup modal
-                tablePemasukanLain(); // Refresh tabel
-            },
-            error: function () {
-                alert("Gagal mengupdate transaksi.");
+            url: BASE_URL + "PemasukanLain/vedit/" + id,
+            type: 'GET',
+            dataType : 'json',            
+            success: function (data) {
+                console.log(data);
+                $('#id').val(id);
+                $('#kategori').val(data.kategori_id).trigger('change');
+                $('#nominal').val(data.nominal);
+                $('#keterangan').val(data.keterangan);
             }
-        });
-    });
+        })
+    })
+
 });
 
 function tablePemasukanLain() {
@@ -97,3 +58,14 @@ function tablePemasukanLain() {
         }
     });
 }
+
+$(document).on('click', '.delete-btn', function (event) {
+    event.preventDefault(); // Mencegah link langsung dijalankan
+
+    var url = $(this).attr('href'); // Ambil URL dari href
+
+    // Konfirmasi sebelum menghapus
+    if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+        window.location.href = url; // Jika dikonfirmasi, jalankan URL
+    }
+});

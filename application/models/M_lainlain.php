@@ -25,6 +25,12 @@ class M_lainlain extends CI_Model
   public function update_pemasukan($id, $data)
   {
     $this->db->where('id', $id);
-    return $this->db->update('tbl_pemasukan', $data);
+    $update = $this->db->update('tbl_pemasukan', $data);
+
+    if (!$update) {
+      error_log("Gagal update ID: $id. Error: " . $this->db->error()['message']);
+    }
+
+    return $update;
   }
 }
