@@ -2,9 +2,9 @@
 // Konfigurasi database
 $host = 'localhost'; // Sesuaikan dengan host database kamu
 $user = 'root'; // Sesuaikan dengan user database kamu
-$pass = ''; // Sesuaikan dengan password database kamu
+$pass = '123'; // Sesuaikan dengan password database kamu
 $db   = 'db_koperasi'; // Sesuaikan dengan nama database kamu
-$port = '5001';
+$port = '3310';
 
 // Koneksi ke database
 $conn = new mysqli($host, $user, $pass, $db, $port);
@@ -13,6 +13,8 @@ $conn = new mysqli($host, $user, $pass, $db, $port);
 if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
 }
+
+// die();
 
 // Ambil data anggota yang belum memiliki iuran
 $sql = "SELECT id FROM tbl_anggota WHERE id NOT IN (SELECT DISTINCT anggota_id FROM tbl_iuran)";

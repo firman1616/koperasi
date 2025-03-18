@@ -74,10 +74,12 @@ class Transaksi extends CI_Controller
         $this->db->select('id, kode_barang, nama_barang, qty');
         $this->db->from('tbl_barang');
         $this->db->where('status', 1); // Filter hanya barang dengan status = 1
+        $this->db->where('status_barang', 2); // Tambah filter status_barang = 2
         $barang = $this->db->get()->result();
-
+    
         echo json_encode($barang);
     }
+    
 
     public function proses_pembayaran()
     {

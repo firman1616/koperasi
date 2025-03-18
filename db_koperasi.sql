@@ -101,7 +101,7 @@ INSERT INTO `tbl_anggota` VALUES (42, 'KSUA24100042', 'Marsan', 'laki', 'Bin Mar
 INSERT INTO `tbl_anggota` VALUES (43, 'KSUA24100043', 'Yanti Heryanti', 'perempuan', 'Binti Udi', 'Cirebon ', '1986-09-01', '3603144109860006', 'Cirebon', '', '', '', '081388883295', 1);
 INSERT INTO `tbl_anggota` VALUES (44, 'KSUA24100044', 'Nadi Gunaedy', 'laki', 'Bin Ahman Dirin', 'Jakarta ', '1976-03-25', '31730625037660001', 'Jakarta Barat', '', '', '', '', 1);
 INSERT INTO `tbl_anggota` VALUES (45, 'KSUA24100045', 'Anah', 'perempuan', 'Binti Aming', 'Jakarta ', '1977-06-15', '3173065506770007', 'Jakarta Barat', '', '', '', '089275772576', 1);
-INSERT INTO `tbl_anggota` VALUES (46, 'KSUA24100046', 'Sana\'ah', 'perempuan', 'Binti Samid', 'Cirebon ', '1980-05-03', '3209385504820002', 'Tangerang', '', '', '', '083825148459', 1);
+INSERT INTO `tbl_anggota` VALUES (46, 'KSUA24100046', "Sanaah", 'perempuan', 'Binti Samid', 'Cirebon ', '1980-05-03', '3209385504820002', 'Tangerang', '', '', '', '083825148459', 1);
 INSERT INTO `tbl_anggota` VALUES (47, 'KSUA24100047', 'Nuriah', 'perempuan', 'Binti Muhadi', 'Pemalang ', '1983-07-25', '3173066507830008', 'Jakarta Barat', '', '', '', '081310075383', 1);
 INSERT INTO `tbl_anggota` VALUES (48, 'KSUA24100048', 'Muhammad Hamdany Munawwa', 'laki', 'Binti Fatchul Munir', ' Jakarta ', '2002-05-31', '3173063105020005', 'Jakarta/ Solo', '', '', '', '', 1);
 INSERT INTO `tbl_anggota` VALUES (49, 'KSUA24100049', 'Neneng Helawati', 'perempuan', 'Binti Marwan Idrus', 'Tangerang ', '1983-03-23', '3603146303830007', 'Tangerang', '', '', '', '087826102431', 1);
