@@ -35,29 +35,77 @@ class PemasukanLain extends CI_Controller
         echo json_encode($this->load->view('pemasukanlain/pemasukan-lain-table', $data, false));
     }
 
-    function store()
+    // function store()
+    // {
+    //     $id = $this->input->post('id');
+    //     if ($id != null) {
+    //         $table = 'tbl_pemasukan';
+    //         $dataupdate = [
+    //             'kategori_id' => $this->input->post('kategori'),
+    //             'nominal' => $this->input->post('nominal'),
+    //             'keterangan' => $this->input->post('keterangan')
+    //         ];
+    //         $where = array('id' => $id);
+    //         $this->m_data->update_data($table, $dataupdate, $where);
+    //     } else {
+    //         $table = 'tbl_pemasukan';
+    //         $data = [
+    //             'kategori_id' => $this->input->post('kategori'),
+    //             'nominal' => $this->input->post('nominal'),
+    //             'date' => date('Y-m-d'),
+    //             'keterangan' => $this->input->post('keterangan')
+    //         ];
+    //         // $die(var_dump($data));
+    //         $this->m_data->simpan_data($table, $data);
+    //     }
+    // }
+
+    public function store()
     {
-        $id = $this->input->post('id');
-        if ($id != null) {
-            $table = 'tbl_pemasukan';
-            $dataupdate = [
-                'kategori_id' => $this->input->post('kategori'),
-                'nominal' => $this->input->post('nominal'),
-                'keterangan' => $this->input->post('keterangan')
-            ];
-            $where = array('id' => $id);
-            $this->m_data->update_data($table, $dataupdate, $where);
+        // Ambil tanggal sekarang dalam format Y-m-d
+        $tanggal_pemasukan = date('Y-m-d');
+
+        $data = [
+            'kategori_id' => $this->input->post('kategori'),
+            'nominal' => $this->input->post('nominal'),
+            'keterangan' => $this->input->post('keterangan'),
+            'date' => $tanggal_pemasukan, // Simpan dengan format Y-m-d
+        ];
+
+        // Simpan ke tbl_pemasukan
+        $this->db->insert('tbl_pemasukan', $data);
+
+        // Ambil kategori_keuangan berdasarkan kategori_id
+        $kategori_id = $data['kategori_id'];
+        $nominal_baru = $data['nominal'];
+
+        // Format periode untuk tbl_keuangan (my -> bulan & tahun tanpa tanda)
+        $periode = date('my', strtotime($tanggal_pemasukan));
+
+        // Periksa apakah kategori sudah ada di tbl_keuangan dengan periode yang sama
+        $this->db->where('kategori_keuangan', $kategori_id);
+        $this->db->where('periode', $periode);
+        $query = $this->db->get('tbl_keuangan');
+
+        if ($query->num_rows() > 0) {
+            // Jika sudah ada, update nominal
+            $row = $query->row();
+            $nominal_lama = $row->nominal;
+            $total_nominal = $nominal_lama + $nominal_baru;
+
+            $this->db->where('id', $row->id);
+            $this->db->update('tbl_keuangan', ['nominal' => $total_nominal]);
         } else {
-            $table = 'tbl_pemasukan';
-            $data = [
-                'kategori_id' => $this->input->post('kategori'),
-                'nominal' => $this->input->post('nominal'),
-                'date' => date('Y-m-d'),
-                'keterangan' => $this->input->post('keterangan')
+            // Jika belum ada, insert data baru
+            $keuangan_data = [
+                'kategori_keuangan' => $kategori_id,
+                'nominal' => $nominal_baru,
+                'periode' => $periode, // Format my (contoh: 0325 untuk Maret 2025)
             ];
-            // $die(var_dump($data));
-            $this->m_data->simpan_data($table, $data);
+            $this->db->insert('tbl_keuangan', $keuangan_data);
         }
+
+        echo json_encode(['status' => 'success']);
     }
 
     function vedit($id)
@@ -68,11 +116,48 @@ class PemasukanLain extends CI_Controller
         echo json_encode($data);
     }
 
-    function delete_data($id)
+    // function delete_data($id)
+    // {
+    //     $table = 'tbl_pemasukan';
+    //     $where = array('id' => $id);
+    //     $this->m_data->hapus_data($table, $where);
+    //     redirect('PemasukanLain');
+    // }
+
+    public function delete_data($id)
     {
-        $table = 'tbl_pemasukan';
-        $where = array('id' => $id);
-        $this->m_data->hapus_data($table, $where);
-        redirect('PemasukanLain');
+        // Ambil data yang akan dihapus dari tbl_pemasukan
+        $this->db->where('id', $id);
+        $query = $this->db->get('tbl_pemasukan');
+
+        if ($query->num_rows() > 0) {
+            $data = $query->row();
+            $kategori_id = $data->kategori_id;
+            $nominal_hapus = $data->nominal;
+            $periode = date('my', strtotime($data->date)); // Format my dari date di tbl_pemasukan
+
+            // Hapus data dari tbl_pemasukan
+            $this->db->where('id', $id);
+            $this->db->delete('tbl_pemasukan');
+
+            // Periksa apakah kategori ini masih ada di tbl_keuangan untuk periode tersebut
+            $this->db->where('kategori_keuangan', $kategori_id);
+            $this->db->where('periode', $periode);
+            $query_keuangan = $this->db->get('tbl_keuangan');
+
+            if ($query_keuangan->num_rows() > 0) {
+                $row_keuangan = $query_keuangan->row();
+                $nominal_lama = $row_keuangan->nominal;
+                $total_nominal = $nominal_lama - $nominal_hapus;
+
+                // Update nominal di tbl_keuangan (biarkan 0 jika hasilnya 0)
+                $this->db->where('id', $row_keuangan->id);
+                $this->db->update('tbl_keuangan', ['nominal' => max(0, $total_nominal)]);
+            }
+
+            echo json_encode(['status' => 'success', 'message' => 'Data berhasil dihapus']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Data tidak ditemukan']);
+        }
     }
 }

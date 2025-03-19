@@ -9,6 +9,11 @@ $(document).ready(function () {
         let id = $('#id').val(); // Cek apakah #id memiliki nilai
         let message = id ? "Data Berhasil Diupdate!" : "Data Berhasil Ditambahkan!";
 
+        if (!kategori || !nominal) {
+            alert("Kategori dan Nominal harus diisi!");
+            return;
+        }
+
         $.ajax({
             data: $('#pemasukanForm').serialize(),
             url: BASE_URL + "PemasukanLain/store",
@@ -60,12 +65,23 @@ function tablePemasukanLain() {
 }
 
 $(document).on('click', '.delete-btn', function (event) {
-    event.preventDefault(); // Mencegah link langsung dijalankan
+    event.preventDefault();
 
     var url = $(this).attr('href'); // Ambil URL dari href
 
-    // Konfirmasi sebelum menghapus
     if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-        window.location.href = url; // Jika dikonfirmasi, jalankan URL
+        $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "json",
+            success: function(response) {
+                alert(response.message);
+                tablePemasukanLain(); // Refresh table setelah hapus
+            },
+            error: function(xhr) {
+                alert("Terjadi kesalahan saat menghapus data!");
+            }
+        });
     }
 });
+
