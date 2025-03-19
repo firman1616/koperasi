@@ -23,6 +23,7 @@
                 <td><?= $row->keterangan ?></td>
                 <td>
                     <button type="button" class="btn btn-warning edit" data-id="<?= $row->id ?>"><i class="fa fa-edit"></i></button>
+                    <a href="<?= site_url('PengeluaranLain/delete_data/'.$row->id) ?>" data-id="<?= $row->id ?>" class="btn btn-danger delete-btn" data-id="<?= $row->id ?>"><i class="fa fa-trash"></i></a>
                 </td>
             </tr>
         <?php }

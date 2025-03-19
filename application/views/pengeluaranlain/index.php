@@ -1,4 +1,12 @@
 <!-- Begin Page Content -->
+<style>
+    .saldo-text {
+        color: red;         /* Warna merah */
+        font-weight: bold;  /* Membuat teks lebih tebal */
+        font-size: 17px;    /* Ukuran teks sedikit lebih besar */
+    }
+</style>
+
 <div class="container-fluid">
 
     <!-- Page Heading -->
@@ -32,7 +40,7 @@
                                 <?php }
                                 ?>
                             </select>
-                            <small>Rp. 0,-</small>
+                            <small id="saldoTersedia" class="saldo-text">Rp. 0,-</small>
                         </div>
                         <div class="form-group">
                             <label for="nominal">Nominal</label>
