@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class PemasukanLain extends CI_Controller
+class PengeluaranLain extends CI_Controller
 {
 
     public function __construct()
@@ -19,38 +19,41 @@ class PemasukanLain extends CI_Controller
         $data = [
             'akses' => $this->session->userdata('level'),
             'name' => $this->session->userdata('nama'),
-            'title' => 'Pemasukan Keuangan',
+            'title' => 'Pengeluaran Keuangan',
             'subtitle' => 'List',
-            'conten' => 'pemasukanlain/index',
-            'kateg' => $this->lain->get_kateg_pemasukan(),
-            'footer_js' => array('assets/js/pemasukanlain.js')
+            'conten' => 'pengeluaranlain/index',
+            'keluar' => $this->lain->kategori_keluar(),
+            'sumber' => $this->lain->sumber_dana(),
+            'footer_js' => array('assets/js/pengeluaranlain.js')
         ];
         $this->load->view('template/conten', $data);
     }
 
-    function tablePemasukanLain()
+    function tablePengeluaranLain()
     {
-        $data['pemasukan'] = $this->lain->get_data_pemasukan()->result();
-        $data['kateg'] = $this->lain->get_kateg_pemasukan();
-        echo json_encode($this->load->view('pemasukanlain/pemasukan-lain-table', $data, false));
+        $data['pengeluaran'] = $this->lain->get_data_pengeluaran()->result();
+        // $data['kateg'] = $this->lain->get_kateg_pemasukan();
+        echo json_encode($this->load->view('pengeluaranlain/pengeluaran-lain-table',$data, false));
     }
 
     function store()
     {
         $id = $this->input->post('id');
         if ($id != null) {
-            $table = 'tbl_pemasukan';
+            $table = 'tbl_pengeluaran';
             $dataupdate = [
                 'kategori_id' => $this->input->post('kategori'),
+                'sumber_dana_id' => $this->input->post('sumberdana'),
                 'nominal' => $this->input->post('nominal'),
                 'keterangan' => $this->input->post('keterangan')
             ];
             $where = array('id' => $id);
             $this->m_data->update_data($table, $dataupdate, $where);
         } else {
-            $table = 'tbl_pemasukan';
+            $table = 'tbl_pengeluaran';
             $data = [
                 'kategori_id' => $this->input->post('kategori'),
+                'sumber_dana_id' => $this->input->post('sumberdana'),
                 'nominal' => $this->input->post('nominal'),
                 'date' => date('Y-m-d'),
                 'keterangan' => $this->input->post('keterangan')
@@ -62,7 +65,7 @@ class PemasukanLain extends CI_Controller
 
     function vedit($id)
     {
-        $table = 'tbl_pemasukan';
+        $table = 'tbl_pengeluaran';
         $where = array('id' => $id);
         $data = $this->m_data->get_data_by_id($table, $where)->row();
         echo json_encode($data);
@@ -70,7 +73,7 @@ class PemasukanLain extends CI_Controller
 
     function delete_data($id)
     {
-        $table = 'tbl_pemasukan';
+        $table = 'tbl_pengeluaran';
         $where = array('id' => $id);
         $this->m_data->hapus_data($table, $where);
         redirect('PemasukanLain');

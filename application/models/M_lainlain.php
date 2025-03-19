@@ -33,4 +33,38 @@ class M_lainlain extends CI_Model
 
     return $update;
   }
+
+  function kategori_keluar() {
+    return $this->db->query("SELECT * FROM tbl_kateg_trans tkt where kategori_id ='2'");
+  }
+
+  function sumber_dana() {
+    return $this->db->query("SELECT
+      tk.kategori_keuangan,
+      tk.nominal,
+      tk.periode,
+      tkt.name,
+      tk2.name as kategori
+    from
+      tbl_keuangan tk 
+    left join tbl_kateg_trans tkt on tkt.id = tk.kategori_keuangan 
+    left join tbl_kategori tk2 on tk2.id = tkt.kategori_id 
+    where tk2.id = '1'");
+  }
+
+  function get_data_pengeluaran()  {
+    return $this->db->query("SELECT
+      tp.id,
+      tp.kategori_id,
+      tp.sumber_dana_id,
+      tp.nominal,
+      tp.date,
+      tp.keterangan,
+      tkt.name as kategori,
+      tkt2.name as sumber_dana
+    from
+      tbl_pengeluaran tp
+    left join tbl_kateg_trans tkt on tkt.id = tp.kategori_id 
+    left join tbl_kateg_trans tkt2 on tkt2.id = tp.sumber_dana_id ");
+  }
 }
