@@ -11,7 +11,7 @@
  Target Server Version : 100428 (10.4.28-MariaDB)
  File Encoding         : 65001
 
- Date: 18/03/2025 16:28:56
+ Date: 19/03/2025 16:21:58
 */
 
 SET NAMES utf8mb4;
@@ -101,7 +101,7 @@ INSERT INTO `tbl_anggota` VALUES (42, 'KSUA24100042', 'Marsan', 'laki', 'Bin Mar
 INSERT INTO `tbl_anggota` VALUES (43, 'KSUA24100043', 'Yanti Heryanti', 'perempuan', 'Binti Udi', 'Cirebon ', '1986-09-01', '3603144109860006', 'Cirebon', '', '', '', '081388883295', 1);
 INSERT INTO `tbl_anggota` VALUES (44, 'KSUA24100044', 'Nadi Gunaedy', 'laki', 'Bin Ahman Dirin', 'Jakarta ', '1976-03-25', '31730625037660001', 'Jakarta Barat', '', '', '', '', 1);
 INSERT INTO `tbl_anggota` VALUES (45, 'KSUA24100045', 'Anah', 'perempuan', 'Binti Aming', 'Jakarta ', '1977-06-15', '3173065506770007', 'Jakarta Barat', '', '', '', '089275772576', 1);
-INSERT INTO `tbl_anggota` VALUES (46, 'KSUA24100046', "Sanaah", 'perempuan', 'Binti Samid', 'Cirebon ', '1980-05-03', '3209385504820002', 'Tangerang', '', '', '', '083825148459', 1);
+INSERT INTO `tbl_anggota` VALUES (46, 'KSUA24100046', 'Sanaah', 'perempuan', 'Binti Samid', 'Cirebon ', '1980-05-03', '3209385504820002', 'Tangerang', '', '', '', '083825148459', 1);
 INSERT INTO `tbl_anggota` VALUES (47, 'KSUA24100047', 'Nuriah', 'perempuan', 'Binti Muhadi', 'Pemalang ', '1983-07-25', '3173066507830008', 'Jakarta Barat', '', '', '', '081310075383', 1);
 INSERT INTO `tbl_anggota` VALUES (48, 'KSUA24100048', 'Muhammad Hamdany Munawwa', 'laki', 'Binti Fatchul Munir', ' Jakarta ', '2002-05-31', '3173063105020005', 'Jakarta/ Solo', '', '', '', '', 1);
 INSERT INTO `tbl_anggota` VALUES (49, 'KSUA24100049', 'Neneng Helawati', 'perempuan', 'Binti Marwan Idrus', 'Tangerang ', '1983-03-23', '3603146303830007', 'Tangerang', '', '', '', '087826102431', 1);
@@ -1688,7 +1688,7 @@ INSERT INTO `tbl_kateg_trans` VALUES (5, NULL, 'Kegiatan Koperasi', 2);
 INSERT INTO `tbl_kateg_trans` VALUES (6, NULL, 'Kegiatan Sosial', 2);
 INSERT INTO `tbl_kateg_trans` VALUES (7, NULL, 'Kegiatan Penunjang Koperasi', 2);
 INSERT INTO `tbl_kateg_trans` VALUES (8, NULL, 'Jasa Pengurus Koperasi', 2);
-INSERT INTO `tbl_kateg_trans` VALUES (9, NULL, 'pembagian SHU anggota', 2);
+INSERT INTO `tbl_kateg_trans` VALUES (9, NULL, 'Pembagian SHU anggota', 2);
 INSERT INTO `tbl_kateg_trans` VALUES (10, NULL, 'Pengadaan Inventaris', 2);
 INSERT INTO `tbl_kateg_trans` VALUES (11, NULL, 'Dana Hasil Penjualan', 1);
 INSERT INTO `tbl_kateg_trans` VALUES (12, NULL, 'Iuran Bulanan & Simpanan Anggota', 1);
@@ -1721,11 +1721,23 @@ CREATE TABLE `tbl_keuangan`  (
   `nominal` decimal(10, 0) NULL DEFAULT NULL,
   `periode` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_keuangan
 -- ----------------------------
+INSERT INTO `tbl_keuangan` VALUES (1, 1, 500000, '0325');
+INSERT INTO `tbl_keuangan` VALUES (3, 3, 10000000, '0325');
+INSERT INTO `tbl_keuangan` VALUES (4, 4, 0, '0325');
+INSERT INTO `tbl_keuangan` VALUES (5, 5, 0, '0325');
+INSERT INTO `tbl_keuangan` VALUES (6, 6, 0, '0325');
+INSERT INTO `tbl_keuangan` VALUES (7, 7, 0, '0325');
+INSERT INTO `tbl_keuangan` VALUES (8, 8, 0, '0325');
+INSERT INTO `tbl_keuangan` VALUES (9, 9, 0, '0325');
+INSERT INTO `tbl_keuangan` VALUES (10, 10, 0, '0325');
+INSERT INTO `tbl_keuangan` VALUES (11, 11, 0, '0325');
+INSERT INTO `tbl_keuangan` VALUES (12, 12, 0, '0325');
+INSERT INTO `tbl_keuangan` VALUES (13, 2, 200000, '0325');
 
 -- ----------------------------
 -- Table structure for tbl_level
@@ -1755,15 +1767,14 @@ CREATE TABLE `tbl_pemasukan`  (
   `date` date NULL DEFAULT NULL,
   `keterangan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_pemasukan
 -- ----------------------------
-INSERT INTO `tbl_pemasukan` VALUES (1, 1, 1000000, '2025-03-16', 'Dana hibah dari bapak paijo');
-INSERT INTO `tbl_pemasukan` VALUES (2, 3, 5000000, '2025-03-17', 'dana cadangan dari investor');
-INSERT INTO `tbl_pemasukan` VALUES (3, 2, 500000, '2025-03-18', 'shodaqoh dari sultan');
-INSERT INTO `tbl_pemasukan` VALUES (4, 2, 50000, '2025-03-18', 'infaq dan shodaqoh');
+INSERT INTO `tbl_pemasukan` VALUES (2, 1, 500000, '2025-03-19', 'sumbangan dari si fulan');
+INSERT INTO `tbl_pemasukan` VALUES (3, 2, 200000, '2025-03-19', 'printing');
+INSERT INTO `tbl_pemasukan` VALUES (4, 3, 10000000, '2025-03-19', 'cadangan dagangan');
 
 -- ----------------------------
 -- Table structure for tbl_pengeluaran
@@ -1777,7 +1788,7 @@ CREATE TABLE `tbl_pengeluaran`  (
   `date` date NULL DEFAULT NULL,
   `keterangan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_pengeluaran

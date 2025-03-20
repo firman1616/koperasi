@@ -85,3 +85,17 @@ $(document).on('click', '.delete-btn', function (event) {
     }
 });
 
+
+document.addEventListener("DOMContentLoaded", function () {
+    let inputNominal = document.getElementById("nominal");
+
+    inputNominal.addEventListener("input", function (e) {
+        let value = e.target.value.replace(/\D/g, ""); // Hanya angka
+        let formattedValue = formatRupiah(value);
+        e.target.value = formattedValue;
+    });
+
+    function formatRupiah(angka) {
+        return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+});

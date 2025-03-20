@@ -2,58 +2,24 @@ $(document).ready(function () {
     tablePengeluaranLain();
     $('#id').val('');
     $('#pengeluaran').trigger("reset");
-    
-    
-    // $('#save-data').click(function (e) { 
-    //     e.preventDefault();
-    //     let id = $('#id').val(); // Cek apakah #id memiliki nilai
-    //     let message = id ? "Data Berhasil Diupdate!" : "Data Berhasil Ditambahkan!";
-    
-    //     // Tambahkan konfirmasi sebelum menyimpan
-    //     if (!confirm("Apakah Anda yakin ingin menyimpan data ini?")) {
-    //         return; // Batalkan jika pengguna memilih "Batal"
-    //     }
-    
-    //     $.ajax({
-    //         data: $('#pengeluaran').serialize(),
-    //         url: BASE_URL + "PengeluaranLain/store",
-    //         type: "POST",
-    //         datatype: 'json',
-    //         success: function(data) {
-    //             $('#pengeluaran').trigger("reset");
-    //             $('#id').val(''); // Reset ID setelah submit
-    //             alert(message);
-    //             tablePengeluaranLain();
-    //         },
-    //         error: function(data) {
-    //             console.log('Error:', data);
-    //             $('#save-data').html('Simpan Data');
-    //         }
-    //     });
-    // });
 
     $('#save-data').click(function (e) {
         e.preventDefault();
         let id = $('#id').val();
+        let kategori = $('#kategori').val();
         let sumberdana = $('#sumberdana').val();
         let nominal = parseFloat($('#nominal').val());
         let message = id ? "Data Berhasil Diupdate!" : "Data Berhasil Ditambahkan!";
     
         // Validasi input
-        if (!sumberdana || isNaN(nominal) || nominal <= 0) {
-            alert("Harap isi sumber dana dan nominal dengan benar.");
-            return;
-        }
-    
-        // Cek apakah nominal lebih besar dari saldo
-        if (nominal > saldoTersedia) {
-            alert("Nominal lebih besar dari saldo yang tersedia!");
+        if (!kategori || !sumberdana || isNaN(nominal) || nominal <= 0) {
+            alert("Harap isi kategori, sumber dana, dan nominal dengan benar.");
             return;
         }
     
         // Konfirmasi sebelum menyimpan
         if (!confirm("Apakah Anda yakin ingin menyimpan data ini?")) {
-            return; // Batalkan jika pengguna memilih "Batal"
+            return;
         }
     
         $.ajax({
@@ -63,11 +29,12 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.status === "success") {
-                    alert(message);
+                    alert(response.message);
                     
                     // Reset Form
                     $('#pengeluaran').trigger("reset");
                     $('#id').val('');
+                    $('#kategori').val('').trigger('change');
                     $('#saldoTersedia').text('Rp. 0,-');
                     tablePengeluaranLain(); // Reload table
                 } else {
@@ -80,6 +47,7 @@ $(document).ready(function () {
             }
         });
     });
+    
     
 
      $('body').on('click','.edit',function (e) {
@@ -164,17 +132,6 @@ function tablePengeluaranLain() {
     });
 }
 
-// $(document).on('click', '.delete-btn', function (event) {
-//     event.preventDefault(); // Mencegah link langsung dijalankan
-
-//     var url = $(this).attr('href'); // Ambil URL dari href
-
-//     // Konfirmasi sebelum menghapus
-//     if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-//         window.location.href = url; // Jika dikonfirmasi, jalankan URL
-//     }
-// });
-
 $(document).on('click', '.delete-btn', function (event) {
     event.preventDefault(); // Mencegah link langsung dijalankan
 
@@ -198,4 +155,19 @@ $(document).on('click', '.delete-btn', function (event) {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    let inputNominal = document.getElementById("nominal");
+
+    inputNominal.addEventListener("input", function (e) {
+        let value = e.target.value.replace(/\D/g, ""); // Hanya angka
+        let formattedValue = formatRupiah(value);
+        e.target.value = formattedValue;
+    });
+
+    function formatRupiah(angka) {
+        return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+});
+
 

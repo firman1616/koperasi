@@ -36,95 +36,94 @@ class PengeluaranLain extends CI_Controller
         echo json_encode($this->load->view('pengeluaranlain/pengeluaran-lain-table', $data, false));
     }
 
-    // function store()
-    // {
-    //     $id = $this->input->post('id');
-    //     if ($id != null) {
-    //         $table = 'tbl_pengeluaran';
-    //         $dataupdate = [
-    //             'kategori_id' => $this->input->post('kategori'),
-    //             'sumber_dana_id' => $this->input->post('sumberdana'),
-    //             'nominal' => $this->input->post('nominal'),
-    //             'keterangan' => $this->input->post('keterangan')
-    //         ];
-    //         $where = array('id' => $id);
-    //         $this->m_data->update_data($table, $dataupdate, $where);
-    //     } else {
-    //         $table = 'tbl_pengeluaran';
-    //         $data = [
-    //             'kategori_id' => $this->input->post('kategori'),
-    //             'sumber_dana_id' => $this->input->post('sumberdana'),
-    //             'nominal' => $this->input->post('nominal'),
-    //             'date' => date('Y-m-d'),
-    //             'keterangan' => $this->input->post('keterangan')
-    //         ];
-    //         // $die(var_dump($data));
-    //         $this->m_data->simpan_data($table, $data);
-    //     }
-    // }
-
     public function store()
     {
-        $id = $this->input->post('id');
-        $sumberdana = $this->input->post('sumberdana');
-        $nominal = $this->input->post('nominal');
+        $id = $this->input->post('id'); // ID pengeluaran (jika ada)
+        $kategori_id = $this->input->post('kategori'); // ID kategori pengeluaran
+        $sumber_dana_id = $this->input->post('sumberdana'); // ID sumber dana yang dipilih
+        $nominal = str_replace('.', '', $this->input->post('nominal')); // Hapus titik dari format angka
+        $date = date('Y-m-d'); // Tanggal sekarang
+        $keterangan = $this->input->post('keterangan');
 
-        if (!$sumberdana || !$nominal || $nominal <= 0) {
-            echo json_encode(['status' => 'error', 'message' => 'Data tidak valid']);
-            return;
+        $data_pengeluaran = [
+            'kategori_id' => $kategori_id,
+            'sumber_dana_id' => $sumber_dana_id,
+            'nominal' => $nominal,
+            'date' => $date,
+            'keterangan' => $keterangan
+        ];
+
+        if ($id) {
+            // Jika ID ada, lakukan update data di tbl_pengeluaran
+            $this->db->where('id', $id);
+            $this->db->update('tbl_pengeluaran', $data_pengeluaran);
+            $message = "Data Berhasil Diupdate!";
+        } else {
+            // Jika tidak ada ID, lakukan insert data ke tbl_pengeluaran
+            $this->db->insert('tbl_pengeluaran', $data_pengeluaran);
+            $id = $this->db->insert_id(); // Ambil ID terakhir yang diinsert
+            $message = "Data Berhasil Ditambahkan!";
         }
 
-        // Jika update data (ID tidak null)
-        if ($id != null) {
-            // Ambil data lama sebelum diupdate
-            $dataLama = $this->db->select('sumber_dana_id, nominal')
-                ->from('tbl_pengeluaran')
-                ->where('id', $id)
-                ->get()
-                ->row();
+        // **PERIODE FORMAT MMYY (contoh: "0325" untuk Maret 2025)**
+        $periode = date('my');
 
-            if ($dataLama) {
-                // Kembalikan saldo lama sebelum update
-                $this->db->set('nominal', 'nominal + ' . $dataLama->nominal, FALSE)
-                    ->where('kategori_keuangan', $dataLama->sumber_dana_id)
-                    ->update('tbl_keuangan');
+        // ==============================
+        // **1. UPDATE / INSERT KE tbl_keuangan BERDASARKAN KATEGORI**
+        // ==============================
+        $cek_kategori_keuangan = $this->db->get_where('tbl_keuangan', [
+            'kategori_keuangan' => $kategori_id,
+            'periode' => $periode
+        ])->row();
+
+        if ($cek_kategori_keuangan) {
+            // Jika kategori sudah ada di tbl_keuangan, tambah nominal
+            $new_nominal = $cek_kategori_keuangan->nominal + $nominal;
+            $this->db->where('id', $cek_kategori_keuangan->id);
+            $this->db->update('tbl_keuangan', ['nominal' => $new_nominal]);
+        } else {
+            // Jika belum ada, insert data baru ke tbl_keuangan
+            $data_keuangan_kategori = [
+                'kategori_keuangan' => $kategori_id,
+                'nominal' => $nominal,
+                'periode' => $periode
+            ];
+            $this->db->insert('tbl_keuangan', $data_keuangan_kategori);
+        }
+
+        // ==============================
+        // **2. PENGURANGAN NOMINAL DI tbl_keuangan BERDASARKAN SUMBER DANA**
+        // ==============================
+        $cek_sumber_dana_keuangan = $this->db->get_where('tbl_keuangan', [
+            'kategori_keuangan' => $sumber_dana_id, // Gunakan sumber dana sebagai kategori_keuangan
+            'periode' => $periode
+        ])->row();
+
+        if ($cek_sumber_dana_keuangan) {
+            // Jika sumber dana sudah ada di tbl_keuangan, kurangi nominal
+            $new_nominal_sumber = $cek_sumber_dana_keuangan->nominal - $nominal;
+
+            // Pastikan nominal tidak negatif
+            if ($new_nominal_sumber < 0) {
+                $new_nominal_sumber = 0;
             }
 
-            // Kurangi saldo dengan nominal baru
-            $this->db->set('nominal', 'nominal - ' . $nominal, FALSE)
-                ->where('kategori_keuangan', $sumberdana)
-                ->update('tbl_keuangan');
-
-            // Update data pengeluaran
-            $table = 'tbl_pengeluaran';
-            $dataupdate = [
-                'kategori_id' => $this->input->post('kategori'),
-                'sumber_dana_id' => $sumberdana,
-                'nominal' => $nominal,
-                'keterangan' => $this->input->post('keterangan')
-            ];
-            $where = array('id' => $id);
-            $this->m_data->update_data($table, $dataupdate, $where);
+            $this->db->where('id', $cek_sumber_dana_keuangan->id);
+            $this->db->update('tbl_keuangan', ['nominal' => $new_nominal_sumber]);
         } else {
-            // Insert data baru ke tbl_pengeluaran
-            $table = 'tbl_pengeluaran';
-            $data = [
-                'kategori_id' => $this->input->post('kategori'),
-                'sumber_dana_id' => $sumberdana,
-                'nominal' => $nominal,
-                'date' => date('Y-m-d'),
-                'keterangan' => $this->input->post('keterangan')
+            // Jika belum ada, insert data baru dengan nominal negatif
+            $data_keuangan_sumber = [
+                'kategori_keuangan' => $sumber_dana_id,
+                'nominal' => max(0, -$nominal), // Jika belum ada, buat negatif
+                'periode' => $periode
             ];
-            $this->m_data->simpan_data($table, $data);
-
-            // Kurangi saldo di tbl_keuangan
-            $this->db->set('nominal', 'nominal - ' . $nominal, FALSE)
-                ->where('kategori_keuangan', $sumberdana)
-                ->update('tbl_keuangan');
+            $this->db->insert('tbl_keuangan', $data_keuangan_sumber);
         }
 
-        echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan']);
+        echo json_encode(['status' => 'success', 'message' => $message]);
     }
+
+
 
     function vedit($id)
     {
@@ -134,39 +133,65 @@ class PengeluaranLain extends CI_Controller
         echo json_encode($data);
     }
 
-    // function delete_data($id)
-    // {
-    //     $table = 'tbl_pengeluaran';
-    //     $where = array('id' => $id);
-    //     $this->m_data->hapus_data($table, $where);
-    //     redirect('PengeluaranLain');
-    // }
-
     public function delete_data($id)
-{
-    $this->load->database();
+    {
+        $this->load->database();
 
-    // Ambil data pengeluaran sebelum dihapus
-    $pengeluaran = $this->db->select('sumber_dana_id, nominal')
-                            ->from('tbl_pengeluaran')
-                            ->where('id', $id)
-                            ->get()
-                            ->row();
+        // Ambil data pengeluaran sebelum dihapus
+        $pengeluaran = $this->db->select('kategori_id, sumber_dana_id, nominal')
+            ->from('tbl_pengeluaran')
+            ->where('id', $id)
+            ->get()
+            ->row();
 
-    if ($pengeluaran) {
-        // Tambahkan kembali saldo di tbl_keuangan
-        $this->db->set('nominal', 'nominal + ' . $pengeluaran->nominal, FALSE)
-                 ->where('kategori_keuangan', $pengeluaran->sumber_dana_id)
-                 ->update('tbl_keuangan');
+        if ($pengeluaran) {
+            $periode = date('my'); // Format MMYY, contoh: "0325" untuk Maret 2025
 
-        // Hapus data dari tbl_pengeluaran
-        $table = 'tbl_pengeluaran';
-        $where = array('id' => $id);
-        $this->m_data->hapus_data($table, $where);
+            // ==============================
+            // **1. Tambahkan kembali saldo di tbl_keuangan berdasarkan SUMBER DANA**
+            // ==============================
+            $cek_sumber_dana_keuangan = $this->db->get_where('tbl_keuangan', [
+                'kategori_keuangan' => $pengeluaran->sumber_dana_id,
+                'periode' => $periode
+            ])->row();
+
+            if ($cek_sumber_dana_keuangan) {
+                $new_nominal_sumber = $cek_sumber_dana_keuangan->nominal + $pengeluaran->nominal;
+                $this->db->where('id', $cek_sumber_dana_keuangan->id);
+                $this->db->update('tbl_keuangan', ['nominal' => $new_nominal_sumber]);
+            }
+
+            // ==============================
+            // **2. Kurangi saldo di tbl_keuangan berdasarkan KATEGORI**
+            // ==============================
+            $cek_kategori_keuangan = $this->db->get_where('tbl_keuangan', [
+                'kategori_keuangan' => $pengeluaran->kategori_id,
+                'periode' => $periode
+            ])->row();
+
+            if ($cek_kategori_keuangan) {
+                $new_nominal_kategori = $cek_kategori_keuangan->nominal - $pengeluaran->nominal;
+
+                // Pastikan nominal tidak negatif
+                if ($new_nominal_kategori < 0) {
+                    $new_nominal_kategori = 0;
+                }
+
+                $this->db->where('id', $cek_kategori_keuangan->id);
+                $this->db->update('tbl_keuangan', ['nominal' => $new_nominal_kategori]);
+            }
+
+            // ==============================
+            // **3. Hapus data dari tbl_pengeluaran**
+            // ==============================
+            $table = 'tbl_pengeluaran';
+            $where = array('id' => $id);
+            $this->m_data->hapus_data($table, $where);
+        }
+
+        redirect('PengeluaranLain');
     }
 
-    redirect('PengeluaranLain');
-}
 
 
     public function getSaldo()

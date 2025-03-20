@@ -35,39 +35,15 @@ class PemasukanLain extends CI_Controller
         echo json_encode($this->load->view('pemasukanlain/pemasukan-lain-table', $data, false));
     }
 
-    // function store()
-    // {
-    //     $id = $this->input->post('id');
-    //     if ($id != null) {
-    //         $table = 'tbl_pemasukan';
-    //         $dataupdate = [
-    //             'kategori_id' => $this->input->post('kategori'),
-    //             'nominal' => $this->input->post('nominal'),
-    //             'keterangan' => $this->input->post('keterangan')
-    //         ];
-    //         $where = array('id' => $id);
-    //         $this->m_data->update_data($table, $dataupdate, $where);
-    //     } else {
-    //         $table = 'tbl_pemasukan';
-    //         $data = [
-    //             'kategori_id' => $this->input->post('kategori'),
-    //             'nominal' => $this->input->post('nominal'),
-    //             'date' => date('Y-m-d'),
-    //             'keterangan' => $this->input->post('keterangan')
-    //         ];
-    //         // $die(var_dump($data));
-    //         $this->m_data->simpan_data($table, $data);
-    //     }
-    // }
-
     public function store()
     {
         // Ambil tanggal sekarang dalam format Y-m-d
         $tanggal_pemasukan = date('Y-m-d');
+        $nominal = str_replace('.', '', $this->input->post('nominal'));
 
         $data = [
             'kategori_id' => $this->input->post('kategori'),
-            'nominal' => $this->input->post('nominal'),
+            'nominal' => $nominal,
             'keterangan' => $this->input->post('keterangan'),
             'date' => $tanggal_pemasukan, // Simpan dengan format Y-m-d
         ];
@@ -115,14 +91,6 @@ class PemasukanLain extends CI_Controller
         $data = $this->m_data->get_data_by_id($table, $where)->row();
         echo json_encode($data);
     }
-
-    // function delete_data($id)
-    // {
-    //     $table = 'tbl_pemasukan';
-    //     $where = array('id' => $id);
-    //     $this->m_data->hapus_data($table, $where);
-    //     redirect('PemasukanLain');
-    // }
 
     public function delete_data($id)
     {
