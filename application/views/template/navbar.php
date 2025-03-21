@@ -103,7 +103,7 @@
                             <a class="collapse-item" href="<?= site_url('Barang') ?>">Master Barang</a>
                             <a class="collapse-item" href="<?= site_url('UOM') ?>">Master UoM (Satuan)</a>
                             <a class="collapse-item" href="<?= site_url('Peserta') ?>">Anggota</a>
-                            <a class="collapse-item" href="<?= site_url('Kategori') ?>">Kategori</a>
+                            <!-- <a class="collapse-item" href="<?= site_url('Kategori') ?>">Kategori</a> -->
                             <a class="collapse-item" href="<?= site_url('User') ?>">User</a>
                         </div>
                     </div>

@@ -26,7 +26,7 @@
             <td>
                 <button type="button" class="btn btn-success btn-update-stok" data-id="<?= $row->id; ?>" title="update stock"><i class="fa fa-sync-alt"></i></button>
                 <a href="<?= site_url('Barang/vedit/'.$row->id) ?>" class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                <a href="<?= site_url('Barang/update_status/'.$row->id) ?>" class="btn btn-danger" title="update status barang" ><i class="fa fa-power-off"></i></a>
+                <a href="<?= site_url('Barang/update_status/'.$row->id) ?>" class="btn btn-danger" title="update status barang" onclick="return confirm('Apakah Anda yakin ingin Menonaktifkan barang ini?');"><i class="fa fa-power-off"></i></a>
             </td>
         </tr>
         <?php }
