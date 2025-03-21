@@ -25,7 +25,7 @@
                         </div>
                         <div class="form-group">
                             <label for="nominal">Nominal</label>
-                            <input type="number" class="form-control" id="nominal" name="nominal" required>
+                            <input type="text" class="form-control" id="nominal" name="nominal" required>
                         </div>
                         <div class="form-group">
                             <label for="nominal">Keterangan</label>
