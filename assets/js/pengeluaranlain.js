@@ -8,12 +8,13 @@ $(document).ready(function () {
         let id = $('#id').val();
         let kategori = $('#kategori').val();
         let sumberdana = $('#sumberdana').val();
+        let keterangan = $('#keterangan').val();
         let nominal = parseFloat($('#nominal').val());
         let message = id ? "Data Berhasil Diupdate!" : "Data Berhasil Ditambahkan!";
     
         // Validasi input
-        if (!kategori || !sumberdana || isNaN(nominal) || nominal <= 0) {
-            alert("Harap isi kategori, sumber dana, dan nominal dengan benar.");
+        if (!kategori || !sumberdana || isNaN(nominal) || nominal <= 0 || !keterangan) {
+            alert("Harap isi kategori, sumber dana, nominal dan Keterangan dengan benar.");
             return;
         }
     

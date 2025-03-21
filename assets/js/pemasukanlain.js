@@ -8,9 +8,12 @@ $(document).ready(function () {
         e.preventDefault();
         let id = $('#id').val(); // Cek apakah #id memiliki nilai
         let message = id ? "Data Berhasil Diupdate!" : "Data Berhasil Ditambahkan!";
+        let kategori = $('#kategori').val(); // Ambil nilai kategori dan hilangkan spasi kosong
+        let nominal = $('#nominal').val(); 
+        let keterangan = $('#keterangan').val(); 
 
-        if (!kategori || !nominal) {
-            alert("Kategori dan Nominal harus diisi!");
+        if (!kategori || !nominal || !keterangan) {
+            alert("Kategori, Nominal dan Keterangan harus diisi!");
             return;
         }
 
