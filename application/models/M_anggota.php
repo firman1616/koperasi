@@ -61,26 +61,23 @@ class M_anggota extends CI_Model
     return $this->db->update('tbl_keuangan', $data);
   }
 
-
-  public function get_total_iuran_by_periode($periode)
+  public function get_total_iuran_by_periode($periode2)
   {
-    $this->db->select('SUM(nominal) as total');
-    $this->db->from('tbl_iuran');
-    $this->db->where("DATE_FORMAT(date, '%m%y') =", $periode); // Filter berdasarkan periode (my)
-    $this->db->where('status', '1'); // Tambahkan filter status = '1'
-    $query = $this->db->get();
+    $query = $this->db->query("SELECT SUM(nominal) as total 
+                               FROM tbl_iuran 
+                               WHERE DATE_FORMAT(date, '%m%y') = ? 
+                               AND status = '1'", [$periode2]);
 
     if ($query->num_rows() > 0) {
       return $query->row()->total;
     }
-    return 0; // Jika tidak ada data, kembalikan 0
+    return 0;
   }
 
-
-  public function update_keuangan_iuran($kategori_id, $periode, $data)
+  public function update_keuangan_iuran($kategori_id, $periode2, $data)
   {
     $this->db->where('kategori_keuangan', $kategori_id);
-    $this->db->where('periode', $periode); // Filter berdasarkan periode saat ini
+    $this->db->where('periode', $periode2); // Filter berdasarkan periode saat ini
     return $this->db->update('tbl_keuangan', $data);
   }
 }
