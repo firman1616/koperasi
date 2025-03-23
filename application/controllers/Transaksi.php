@@ -76,14 +76,69 @@ class Transaksi extends CI_Controller
         $this->db->where('status', 1); // Filter hanya barang dengan status = 1
         $this->db->where('status_barang', 2); // Tambah filter status_barang = 2
         $barang = $this->db->get()->result();
-    
+
         echo json_encode($barang);
     }
-    
+
+
+    // public function proses_pembayaran()
+    // {
+
+    //     $tanggal = $this->input->post('tanggal');
+    //     $diskon = $this->input->post('diskon');
+    //     $total_bayar = $this->input->post('total_setelah_diskon');
+    //     $uang_dibayarkan = $this->input->post('uang_dibayarkan');
+    //     $uang_kembali = $uang_dibayarkan - $total_bayar;
+    //     $anggota_id = $this->input->post('anggota_id');
+    //     $extra_value = $this->input->post('extraField');
+    //     $metode_bayar = $this->input->post('metode_bayar');
+    //     $id_user = $this->input->post('id_user');
+
+    //     // Data transaksi utama
+    //     $data_transaksi = [
+    //         'no_transaksi' => $this->input->post('kd_trans'), // Sementara NULL, nanti diperbarui dengan ID
+    //         'diskon' => $diskon,
+    //         'grand_total' => $total_bayar,
+    //         'uang_bayar' => $uang_dibayarkan,
+    //         'uang_kembali' => $uang_kembali,
+    //         'tgl_transaksi' => $tanggal,
+    //         'pelanggan_id' => $anggota_id,
+    //         'lainnya' => ($anggota_id == 117) ? $extra_value : null,
+    //         'metode_bayar' => $metode_bayar,
+    //         'kasir_id' => $id_user,
+    //     ];
+
+    //     log_message('error', 'Data Transaksi: ' . print_r($data_transaksi, true));
+
+    //     // Ambil data barang dari frontend
+    //     $barang = $this->input->post('barang'); // Array barang yang dikirim dari frontend
+    //     $data_detail = [];
+
+    //     foreach ($barang as $item) {
+    //         $data_detail[] = [
+    //             'kode_barang' => $item['barcode'],
+    //             'qty' => $item['jumlah'],
+    //             'total_harga' => $item['harga']
+    //         ];
+    //     }
+
+    //     // Simpan transaksi dan detailnya
+    //     $result = $this->trans->insert_transaksi($data_transaksi, $data_detail);
+
+    //     // Kurangi stok barang
+    //     foreach ($barang as $item) {
+    //         $this->trans->kurangi_stok($item['barcode'], $item['jumlah']);
+    //     }
+
+    //     if ($result) {
+    //         echo json_encode(['status' => 'success']);
+    //     } else {
+    //         echo json_encode(['status' => 'error']);
+    //     }
+    // }
 
     public function proses_pembayaran()
     {
-
         $tanggal = $this->input->post('tanggal');
         $diskon = $this->input->post('diskon');
         $total_bayar = $this->input->post('total_setelah_diskon');
@@ -94,9 +149,12 @@ class Transaksi extends CI_Controller
         $metode_bayar = $this->input->post('metode_bayar');
         $id_user = $this->input->post('id_user');
 
+        // Format periode berdasarkan tgl_transaksi (format MMYY)
+        $periode = date('my', strtotime($tanggal));
+
         // Data transaksi utama
         $data_transaksi = [
-            'no_transaksi' => $this->input->post('kd_trans'), // Sementara NULL, nanti diperbarui dengan ID
+            'no_transaksi' => $this->input->post('kd_trans'),
             'diskon' => $diskon,
             'grand_total' => $total_bayar,
             'uang_bayar' => $uang_dibayarkan,
@@ -108,10 +166,10 @@ class Transaksi extends CI_Controller
             'kasir_id' => $id_user,
         ];
 
-        log_message('error', 'Data Transaksi: ' . print_r($data_transaksi, true));
+        // log_message('error', 'Data Transaksi: ' . print_r($data_transaksi, true));
 
         // Ambil data barang dari frontend
-        $barang = $this->input->post('barang'); // Array barang yang dikirim dari frontend
+        $barang = $this->input->post('barang');
         $data_detail = [];
 
         foreach ($barang as $item) {
@@ -125,6 +183,26 @@ class Transaksi extends CI_Controller
         // Simpan transaksi dan detailnya
         $result = $this->trans->insert_transaksi($data_transaksi, $data_detail);
 
+        // Jika metode pembayaran adalah "Cash", update tbl_keuangan
+        if ($metode_bayar == "1") {
+            // Hitung total transaksi dalam periode saat ini
+            $this->db->select('SUM(grand_total) AS total_transaksi');
+            $periode = date('my'); // Format periode '0325' (Maret 2025)
+            $this->db->select('SUM(grand_total) AS total_transaksi');
+            $this->db->from('tbl_transaksi');
+            $this->db->where("DATE_FORMAT(tgl_transaksi, '%m%y') =", $periode);
+            $query = $this->db->get();
+
+            $result = $query->row();
+            $total_transaksi = $result ? $result->total_transaksi : 0;
+
+
+            // Update hanya field nominal di tbl_keuangan berdasarkan periode
+            $this->db->where('kategori_keuangan', '11');
+            $this->db->where('periode', $periode);
+            $this->db->update('tbl_keuangan', ['nominal' => $total_transaksi]);
+        }
+
         // Kurangi stok barang
         foreach ($barang as $item) {
             $this->trans->kurangi_stok($item['barcode'], $item['jumlah']);
@@ -136,6 +214,7 @@ class Transaksi extends CI_Controller
             echo json_encode(['status' => 'error']);
         }
     }
+
 
     function list_trans()
     {
@@ -185,6 +264,31 @@ class Transaksi extends CI_Controller
         echo json_encode($this->load->view('tempo/tempo-table', $data, false));
     }
 
+    // public function updatePembayaran()
+    // {
+    //     date_default_timezone_set('Asia/Jakarta');
+
+    //     $id_transaksi = $this->input->post('id_transaksi'); // Ambil ID transaksi dari form
+    //     if (!$id_transaksi) {
+    //         echo json_encode(['status' => 'error', 'message' => 'ID Transaksi tidak ditemukan!']);
+    //         return;
+    //     }
+
+    //     $data = [
+    //         'uang_bayar'     => $this->input->post('uang_bayar'),
+    //         'uang_kembali'   => $this->input->post('uang_kembali'),
+    //         'tgl_transaksi'  => date('Y-m-d H:i:s'), // Format waktu saat ini
+    //         'metode_bayar'   => 1 // Set metode bayar ke 1
+    //     ];
+
+    //     $update = $this->trans->updateTransaksi($id_transaksi, $data); // Pastikan model dipanggil dengan benar
+
+    //     if ($update) {
+    //         echo json_encode(['status' => 'success', 'message' => 'Pembayaran Tempo Lunas!']);
+    //     } else {
+    //         echo json_encode(['status' => 'error', 'message' => 'Gagal melakukan pembayaran Tempo!']);
+    //     }
+    // }
     public function updatePembayaran()
     {
         date_default_timezone_set('Asia/Jakarta');
@@ -195,17 +299,50 @@ class Transaksi extends CI_Controller
             return;
         }
 
-        $data = [
-            'uang_bayar'     => $this->input->post('uang_bayar'),
-            'uang_kembali'   => $this->input->post('uang_kembali'),
-            'tgl_transaksi'  => date('Y-m-d H:i:s'), // Format waktu saat ini
-            'metode_bayar'   => 1 // Set metode bayar ke 1
+        // Ambil grand_total dan tgl_transaksi dari tbl_transaksi berdasarkan id_transaksi
+        $this->db->select('grand_total, tgl_transaksi');
+        $this->db->from('tbl_transaksi');
+        $this->db->where('id', $id_transaksi);
+        $query = $this->db->get();
+        $transaksi = $query->row();
+
+        if (!$transaksi) {
+            echo json_encode(['status' => 'error', 'message' => 'Data transaksi tidak ditemukan!']);
+            return;
+        }
+
+        // Ambil periode berdasarkan tgl_transaksi dengan format my (misal: 0325 untuk Maret 2025)
+        $periode = date('my', strtotime($transaksi->tgl_transaksi));
+
+        // Hitung total transaksi untuk periode yang sama
+        $this->db->select('SUM(grand_total) as total_transaksi');
+        $this->db->from('tbl_transaksi');
+        $this->db->where("DATE_FORMAT(tgl_transaksi, '%m%y') =", $periode);
+        $query_total = $this->db->get();
+        $total_transaksi = $query_total->row()->total_transaksi ?? 0; // Pastikan nilai tidak null
+
+        // Data update ke tbl_transaksi
+        $data_transaksi = [
+            'uang_bayar'   => $this->input->post('uang_bayar'),
+            'uang_kembali' => $this->input->post('uang_kembali'),
+            'tgl_transaksi' => date('Y-m-d H:i:s'), // Format waktu saat ini
+            'metode_bayar' => 1 // Set metode bayar ke 1
         ];
 
-        $update = $this->trans->updateTransaksi($id_transaksi, $data); // Pastikan model dipanggil dengan benar
+        $update_transaksi = $this->trans->updateTransaksi($id_transaksi, $data_transaksi); // Update transaksi
 
-        if ($update) {
-            echo json_encode(['status' => 'success', 'message' => 'Pembayaran Tempo Lunas!']);
+        if ($update_transaksi) {
+            // Jika metode_bayar = 1, update juga tbl_keuangan dengan SUM(grand_total)
+            $this->db->set('nominal', $total_transaksi);
+            $this->db->where('kategori_keuangan', '11');
+            $this->db->where('periode', $periode);
+            $update_keuangan = $this->db->update('tbl_keuangan');
+
+            if ($update_keuangan) {
+                echo json_encode(['status' => 'success', 'message' => 'Pembayaran Tempo Lunas & Data Keuangan Diperbarui!']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Pembayaran berhasil tetapi update keuangan gagal!']);
+            }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Gagal melakukan pembayaran Tempo!']);
         }
