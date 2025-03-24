@@ -35,4 +35,12 @@ class M_dashboard extends CI_Model
   {
     return $this->db->query("SELECT * FROM `tbl_transaksi` WHERE metode_bayar ='2'")->num_rows();
   }
+
+  function qty_0()  {
+    return $this->db->query("SELECT tb.kode_barang, tb.nama_barang, tb.qty  from tbl_barang tb where qty = '0' and status_barang = '2'");
+  }
+
+  function qty_kurang()  {
+    return $this->db->query("SELECT tb.kode_barang, tb.nama_barang, tb.qty  from tbl_barang tb where qty <= '4' and status_barang = '2' and qty != '0'");
+  }
 }

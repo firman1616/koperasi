@@ -24,6 +24,8 @@ class Dashboard extends CI_Controller {
 			'trans_day' => $this->dash->trans_day(),
 			'count_anggota' => $this->dash->count_anggota(),
 			'tempo' => $this->dash->count_tempo(),
+			'qty_0' => $this->dash->qty_0(),
+			'qty_kurang' => $this->dash->qty_kurang(),
 		];
 		$this->load->view('template/conten',$data);
 	}

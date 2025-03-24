@@ -87,14 +87,12 @@
     </div>
 
     <div class="row">
-
         <!-- Area Chart -->
-        <div class="col-xl-8 col-lg-7">
+        <div class="col-md-6">
             <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div
-                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                <!-- Card Header -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Stock Barang Habis</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -112,20 +110,39 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="myAreaChart"></canvas>
-                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Kode Barang</th>
+                                <th scope="col">Nama Barang</th>
+                                <th scope="col">QTY</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            $x=1;
+                            foreach ($qty_0->result() as $row) { ?>
+                                <tr>
+                                    <th scope="row"><?= $x++ ?></th>
+                                    <td><?= $row->kode_barang ?></td>
+                                    <td><?= $row->nama_barang ?></td>
+                                    <td><?= $row->qty ?></td>
+                                </tr>
+                            <?php }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
         <!-- Pie Chart -->
-        <div class="col-xl-4 col-lg-5">
+        <div class="col-md-6">
             <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div
-                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                <!-- Card Header -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Stock Barang Hampir Habis</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -143,24 +160,35 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <div class="chart-pie pt-4 pb-2">
-                        <canvas id="myPieChart"></canvas>
-                    </div>
-                    <div class="mt-4 text-center small">
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-primary"></i> Direct
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-success"></i> Social
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-info"></i> Referral
-                        </span>
-                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Kode Barang</th>
+                                <th scope="col">Nama Barang</th>
+                                <th scope="col">QTY</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            $x=1;
+                            foreach ($qty_kurang->result() as $row) { ?>
+                                <tr>
+                                    <th scope="row"><?= $x++; ?></th>
+                                    <td><?= $row->kode_barang ?></td>
+                                    <td><?= $row->nama_barang ?></td>
+                                    <td><?= $row->qty ?></td>
+                                </tr>
+                            <?php }
+                            ?>
+                            
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+
 
 
 </div>
