@@ -16,21 +16,22 @@
                 <input type="text" class="form-control" id="nama_barang" name="nama_barang" required>
 
                 <div class="row">
-                    <div class="col">
+                    <!-- <div class="col">
                         <label class="form-label">Harga Beli</label>
                         <input type="number" class="form-control" id="harga_beli" name="harga_beli" value="0">
-                    </div>
+                    </div> -->
                     <div class="col">
                         <label class="form-label">Harga Jual</label>
                         <input type="number" class="form-control" id="harga_jual" name="harga_jual" value="0">
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col">
                         <label class="form-label">QTY</label>
                         <input type="number" class="form-control" id="qty" name="qty" value="0">
                     </div>
+                </div>
+
+                <div class="row">
+                    
                     <div class="col">
                         <label class="form-label">Satuan</label>
                         <select name="uom" id="uom" class="form-control select2" required>

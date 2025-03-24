@@ -30,10 +30,10 @@
                 <input type="text" class="form-control" id="nama_barang" name="nama_barang" value="<?= $b ?>">
 
                 <div class="row">
-                    <div class="col">
+                    <!-- <div class="col">
                         <label class="form-label">Harga Beli</label>
                         <input type="number" class="form-control" id="harga_beli" name="harga_beli" value="<?= $c ?>">
-                    </div>
+                    </div> -->
                     <div class="col">
                         <label class="form-label">Harga Jual</label>
                         <input type="number" class="form-control" id="harga_jual" name="harga_jual" value="<?= $d ?>">

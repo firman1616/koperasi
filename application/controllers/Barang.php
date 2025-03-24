@@ -54,9 +54,9 @@ class Barang extends CI_Controller {
         $data = [
             'kode_barang' => $this->input->post('kode_barang'),
             'nama_barang' => $this->input->post('nama_barang'),
-            'harga_beli' => $this->input->post('harga_beli'),
+            'harga_beli' => 0,
             'harga_jual' => $this->input->post('harga_jual'),
-            'margin' => $this->input->post('harga_jual') - $this->input->post('harga_beli'),
+            'margin' => 0,
             'qty' => $this->input->post('qty'),
             'uom' => $this->input->post('uom'),
             'create_at' => date('Y-m-d H:i:s'),
@@ -93,9 +93,9 @@ class Barang extends CI_Controller {
         $data = [
            'kode_barang' => $this->input->post('kode_barang'),
             'nama_barang' => $this->input->post('nama_barang'),
-            'harga_beli' => $this->input->post('harga_beli'),
+            'harga_beli' => 0,
             'harga_jual' => $this->input->post('harga_jual'),
-            'margin' => $margin,
+            'margin' => 0,
             // 'qty' => $this->input->post('qty'),
             'uom' => $this->input->post('uom'),
             'tgl_update_stock' => date('Y-m-d H:i:s'),
