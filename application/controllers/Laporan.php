@@ -362,16 +362,17 @@ class Laporan extends CI_Controller
     private function isiSheetKeuangan($sheet, $data)
     {
         // Header kolom
-        $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Nama Kategori');
-        $sheet->setCellValue('C1', 'Periode');
-        $sheet->setCellValue('D1', 'Kategori');
-        $sheet->setCellValue('E1', 'Nominal');
+        $headers = ['A1' => 'No', 'B1' => 'Nama Kategori', 'C1' => 'Periode', 'D1' => 'Kategori', 'E1' => 'Nominal'];
+
+        foreach ($headers as $cell => $text) {
+            $sheet->setCellValue($cell, $text);
+            $sheet->getStyle($cell)->getFont()->setBold(true); // Buat Bold
+        }
 
         // Isi data
         $row = 2;
         $x = 1;
-        $totalNominal = 0; // Untuk menyimpan total
+        $total = 0;
 
         foreach ($data as $d) {
             $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
@@ -383,43 +384,35 @@ class Laporan extends CI_Controller
             $sheet->setCellValue('D' . $row, $d->kode);
             $sheet->setCellValue('E' . $row, $d->nominal);
 
-            // Tambahkan nominal ke total
-            $totalNominal += $d->nominal;
+            // Format Nominal menjadi angka dengan style keuangan & rata kanan
+            $sheet->getStyle('E' . $row)
+                ->getNumberFormat()
+                ->setFormatCode('#,##0.00');
+            $sheet->getStyle('E' . $row)
+                ->getAlignment()
+                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 
-            // Format Rupiah pada kolom Nominal
-            $sheet->getStyle("E{$row}")->getNumberFormat()->setFormatCode('"Rp" #,##0.00');
-
-            // Set alignment Nominal (rata kanan)
-            $sheet->getStyle("E{$row}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-
+            $total += $d->nominal;
             $row++;
         }
 
-        // Baris total
-        $sheet->mergeCells("A{$row}:D{$row}"); // Gabungkan A sampai D
-        $sheet->setCellValue("A{$row}", 'TOTAL');
-        $sheet->setCellValue("E{$row}", $totalNominal);
+        // Baris Total
+        $sheet->mergeCells("A{$row}:D{$row}");
+        $sheet->setCellValue("A{$row}", "TOTAL");
+        $sheet->setCellValue("E{$row}", $total);
 
-        // Format Bold & Alignment untuk TOTAL
-        $styleArray = [
-            'font' => ['bold' => true],
-            'alignment' => [
-                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, // TOTAL rata tengah
-            ],
-            'borders' => ['top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]],
-        ];
-        $sheet->getStyle("A{$row}:D{$row}")->applyFromArray($styleArray);
+        // Styling untuk total
+        $sheet->getStyle("A{$row}:E{$row}")->getFont()->setBold(true);
+        $sheet->getStyle("E{$row}")
+            ->getNumberFormat()
+            ->setFormatCode('#,##0.00');
+        $sheet->getStyle("E{$row}")
+            ->getAlignment()
+            ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 
-        // Format untuk Total Nominal (Bold & Rata Kanan)
-        $sheet->getStyle("E{$row}")->applyFromArray([
-            'font' => ['bold' => true],
-            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT], // Rata Kanan
-        ]);
-        $sheet->getStyle("E{$row}")->getNumberFormat()->setFormatCode('"Rp" #,##0.00');
-
-        // **AUTO SIZE KOLOM SESUAI ISI**
-        foreach (range('A', 'E') as $columnID) {
-            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        // Auto-size columns
+        foreach (range('A', 'E') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
         }
     }
 }
