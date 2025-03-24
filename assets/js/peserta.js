@@ -30,7 +30,9 @@ function tableIuran() {
                 "processing": true,
                 "responsive": true,
                 "ordering": true,
-                "paging": false
+                "paging": false,
+                "scrollY": "500px", // Scroll vertikal dengan tinggi tetap 400px
+                "scrollCollapse": true,
             });
 
             // Pastikan event handler di-bind ulang setelah tabel iuran di-load
