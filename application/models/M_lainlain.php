@@ -8,7 +8,7 @@ class M_lainlain extends CI_Model
 
   function get_kateg_pemasukan()
   {
-    return $this->db->query("SELECT * FROM tbl_kateg_trans WHERE kategori_id = '1' AND id in ('1','2','3')");
+    return $this->db->query("SELECT * FROM tbl_kateg_trans WHERE kategori_id = '1' AND id in ('1','2')");
   }
 
   public function insert_pemasukan($data)
