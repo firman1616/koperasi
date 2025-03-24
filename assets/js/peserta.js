@@ -29,6 +29,8 @@ function tableIuran() {
             $('#tableIuran').DataTable({
                 "processing": true,
                 "responsive": true,
+                "ordering": true,
+                "paging": false
             });
 
             // Pastikan event handler di-bind ulang setelah tabel iuran di-load
