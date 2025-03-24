@@ -299,4 +299,127 @@ class Laporan extends CI_Controller
         $writer->save('php://output');
         exit;
     }
+
+    function lap_keuangan()
+    {
+        $data = [
+            'akses' => $this->session->userdata('level'),
+            'name' => $this->session->userdata('nama'),
+            'title' => 'Laporan Keuangan',
+            'subtitle' => 'Report',
+            'conten' => 'laporan/keuangan/index',
+            'footer_js' => array('assets/js/lap_keuangan.js')
+        ];
+        $this->load->view('template/conten', $data);
+    }
+
+    function tableLapKeuangan()
+    {
+        $bulan = $this->input->post('bulan');
+        $tahun = $this->input->post('tahun');
+        $data['keuangan'] = $this->lap->lap_keuangan($bulan, $tahun)->result();
+        $data['sum_nominal'] = $this->lap->sum_nominal($bulan, $tahun)->result();
+
+        echo json_encode($this->load->view('laporan/keuangan/lap-keuangan-table', $data, false));
+    }
+
+    public function export_excel_keuangan()
+    {
+        $bulan = $this->input->get('bulan') ?: date('m');
+        $tahun = $this->input->get('tahun') ?: date('y'); // Sesuai format yang digunakan di query (2 digit)
+
+        // Ambil data dari model berdasarkan kategori
+        $pemasukan = $this->lap->in_keuangan($bulan, $tahun)->result();
+        $pengeluaran = $this->lap->out_keuangan($bulan, $tahun)->result();
+
+        // Buat Spreadsheet
+        $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+
+        // Buat Sheet Pemasukan
+        $sheet1 = $spreadsheet->setActiveSheetIndex(0);
+        $sheet1->setTitle('Pemasukan');
+        $this->isiSheetKeuangan($sheet1, $pemasukan);
+
+        // Buat Sheet Pengeluaran
+        $sheet2 = $spreadsheet->createSheet();
+        $sheet2->setTitle('Pengeluaran');
+        $this->isiSheetKeuangan($sheet2, $pengeluaran);
+
+        // Set nama file
+        $filename = 'Laporan_Keuangan_' . $bulan . '-' . $tahun . '.xlsx';
+
+        // Set header untuk download
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        ob_end_clean();
+        $writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
+    }
+
+    private function isiSheetKeuangan($sheet, $data)
+    {
+        // Header kolom
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Nama Kategori');
+        $sheet->setCellValue('C1', 'Periode');
+        $sheet->setCellValue('D1', 'Kategori');
+        $sheet->setCellValue('E1', 'Nominal');
+
+        // Isi data
+        $row = 2;
+        $x = 1;
+        $totalNominal = 0; // Untuk menyimpan total
+
+        foreach ($data as $d) {
+            $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+            $formatter->setPattern('MMMM yyyy'); // Format Indonesia
+
+            $sheet->setCellValue('A' . $row, $x++);
+            $sheet->setCellValue('B' . $row, $d->kateg_trans);
+            $sheet->setCellValue('C' . $row, $formatter->format(new DateTime($d->periode)));
+            $sheet->setCellValue('D' . $row, $d->kode);
+            $sheet->setCellValue('E' . $row, $d->nominal);
+
+            // Tambahkan nominal ke total
+            $totalNominal += $d->nominal;
+
+            // Format Rupiah pada kolom Nominal
+            $sheet->getStyle("E{$row}")->getNumberFormat()->setFormatCode('"Rp" #,##0.00');
+
+            // Set alignment Nominal (rata kanan)
+            $sheet->getStyle("E{$row}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+
+            $row++;
+        }
+
+        // Baris total
+        $sheet->mergeCells("A{$row}:D{$row}"); // Gabungkan A sampai D
+        $sheet->setCellValue("A{$row}", 'TOTAL');
+        $sheet->setCellValue("E{$row}", $totalNominal);
+
+        // Format Bold & Alignment untuk TOTAL
+        $styleArray = [
+            'font' => ['bold' => true],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, // TOTAL rata tengah
+            ],
+            'borders' => ['top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]],
+        ];
+        $sheet->getStyle("A{$row}:D{$row}")->applyFromArray($styleArray);
+
+        // Format untuk Total Nominal (Bold & Rata Kanan)
+        $sheet->getStyle("E{$row}")->applyFromArray([
+            'font' => ['bold' => true],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT], // Rata Kanan
+        ]);
+        $sheet->getStyle("E{$row}")->getNumberFormat()->setFormatCode('"Rp" #,##0.00');
+
+        // **AUTO SIZE KOLOM SESUAI ISI**
+        foreach (range('A', 'E') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+    }
 }

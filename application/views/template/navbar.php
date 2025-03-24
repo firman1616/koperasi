@@ -11,7 +11,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="<?= base_url('assets/image/ksua.png') ?>" alt="Logo" style="width: 40px; height: 40px;">
                 </div>
-                <div class="sidebar-brand-text mx-3">KSU ASY-SYATHIBIYYAH </div>
+                <div class="sidebar-brand-text mx-3">SYATHIBI </div>
             </a>
 
             <!-- Divider -->
@@ -26,7 +26,7 @@
             <?php if ($akses == 1 || $akses == 3) { ?>
                 <li class="nav-item">
                     <a class="nav-link" href="<?= site_url('Transaksi') ?>">
-                        <i class="fas fa-fw fa-exchange-alt"></i>
+                        <i class="fas fa-fw fa-shopping-cart"></i>
                         <span>POS Penjualan</span></a>
                 </li>
             <?php } ?>
@@ -43,25 +43,10 @@
             <?php if ($akses == 1 || $akses == 3 || $akses == 2) { ?>
                 <li class="nav-item">
                     <a class="nav-link" href="<?= site_url('Peserta/iuran') ?>">
-                        <i class="fas fa-fw fa-user"></i>
+                        <i class="fas fa-fw fa-users"></i>
                         <span>Iuran Anggota</span></a>
                 </li>
-            <?php } ?>
-
-            <?php if ($akses == 1 || $akses == 2) { ?>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#trans_lain"
-                        aria-expanded="true" aria-controls="trans_lain">
-                        <i class="fas fa-fw fa-wallet"></i>
-                        <span>Transaksi Keuangan</span>
-                    </a>
-                    <div id="trans_lain" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="<?= site_url('PemasukanLain') ?>">Pemasukan Keuangan</a>
-                            <a class="collapse-item" href="<?= site_url('PengeluaranLain') ?>">Pengeluaran Keuangan</a>
-                        </div>
-                    </div>
-                </li>
+            
             <?php } ?>
 
 
@@ -89,6 +74,25 @@
                         </div>
                     </div>
                 </li>
+                
+                <?php } ?>
+
+            <?php if ($akses == 1 || $akses == 2) { ?>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#trans_lain"
+                        aria-expanded="true" aria-controls="trans_lain">
+                        <i class="fas fa-fw fa-wallet"></i>
+                        <span>Keuangan Koperasi</span>
+                    </a>
+                    <div id="trans_lain" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="<?= site_url('PemasukanLain') ?>">Pemasukan Keuangan</a>
+                            <a class="collapse-item" href="<?= site_url('PengeluaranLain') ?>">Pengeluaran Keuangan</a>
+                            <a class="collapse-item" href="<?= site_url('Laporan/lap_keuangan') ?>">Laporan Keuangan</a>
+                        </div>
+                    </div>
+                </li>
+                
             <?php } ?>
 
             <?php if ($akses == 1 || $akses == 2) { ?>
@@ -100,9 +104,9 @@
                     </a>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="<?= site_url('Barang') ?>">Master Barang</a>
-                            <a class="collapse-item" href="<?= site_url('UOM') ?>">Master UoM (Satuan)</a>
                             <a class="collapse-item" href="<?= site_url('Peserta') ?>">Anggota</a>
+                            <a class="collapse-item" href="<?= site_url('Barang') ?>">Barang</a>
+                            <a class="collapse-item" href="<?= site_url('UOM') ?>">UoM (Satuan)</a>
                             <!-- <a class="collapse-item" href="<?= site_url('Kategori') ?>">Kategori</a> -->
                             <a class="collapse-item" href="<?= site_url('User') ?>">User</a>
                         </div>

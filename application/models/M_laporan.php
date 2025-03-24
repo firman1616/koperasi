@@ -134,4 +134,79 @@ class M_laporan extends CI_Model
       tb.nama_barang,
       month(thb.history_date)");
   }
+
+  function lap_keuangan($bulan,$tahun)  {
+    return $this->db->query("SELECT
+      tk.id,
+      tk.kategori_keuangan,
+      tk.nominal,
+      tk.periode,
+      tkt.name as kateg_trans,
+      tk2.name as kategori,
+      tk2.kode 
+    from
+      tbl_keuangan tk
+    left join tbl_kateg_trans tkt on
+      tkt.id = tk.kategori_keuangan
+    left join tbl_kategori tk2 on
+      tk2.id = tkt.kategori_id
+    WHERE SUBSTRING(tk.periode, 1, 2) = '$bulan' 
+    AND SUBSTRING(tk.periode, 3, 2) = '$tahun'");
+  }
+
+  function sum_nominal($bulan,$tahun) {
+    return $this->db->query("SELECT 
+        tk.periode,
+        SUM(CASE WHEN tk2.name = 'Pemasukan' THEN tk.nominal ELSE 0 END) AS pemasukan,
+        SUM(CASE WHEN tk2.name = 'Pengeluaran' THEN tk.nominal ELSE 0 END) AS pengeluaran
+    FROM 
+        tbl_keuangan tk
+    LEFT JOIN tbl_kateg_trans tkt ON tkt.id = tk.kategori_keuangan
+    LEFT JOIN tbl_kategori tk2 ON tk2.id = tkt.kategori_id
+    WHERE 
+        SUBSTRING(tk.periode, 1, 2) = '$bulan' 
+        AND SUBSTRING(tk.periode, 3, 2) = '$tahun'
+    GROUP BY 
+        tk.periode");
+  }
+
+  function in_keuangan($bulan,$tahun) {
+    return $this->db->query("SELECT
+      tk.id,
+      tk.kategori_keuangan,
+      tk.nominal,
+      tk.periode,
+      tkt.name as kateg_trans,
+      tk2.name as kategori,
+      tk2.kode 
+    from
+      tbl_keuangan tk
+    left join tbl_kateg_trans tkt on
+      tkt.id = tk.kategori_keuangan
+    left join tbl_kategori tk2 on
+      tk2.id = tkt.kategori_id
+    WHERE SUBSTRING(tk.periode, 1, 2) = '$bulan' 
+    AND SUBSTRING(tk.periode, 3, 2) = '$tahun'
+    and tk2.kode = 'IN'");
+  }
+
+  function out_keuangan($bulan,$tahun) {
+    return $this->db->query("SELECT
+      tk.id,
+      tk.kategori_keuangan,
+      tk.nominal,
+      tk.periode,
+      tkt.name as kateg_trans,
+      tk2.name as kategori,
+      tk2.kode 
+    from
+      tbl_keuangan tk
+    left join tbl_kateg_trans tkt on
+      tkt.id = tk.kategori_keuangan
+    left join tbl_kategori tk2 on
+      tk2.id = tkt.kategori_id
+    WHERE SUBSTRING(tk.periode, 1, 2) = '$bulan' 
+    AND SUBSTRING(tk.periode, 3, 2) = '$tahun'
+    and tk2.kode = 'OUT'");
+  }
 }
