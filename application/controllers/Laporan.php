@@ -46,18 +46,26 @@ class Laporan extends CI_Controller
     public function export_excel()
     {
         // Ambil tanggal dari input form
-        $date_start = $this->input->get('date_start'); // Bisa pakai $this->input->post() jika pakai method POST
+        $date_start = $this->input->get('date_start');
         $date_end = $this->input->get('date_end');
 
         // Gunakan default jika kosong
         if (!$date_start) $date_start = date('Y-m-d', strtotime('-7 days'));
         if (!$date_end) $date_end = date('Y-m-d');
 
-        // Ambil data dari model berdasarkan tanggal input
-        $data = $this->lap->export_excel_penjualan($date_start, $date_end)->result();
+        // Ambil data dari model
+        $headerData = $this->lap->export_excel_penjualan($date_start, $date_end)->result();
+        $detailData = $this->lap->export_detail_penjualan($date_start, $date_end)->result();
 
+        // Buat spreadsheet
         $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+
+        // ============================
+        // SHEET 1: HEADER TRANSAKSI
+        // ============================
+        $spreadsheet->setActiveSheetIndex(0);
         $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Header');
 
         // Header kolom
         $sheet->setCellValue('A1', 'No');
@@ -65,28 +73,79 @@ class Laporan extends CI_Controller
         $sheet->setCellValue('C1', 'Pembeli');
         $sheet->setCellValue('D1', 'Nominal');
         $sheet->setCellValue('E1', 'Tanggal Transaksi');
-        $sheet->setCellValue('F1', 'Kode Barang');
-        $sheet->setCellValue('G1', 'Nama Barang');
-        $sheet->setCellValue('H1', 'Qty Beli');
 
         // Isi data
         $row = 2;
         $x = 1;
-        foreach ($data as $d) {
+        foreach ($headerData as $d) {
             $customer = ($d->pelanggan_id == '117') ? $d->lainnya : $d->cust;
-            $total = number_format($d->grand_total);
             $date = date('d-m-Y', strtotime($d->tgl_transaksi));
 
             $sheet->setCellValue('A' . $row, $x++);
             $sheet->setCellValue('B' . $row, $d->no_transaksi);
             $sheet->setCellValue('C' . $row, $customer);
-            $sheet->setCellValue('D' . $row, $total);
+            $sheet->setCellValueExplicit('D' . $row, $d->grand_total, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
             $sheet->setCellValue('E' . $row, $date);
-            $sheet->setCellValue('F' . $row, $d->kode_barang);
-            $sheet->setCellValue('G' . $row, $d->nama_barang);
-            $sheet->setCellValue('H' . $row, $d->qty);
+
             $row++;
         }
+
+        // Format kolom D sebagai Rupiah
+        $sheet->getStyle('D2:D' . ($row - 1))
+            ->getNumberFormat()
+            ->setFormatCode('"Rp" #,##0');
+
+        // Auto size kolom
+        foreach (range('A', 'E') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // ============================
+        // SHEET 2: DETAIL TRANSAKSI
+        // ============================
+        $detailSheet = $spreadsheet->createSheet();
+        $spreadsheet->setActiveSheetIndex(1);
+        $detailSheet = $spreadsheet->getActiveSheet();
+        $detailSheet->setTitle('Detail');
+
+        // Header kolom
+        $detailSheet->setCellValue('A1', 'No');
+        $detailSheet->setCellValue('B1', 'Kode Transaksi');
+        $detailSheet->setCellValue('C1', 'Tanggal Transaksi');
+        $detailSheet->setCellValue('D1', 'Kode Barang');
+        $detailSheet->setCellValue('E1', 'Nama Barang');
+        $detailSheet->setCellValue('F1', 'Qty');
+        $detailSheet->setCellValue('G1', 'Harga Barang');
+
+        // Isi data
+        $row = 2;
+        $x = 1;
+        foreach ($detailData as $d) {
+            $date = date('d-m-Y', strtotime($d->tgl_transaksi));
+
+            $detailSheet->setCellValue('A' . $row, $x++);
+            $detailSheet->setCellValue('B' . $row, $d->no_transaksi);
+            $detailSheet->setCellValue('C' . $row, $date);
+            $detailSheet->setCellValue('D' . $row, $d->kode_barang);
+            $detailSheet->setCellValue('E' . $row, $d->nama_barang);
+            $detailSheet->setCellValue('F' . $row, $d->qty);
+            $detailSheet->setCellValueExplicit('G' . $row, $d->harga_barang, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+
+            $row++;
+        }
+
+        // Format kolom G sebagai Rupiah
+        $detailSheet->getStyle('G2:G' . ($row - 1))
+            ->getNumberFormat()
+            ->setFormatCode('"Rp" #,##0');
+
+        // Auto size kolom
+        foreach (range('A', 'G') as $col) {
+            $detailSheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Kembalikan ke sheet pertama sebagai default tampilan
+        $spreadsheet->setActiveSheetIndex(0);
 
         // Set nama file
         $filename = 'Laporan_Penjualan_' . date('Ymd') . '.xlsx';
@@ -101,6 +160,9 @@ class Laporan extends CI_Controller
         $writer->save('php://output');
         exit;
     }
+
+
+
 
     public function getDetailTransaksi()
     {
@@ -129,7 +191,8 @@ class Laporan extends CI_Controller
             'title' => 'Laporan Iuran Anggota',
             'subtitle' => 'Report',
             'conten' => 'laporan/iuran/index',
-            'footer_js' => array('assets/js/lap_iuran.js')
+            'footer_js' => array('assets/js/lap_iuran.js'),
+            'total' => $this->lap->total_iuran(),
         ];
         $this->load->view('template/conten', $data);
     }
@@ -308,7 +371,8 @@ class Laporan extends CI_Controller
             'title' => 'Laporan Keuangan',
             'subtitle' => 'Report',
             'conten' => 'laporan/keuangan/index',
-            'footer_js' => array('assets/js/lap_keuangan.js')
+            'footer_js' => array('assets/js/lap_keuangan.js'),
+            'kategori' => $this->m_data->get_data('tbl_kateg_trans'),
         ];
         $this->load->view('template/conten', $data);
     }
