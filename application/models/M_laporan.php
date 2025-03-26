@@ -180,7 +180,7 @@ class M_laporan extends CI_Model
       month(thb.history_date)");
   }
 
-  function lap_keuangan($bulan,$tahun)  {
+  function lap_keuangan($periode)  {
     return $this->db->query("SELECT
       tk.id,
       tk.kategori_keuangan,
@@ -195,11 +195,10 @@ class M_laporan extends CI_Model
       tkt.id = tk.kategori_keuangan
     left join tbl_kategori tk2 on
       tk2.id = tkt.kategori_id
-    WHERE SUBSTRING(tk.periode, 1, 2) = '$bulan' 
-    AND SUBSTRING(tk.periode, 3, 2) = '$tahun'");
+    WHERE tk.periode = '$periode'");
   }
 
-  function sum_nominal($bulan,$tahun) {
+  function sum_nominal($periode) {
     return $this->db->query("SELECT 
         tk.periode,
         SUM(CASE WHEN tk2.name = 'Pemasukan' THEN tk.nominal ELSE 0 END) AS pemasukan,
@@ -209,13 +208,12 @@ class M_laporan extends CI_Model
     LEFT JOIN tbl_kateg_trans tkt ON tkt.id = tk.kategori_keuangan
     LEFT JOIN tbl_kategori tk2 ON tk2.id = tkt.kategori_id
     WHERE 
-        SUBSTRING(tk.periode, 1, 2) = '$bulan' 
-        AND SUBSTRING(tk.periode, 3, 2) = '$tahun'
+        tk.periode = '$periode'
     GROUP BY 
         tk.periode");
   }
 
-  function in_keuangan($bulan,$tahun) {
+  function in_keuangan($periode) {
     return $this->db->query("SELECT
       tk.id,
       tk.kategori_keuangan,
@@ -230,12 +228,11 @@ class M_laporan extends CI_Model
       tkt.id = tk.kategori_keuangan
     left join tbl_kategori tk2 on
       tk2.id = tkt.kategori_id
-    WHERE SUBSTRING(tk.periode, 1, 2) = '$bulan' 
-    AND SUBSTRING(tk.periode, 3, 2) = '$tahun'
+    WHERE tk.periode = '$periode'
     and tk2.kode = 'IN'");
   }
 
-  function out_keuangan($bulan,$tahun) {
+  function out_keuangan($periode) {
     return $this->db->query("SELECT
       tk.id,
       tk.kategori_keuangan,
@@ -250,8 +247,7 @@ class M_laporan extends CI_Model
       tkt.id = tk.kategori_keuangan
     left join tbl_kategori tk2 on
       tk2.id = tkt.kategori_id
-    WHERE SUBSTRING(tk.periode, 1, 2) = '$bulan' 
-    AND SUBSTRING(tk.periode, 3, 2) = '$tahun'
+    WHERE tk.periode = '$periode'
     and tk2.kode = 'OUT'");
   }
 

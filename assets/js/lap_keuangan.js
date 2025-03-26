@@ -114,22 +114,36 @@ $(document).ready(function () {
             $("#detail_out").show(); // Tampilkan div pemasukan keuangan
             tablePengeluaranKeuangan(date_start, date_end);
         }
+
+        if (kategori_utama !== "") {
+            // Jika kategori dipilih (IN atau OUT), jangan tampilkan div & jangan load tabel
+            $("#detail_keuangan").hide();
+            $("#div-table-lap-keuangan").hide();
+        } else {
+            // Jika kategori belum dipilih, jalankan fungsi seperti biasa
+            $("#detail_keuangan").show();
+            $("#div-table-lap-keuangan").show();
+
+            // Panggil fungsi untuk load tabel dengan parameter tanggal
+            tableKeuangan(date_end);
+        }
     });
 
 
 
     $("#export_excel_keuangan").click(function () {
-        let bulan = $("#bulan").val();
-        let tahun = $("#tahun").val();
+        let date_end = $("#date_end").val();
 
-        if (bulan === "" || tahun === "") {
-            alert("Silakan pilih periode terlebih dahulu!");
+        if (date_end === "") {
+            alert("Silakan pilih tanggal terlebih dahulu!");
             return;
         }
 
-        // Redirect ke fungsi export di controller dengan parameter bulan & tahun
-        window.location.href = BASE_URL + "Laporan/export_excel_keuangan?bulan=" + bulan + "&tahun=" + tahun;
+        // Redirect ke fungsi export di controller dengan parameter date_end
+        window.location.href = BASE_URL + "Laporan/export_excel_keuangan?date_end=" + date_end;
     });
+
+
 
     let today = new Date();
 
@@ -149,11 +163,11 @@ $(document).ready(function () {
 
 });
 
-function tableKeuangan(bulan, tahun) {
+function tableKeuangan(date_end) {
     $.ajax({
         url: BASE_URL + "Laporan/tableLapKeuangan",
         type: "POST",
-        data: { bulan: bulan, tahun: tahun }, // Kirim parameter
+        data: { date_end: date_end }, // Kirim parameter
         success: function (data) {
             $('#div-table-lap-keuangan').html(data);
             // $('#tableKeuangan').DataTable({

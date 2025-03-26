@@ -379,22 +379,34 @@ class Laporan extends CI_Controller
 
     function tableLapKeuangan()
     {
-        $bulan = $this->input->post('bulan');
-        $tahun = $this->input->post('tahun');
-        $data['keuangan'] = $this->lap->lap_keuangan($bulan, $tahun)->result();
-        $data['sum_nominal'] = $this->lap->sum_nominal($bulan, $tahun)->result();
+        $date_param = $this->input->post('date_end');
+        $periode = date('my', strtotime($date_param));
+        $data['keuangan'] = $this->lap->lap_keuangan($periode)->result();
+        $data['sum_nominal'] = $this->lap->sum_nominal($periode)->result();
 
         echo json_encode($this->load->view('laporan/keuangan/lap-keuangan-table', $data, false));
     }
 
     public function export_excel_keuangan()
     {
-        $bulan = $this->input->get('bulan') ?: date('m');
-        $tahun = $this->input->get('tahun') ?: date('y'); // Sesuai format yang digunakan di query (2 digit)
+        $date_end = $this->input->get('date_end');
+        if (!$date_end) {
+            $date_end = date('Y-m-d'); // Default jika tidak ada input
+        }
+
+        // Konversi date_end menjadi format 'my' (bulan 2 digit + tahun 2 digit)
+        $periode = date('my', strtotime($date_end));
+
+        // Ambil date_start (awal bulan dari date_end)
+        $date_start = date('Y-m-01', strtotime($date_end));
 
         // Ambil data dari model berdasarkan kategori
-        $pemasukan = $this->lap->in_keuangan($bulan, $tahun)->result();
-        $pengeluaran = $this->lap->out_keuangan($bulan, $tahun)->result();
+        $pemasukan = $this->lap->in_keuangan($periode)->result();
+        $pengeluaran = $this->lap->out_keuangan($periode)->result();
+
+        // Ambil data Detail Pemasukan & Detail Pengeluaran
+        $detail_pemasukan = $this->lap->getLapPemasukan($date_start, $date_end)->result();
+        $detail_pengeluaran = $this->lap->getLapPengeluaran($date_start, $date_end)->result();
 
         // Buat Spreadsheet
         $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -409,8 +421,18 @@ class Laporan extends CI_Controller
         $sheet2->setTitle('Pengeluaran');
         $this->isiSheetKeuangan($sheet2, $pengeluaran);
 
+        // Buat Sheet Detail Pemasukan
+        $sheet3 = $spreadsheet->createSheet();
+        $sheet3->setTitle('Detail Pemasukan');
+        $this->isiSheetDetailPemasukan($sheet3, $detail_pemasukan);
+
+        // Buat Sheet Detail Pengeluaran
+        $sheet4 = $spreadsheet->createSheet();
+        $sheet4->setTitle('Detail Pengeluaran');
+        $this->isiSheetDetailPengeluaran($sheet4, $detail_pengeluaran);
+
         // Set nama file
-        $filename = 'Laporan_Keuangan_' . $bulan . '-' . $tahun . '.xlsx';
+        $filename = 'Laporan_Keuangan_' . $periode . '.xlsx';
 
         // Set header untuk download
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -422,6 +444,8 @@ class Laporan extends CI_Controller
         $writer->save('php://output');
         exit;
     }
+
+
 
     private function isiSheetKeuangan($sheet, $data)
     {
@@ -479,6 +503,130 @@ class Laporan extends CI_Controller
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
     }
+
+    private function isiSheetDetailPemasukan($sheet, $data)
+    {
+        // Header kolom
+        $headers = [
+            'A1' => 'No',
+            'B1' => 'Kategori Transaksi',
+            'C1' => 'Tanggal',
+            'D1' => 'Keterangan',
+            'E1' => 'Nominal'
+        ];
+
+        foreach ($headers as $cell => $text) {
+            $sheet->setCellValue($cell, $text);
+            $sheet->getStyle($cell)->getFont()->setBold(true);
+        }
+
+        // Isi data
+        $row = 2;
+        $x = 1;
+        $total = 0;
+
+        foreach ($data as $d) {
+            $sheet->setCellValue('A' . $row, $x++);
+            $sheet->setCellValue('B' . $row, $d->kategori_trans);
+            $sheet->setCellValue('C' . $row, $d->date);
+            $sheet->setCellValue('D' . $row, $d->keterangan);
+            $sheet->setCellValue('E' . $row, $d->nominal);
+
+            // Format Nominal
+            $sheet->getStyle('E' . $row)
+                ->getNumberFormat()
+                ->setFormatCode('#,##0.00');
+            $sheet->getStyle('E' . $row)
+                ->getAlignment()
+                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+
+            $total += $d->nominal;
+            $row++;
+        }
+
+        // Baris Total
+        $sheet->mergeCells("A{$row}:D{$row}");
+        $sheet->setCellValue("A{$row}", "TOTAL");
+        $sheet->setCellValue("E{$row}", $total);
+
+        // Styling untuk total
+        $sheet->getStyle("A{$row}:E{$row}")->getFont()->setBold(true);
+        $sheet->getStyle("E{$row}")
+            ->getNumberFormat()
+            ->setFormatCode('#,##0.00');
+        $sheet->getStyle("E{$row}")
+            ->getAlignment()
+            ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+
+        // Auto-size columns
+        foreach (range('A', 'E') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+    private function isiSheetDetailPengeluaran($sheet, $data)
+    {
+        // Header kolom
+        $headers = [
+            'A1' => 'No',
+            'B1' => 'Nama Kategori',
+            'C1' => 'Sumber Dana',
+            'D1' => 'Tanggal',
+            'E1' => 'Keterangan',
+            'F1' => 'Nominal'
+        ];
+
+        foreach ($headers as $cell => $text) {
+            $sheet->setCellValue($cell, $text);
+            $sheet->getStyle($cell)->getFont()->setBold(true);
+        }
+
+        // Isi data
+        $row = 2;
+        $x = 1;
+        $total = 0;
+
+        foreach ($data as $d) {
+            $sheet->setCellValue('A' . $row, $x++);
+            $sheet->setCellValue('B' . $row, $d->nama_kategori);
+            $sheet->setCellValue('C' . $row, $d->nama_sumber_dana);
+            $sheet->setCellValue('D' . $row, $d->date);
+            $sheet->setCellValue('E' . $row, $d->keterangan);
+            $sheet->setCellValue('F' . $row, $d->nominal);
+
+            // Format Nominal
+            $sheet->getStyle('F' . $row)
+                ->getNumberFormat()
+                ->setFormatCode('#,##0.00');
+            $sheet->getStyle('F' . $row)
+                ->getAlignment()
+                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+
+            $total += $d->nominal;
+            $row++;
+        }
+
+        // Baris Total
+        $sheet->mergeCells("A{$row}:E{$row}");
+        $sheet->setCellValue("A{$row}", "TOTAL");
+        $sheet->setCellValue("F{$row}", $total);
+
+        // Styling untuk total
+        $sheet->getStyle("A{$row}:F{$row}")->getFont()->setBold(true);
+        $sheet->getStyle("F{$row}")
+            ->getNumberFormat()
+            ->setFormatCode('#,##0.00');
+        $sheet->getStyle("F{$row}")
+            ->getAlignment()
+            ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+
+        // Auto-size columns
+        foreach (range('A', 'F') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+
 
     public function getTotalTransaksiPOS()
     {
