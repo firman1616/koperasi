@@ -92,5 +92,16 @@
         </div>
     </div>
 
+    <div class="card shadow mb-4" id="detail_out">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Detail Kategori Pengeluaran</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="div-table-lap-pengeluaran-keuangan"></div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <!-- /.container-fluid -->

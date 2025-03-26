@@ -589,4 +589,40 @@ class Laporan extends CI_Controller
             echo json_encode(["status" => false]);
         }
     }
+
+    public function tableLapKeuanganKeluar()
+    {
+        $date_start = $this->input->post('date_start');
+        $date_end = $this->input->post('date_end');
+
+        // Ambil data pemasukan dari model
+        $data['keuangan_keluar'] = $this->lap->getLapPengeluaran($date_start, $date_end)->result();
+
+        // Kirim hasil query ke view tabel pemasukan
+        echo json_encode($this->load->view('laporan/keuangan/lap-keuangan-out-table', $data, false));
+    }
+
+    public function getTotalOut()
+    {
+        $date_start = $this->input->post('date_start');
+        $date_end = $this->input->post('date_end');
+
+        $query = $this->db->query("
+        SELECT SUM(nominal) AS total 
+        FROM tbl_pengeluaran 
+        WHERE DATE(date) >= ? 
+        AND DATE(date) <= ?", [$date_start, $date_end]);
+
+        $result = $query->row();
+
+        if ($result && $result->total) {
+            echo json_encode([
+                "status" => true,
+                "kategori" => "Pengeluaran",
+                "total" => number_format($result->total, 0, ",", ".")
+            ]);
+        } else {
+            echo json_encode(["status" => false]);
+        }
+    }
 }

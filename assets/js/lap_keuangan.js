@@ -1,6 +1,7 @@
 $(document).ready(function () {
     // tableIuran();
     $("#detail_in").hide();
+    $("#detail_out").hide();
     // $("#div-table-lap-pemasukan-keuangan").hide();
     $("#detail_keuangan").hide();
     $("#div-table-lap-keuangan").hide();
@@ -95,9 +96,23 @@ $(document).ready(function () {
 
         // Jika kategori utama adalah OUT (Pengeluaran)
         if (kategori_utama === "2") {
-            $("#detail_keuangan").show();
-            $("#div-table-lap-keuangan").show();
-            tableKeuangan(date_start, date_end);
+            $.ajax({
+                url: BASE_URL + "Laporan/getTotalOut",
+                type: "POST",
+                data: { date_start: date_start, date_end: date_end },
+                dataType: "json",
+                success: function (response) {
+                    if (response.status) {
+                        $("#kategori-text").text("Total " + response.kategori);
+                        $("#total-transaksi").text(response.total);
+                    } else {
+                        alert("Data tidak ditemukan!");
+                        $("#total-transaksi").text("0");
+                    }
+                }
+            });
+            $("#detail_out").show(); // Tampilkan div pemasukan keuangan
+            tablePengeluaranKeuangan(date_start, date_end);
         }
     });
 
@@ -157,6 +172,21 @@ function tablePemasukanKeuangan(date_start, date_end) {
         success: function (data) {
             $('#div-table-lap-pemasukan-keuangan').html(data);
             $('#tableKeuanganIn').DataTable({
+                "processing": true,
+                "responsive": true,
+            });
+        }
+    });
+}
+
+function tablePengeluaranKeuangan(date_start, date_end) {
+    $.ajax({
+        url: BASE_URL + "Laporan/tableLapKeuanganKeluar",
+        type: "POST",
+        data: { date_start: date_start, date_end: date_end },
+        success: function (data) {
+            $('#div-table-lap-pengeluaran-keuangan').html(data);
+            $('#tableKeuanganOut').DataTable({
                 "processing": true,
                 "responsive": true,
             });

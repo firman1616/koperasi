@@ -268,4 +268,19 @@ class M_laporan extends CI_Model
       DATE(tp.date) >= '$date_start'
       and DATE(tp.date) <= '$date_end'");
   }
+
+  function getLapPengeluaran($date_start,$date_end) {
+    return $this->db->query("SELECT
+      tkt.name as nama_kategori,
+      tkt2.name as nama_sumber_dana,
+      tp.nominal,
+      tp.date,
+      tp.keterangan
+    from
+      tbl_pengeluaran tp
+    left join tbl_kateg_trans tkt on tkt.id = tp.kategori_id 
+    left join tbl_kateg_trans tkt2 on tkt2.id = tp.sumber_dana_id 
+    where DATE(tp.date) >= '$date_start'
+      and DATE(tp.date) <= '$date_end'");
+  }
 }
