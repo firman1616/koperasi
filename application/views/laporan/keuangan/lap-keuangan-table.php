@@ -4,7 +4,7 @@ foreach ($sum_nominal as $row) {
     $out = $row->pengeluaran;
  }
 ?>
-<table>
+<!-- <table>
     <tr>
         <td>Total Pemasukan</td>
         <td>:</td>
@@ -15,7 +15,7 @@ foreach ($sum_nominal as $row) {
         <td>:</td>
         <td>Rp. <?= number_format(isset($out) ? $out : 0) ?></td>
     </tr>
-</table>
+</table> -->
 
 <?php
 $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::LONG, IntlDateFormatter::NONE);

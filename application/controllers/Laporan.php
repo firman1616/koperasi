@@ -479,4 +479,114 @@ class Laporan extends CI_Controller
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
     }
+
+    public function getTotalTransaksiPOS()
+    {
+        $date_start = $this->input->post('date_start');
+        $date_end = $this->input->post('date_end');
+
+        $query = $this->db->query("
+        SELECT SUM(grand_total) AS total 
+        FROM tbl_transaksi 
+        WHERE DATE(tgl_transaksi) >= ? 
+        AND DATE(tgl_transaksi) <= ? 
+        AND metode_bayar = '1'", [$date_start, $date_end]);
+
+        $result = $query->row();
+
+        if ($result && $result->total) {
+            echo json_encode([
+                "status" => true,
+                "kategori" => "Transaksi POS",
+                "total" => number_format($result->total, 0, ",", ".")
+            ]);
+        } else {
+            echo json_encode(["status" => false]);
+        }
+    }
+
+    public function getTotalDeposit()
+    {
+        $date_start = $this->input->post('date_start');
+        $date_end = $this->input->post('date_end');
+
+        $query = $this->db->query("
+        SELECT SUM(nominal) AS total 
+        FROM tbl_deposit 
+        WHERE DATE(date) >= ? 
+        AND DATE(date) <= ?", [$date_start, $date_end]);
+
+        $result = $query->row();
+
+        if ($result && $result->total) {
+            echo json_encode([
+                "status" => true,
+                "kategori" => "Deposit",
+                "total" => number_format($result->total, 0, ",", ".")
+            ]);
+        } else {
+            echo json_encode(["status" => false]);
+        }
+    }
+
+    public function getTotalIuran()
+    {
+        $date_start = $this->input->post('date_start');
+        $date_end = $this->input->post('date_end');
+
+        $query = $this->db->query("
+        SELECT SUM(nominal) AS total 
+        FROM tbl_iuran 
+        WHERE DATE(date) >= ? 
+        AND DATE(date) <= ? 
+        AND status = '1'", [$date_start, $date_end]);
+
+        $result = $query->row();
+
+        if ($result && $result->total) {
+            echo json_encode([
+                "status" => true,
+                "kategori" => "Iuran",
+                "total" => number_format($result->total, 0, ",", ".")
+            ]);
+        } else {
+            echo json_encode(["status" => false]);
+        }
+    }
+
+    public function tableLapKeuanganMasuk()
+    {
+        $date_start = $this->input->post('date_start');
+        $date_end = $this->input->post('date_end');
+
+        // Ambil data pemasukan dari model
+        $data['keuangan_masuk'] = $this->lap->getLapPemasukan($date_start, $date_end)->result();
+
+        // Kirim hasil query ke view tabel pemasukan
+        echo json_encode($this->load->view('laporan/keuangan/lap-keuangan-in-table', $data, false));
+    }
+
+    public function getTotalIn()
+    {
+        $date_start = $this->input->post('date_start');
+        $date_end = $this->input->post('date_end');
+
+        $query = $this->db->query("
+        SELECT SUM(nominal) AS total 
+        FROM tbl_pemasukan 
+        WHERE DATE(date) >= ? 
+        AND DATE(date) <= ?", [$date_start, $date_end]);
+
+        $result = $query->row();
+
+        if ($result && $result->total) {
+            echo json_encode([
+                "status" => true,
+                "kategori" => "Pemasukan",
+                "total" => number_format($result->total, 0, ",", ".")
+            ]);
+        } else {
+            echo json_encode(["status" => false]);
+        }
+    }
 }

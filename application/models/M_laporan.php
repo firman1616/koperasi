@@ -254,4 +254,18 @@ class M_laporan extends CI_Model
     AND SUBSTRING(tk.periode, 3, 2) = '$tahun'
     and tk2.kode = 'OUT'");
   }
+
+  function getLapPemasukan($date_start, $date_end) {
+    return $this->db->query("SELECT
+      tkt.name as kategori_trans,
+      tp.nominal,
+      tp.date,
+      tp.keterangan
+    from
+      tbl_pemasukan tp
+    left join tbl_kateg_trans tkt on tkt.id = tp.kategori_id 
+    where
+      DATE(tp.date) >= '$date_start'
+      and DATE(tp.date) <= '$date_end'");
+  }
 }
