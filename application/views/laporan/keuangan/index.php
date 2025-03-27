@@ -4,8 +4,8 @@
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800"><?= $title ?></h1>
     <div class="row">
-        <div class="col">
-            <div class="card shadow mb-4">
+        <!-- <div class="col"> -->
+            <div class="card shadow mb-4 col-lg-6">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary"><?= $subtitle ?></h6>
                 </div>
@@ -22,21 +22,21 @@
                         </div>
                         <div class="row" style="margin-bottom: 5px;">
                             <div class="col">
-                                <select name="kategori" id="kategori" class="form-control">
+                                <select name="kategori_utama" id="kategori_utama" class="form-control">
+                                    <option value="">Pilih kategori Transaksi</option>
+                                    <option value="1">IN</option>
+                                    <option value="2">OUT</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <!-- <select name="kategori" id="kategori" class="form-control">
                                     <option value="">Pilih kategori Keuangan</option>
                                     <?php
                                     foreach ($kategori->result() as $row) { ?>
                                         <option value="<?= $row->id ?>"><?= $row->name ?></option>
                                     <?php }
                                     ?>
-                                </select>
-                            </div>
-                            <div class="col">
-                                <select name="kategori_utama" id="kategori_utama" class="form-control">
-                                    <option value="">Pilih kategori Transaksi</option>
-                                    <option value="1">IN</option>
-                                    <option value="2">OUT</option>
-                                </select>
+                                </select> -->
                             </div>
                         </div>
                         <button type="button" class="btn btn-primary" id="preview">Lihat</button>
@@ -44,8 +44,8 @@
                     </form>
                 </div>
             </div>
-        </div>
-        <div class="col">
+        <!-- </div> -->
+        <!-- <div class="col">
             <div>
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
@@ -66,7 +66,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
 

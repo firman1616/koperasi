@@ -379,10 +379,10 @@ class Laporan extends CI_Controller
 
     function tableLapKeuangan()
     {
-        $date_param = $this->input->post('date_end');
-        $periode = date('my', strtotime($date_param));
-        $data['keuangan'] = $this->lap->lap_keuangan($periode)->result();
-        $data['sum_nominal'] = $this->lap->sum_nominal($periode)->result();
+        // $date_param = $this->input->post('date_end');
+        // $periode = date('my', strtotime($date_param));
+        $data['keuangan'] = $this->lap->lap_keuangan()->result();
+        $data['sum_nominal'] = $this->lap->sum_nominal()->result();
 
         echo json_encode($this->load->view('laporan/keuangan/lap-keuangan-table', $data, false));
     }
@@ -459,7 +459,7 @@ class Laporan extends CI_Controller
         $date_start = date('Y-m-01', strtotime($date_end));
 
         // Ambil data dari model
-        $keuangan = $this->lap->lap_keuangan($periode)->result();
+        $keuangan = $this->lap->lap_keuangan()->result();
         $sum_nominal = $this->lap->sum_nominal($periode)->row(); // Ambil total pemasukan & pengeluaran
 
         $total_pemasukan = $sum_nominal->pemasukan ?? 0;

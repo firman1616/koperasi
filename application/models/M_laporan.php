@@ -180,7 +180,7 @@ class M_laporan extends CI_Model
       month(thb.history_date)");
   }
 
-  function lap_keuangan($periode)  {
+  function lap_keuangan()  {
     return $this->db->query("SELECT
       tk.id,
       tk.kategori_keuangan,
@@ -194,24 +194,52 @@ class M_laporan extends CI_Model
     left join tbl_kateg_trans tkt on
       tkt.id = tk.kategori_keuangan
     left join tbl_kategori tk2 on
-      tk2.id = tkt.kategori_id
-    WHERE tk.periode = '$periode'");
+      tk2.id = tkt.kategori_id 
+    WHERE tk2.kode = 'IN'");
   }
 
-  function sum_nominal($periode) {
-    return $this->db->query("SELECT 
-        tk.periode,
+  // function lap_keuangan($periode)  {
+  //   return $this->db->query("SELECT
+  //     tk.id,
+  //     tk.kategori_keuangan,
+  //     tk.nominal,
+  //     tk.periode,
+  //     tkt.name as kateg_trans,
+  //     tk2.name as kategori,
+  //     tk2.kode 
+  //   from
+  //     tbl_keuangan tk
+  //   left join tbl_kateg_trans tkt on
+  //     tkt.id = tk.kategori_keuangan
+  //   left join tbl_kategori tk2 on
+  //     tk2.id = tkt.kategori_id
+  //   WHERE tk.periode = '$periode'");
+  // }
+
+  function sum_nominal()  {
+    return $this->db->query(" SELECT 
         SUM(CASE WHEN tk2.name = 'Pemasukan' THEN tk.nominal ELSE 0 END) AS pemasukan,
         SUM(CASE WHEN tk2.name = 'Pengeluaran' THEN tk.nominal ELSE 0 END) AS pengeluaran
     FROM 
         tbl_keuangan tk
     LEFT JOIN tbl_kateg_trans tkt ON tkt.id = tk.kategori_keuangan
-    LEFT JOIN tbl_kategori tk2 ON tk2.id = tkt.kategori_id
-    WHERE 
-        tk.periode = '$periode'
-    GROUP BY 
-        tk.periode");
+    LEFT JOIN tbl_kategori tk2 ON tk2.id = tkt.kategori_id");
   }
+
+  // function sum_nominal($periode) {
+  //   return $this->db->query("SELECT 
+  //       tk.periode,
+  //       SUM(CASE WHEN tk2.name = 'Pemasukan' THEN tk.nominal ELSE 0 END) AS pemasukan,
+  //       SUM(CASE WHEN tk2.name = 'Pengeluaran' THEN tk.nominal ELSE 0 END) AS pengeluaran
+  //   FROM 
+  //       tbl_keuangan tk
+  //   LEFT JOIN tbl_kateg_trans tkt ON tkt.id = tk.kategori_keuangan
+  //   LEFT JOIN tbl_kategori tk2 ON tk2.id = tkt.kategori_id
+  //   WHERE 
+  //       tk.periode = '$periode'
+  //   GROUP BY 
+  //       tk.periode");
+  // }
 
   function in_keuangan($periode) {
     return $this->db->query("SELECT
