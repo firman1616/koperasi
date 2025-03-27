@@ -387,6 +387,64 @@ class Laporan extends CI_Controller
         echo json_encode($this->load->view('laporan/keuangan/lap-keuangan-table', $data, false));
     }
 
+    // public function export_excel_keuangan()
+    // {
+    //     $date_end = $this->input->get('date_end');
+    //     if (!$date_end) {
+    //         $date_end = date('Y-m-d'); // Default jika tidak ada input
+    //     }
+
+    //     // Konversi date_end menjadi format 'my' (bulan 2 digit + tahun 2 digit)
+    //     $periode = date('my', strtotime($date_end));
+
+    //     // Ambil date_start (awal bulan dari date_end)
+    //     $date_start = date('Y-m-01', strtotime($date_end));
+
+    //     // Ambil data dari model berdasarkan kategori
+    //     $pemasukan = $this->lap->in_keuangan($periode)->result();
+    //     $pengeluaran = $this->lap->out_keuangan($periode)->result();
+
+    //     // Ambil data Detail Pemasukan & Detail Pengeluaran
+    //     $detail_pemasukan = $this->lap->getLapPemasukan($date_start, $date_end)->result();
+    //     $detail_pengeluaran = $this->lap->getLapPengeluaran($date_start, $date_end)->result();
+
+    //     // Buat Spreadsheet
+    //     $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+
+    //     // Buat Sheet Pemasukan
+    //     $sheet1 = $spreadsheet->setActiveSheetIndex(0);
+    //     $sheet1->setTitle('Pemasukan');
+    //     $this->isiSheetKeuangan($sheet1, $pemasukan);
+
+    //     // Buat Sheet Pengeluaran
+    //     $sheet2 = $spreadsheet->createSheet();
+    //     $sheet2->setTitle('Pengeluaran');
+    //     $this->isiSheetKeuangan($sheet2, $pengeluaran);
+
+    //     // Buat Sheet Detail Pemasukan
+    //     $sheet3 = $spreadsheet->createSheet();
+    //     $sheet3->setTitle('Detail Pemasukan');
+    //     $this->isiSheetDetailPemasukan($sheet3, $detail_pemasukan);
+
+    //     // Buat Sheet Detail Pengeluaran
+    //     $sheet4 = $spreadsheet->createSheet();
+    //     $sheet4->setTitle('Detail Pengeluaran');
+    //     $this->isiSheetDetailPengeluaran($sheet4, $detail_pengeluaran);
+
+    //     // Set nama file
+    //     $filename = 'Laporan_Keuangan_' . $periode . '.xlsx';
+
+    //     // Set header untuk download
+    //     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    //     header('Content-Disposition: attachment;filename="' . $filename . '"');
+    //     header('Cache-Control: max-age=0');
+
+    //     ob_end_clean();
+    //     $writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    //     $writer->save('php://output');
+    //     exit;
+    // }
+
     public function export_excel_keuangan()
     {
         $date_end = $this->input->get('date_end');
@@ -400,41 +458,40 @@ class Laporan extends CI_Controller
         // Ambil date_start (awal bulan dari date_end)
         $date_start = date('Y-m-01', strtotime($date_end));
 
-        // Ambil data dari model berdasarkan kategori
-        $pemasukan = $this->lap->in_keuangan($periode)->result();
-        $pengeluaran = $this->lap->out_keuangan($periode)->result();
+        // Ambil data dari model
+        $keuangan = $this->lap->lap_keuangan($periode)->result();
+        $sum_nominal = $this->lap->sum_nominal($periode)->row(); // Ambil total pemasukan & pengeluaran
 
-        // Ambil data Detail Pemasukan & Detail Pengeluaran
+        $total_pemasukan = $sum_nominal->pemasukan ?? 0;
+        $total_pengeluaran = $sum_nominal->pengeluaran ?? 0;
+        $saldo_akhir = $total_pemasukan - $total_pengeluaran;
+
+        // Ambil Detail Pemasukan & Pengeluaran dengan kedua parameter yang benar
         $detail_pemasukan = $this->lap->getLapPemasukan($date_start, $date_end)->result();
         $detail_pengeluaran = $this->lap->getLapPengeluaran($date_start, $date_end)->result();
 
         // Buat Spreadsheet
         $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
 
-        // Buat Sheet Pemasukan
+        // **Buat Sheet Resume Keuangan**
         $sheet1 = $spreadsheet->setActiveSheetIndex(0);
-        $sheet1->setTitle('Pemasukan');
-        $this->isiSheetKeuangan($sheet1, $pemasukan);
+        $sheet1->setTitle('Resume Keuangan');
+        $this->isiSheetResumeKeuangan($sheet1, $keuangan, $total_pemasukan, $total_pengeluaran, $saldo_akhir);
 
-        // Buat Sheet Pengeluaran
+        // **Buat Sheet Detail Pemasukan**
         $sheet2 = $spreadsheet->createSheet();
-        $sheet2->setTitle('Pengeluaran');
-        $this->isiSheetKeuangan($sheet2, $pengeluaran);
+        $sheet2->setTitle('Detail Pemasukan');
+        $this->isiSheetDetailPemasukan($sheet2, $detail_pemasukan);
 
-        // Buat Sheet Detail Pemasukan
+        // **Buat Sheet Detail Pengeluaran**
         $sheet3 = $spreadsheet->createSheet();
-        $sheet3->setTitle('Detail Pemasukan');
-        $this->isiSheetDetailPemasukan($sheet3, $detail_pemasukan);
+        $sheet3->setTitle('Detail Pengeluaran');
+        $this->isiSheetDetailPengeluaran($sheet3, $detail_pengeluaran);
 
-        // Buat Sheet Detail Pengeluaran
-        $sheet4 = $spreadsheet->createSheet();
-        $sheet4->setTitle('Detail Pengeluaran');
-        $this->isiSheetDetailPengeluaran($sheet4, $detail_pengeluaran);
-
-        // Set nama file
+        // **Set nama file**
         $filename = 'Laporan_Keuangan_' . $periode . '.xlsx';
 
-        // Set header untuk download
+        // **Set header untuk download**
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -444,6 +501,8 @@ class Laporan extends CI_Controller
         $writer->save('php://output');
         exit;
     }
+
+
 
 
 
@@ -625,6 +684,70 @@ class Laporan extends CI_Controller
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
     }
+
+    private function isiSheetResumeKeuangan($sheet, $keuangan, $total_pemasukan, $total_pengeluaran, $saldo_akhir)
+    {
+        // Header Kolom
+        $headers = ['A1' => 'No', 'B1' => 'Kategori', 'C1' => 'Nominal'];
+        foreach ($headers as $cell => $text) {
+            $sheet->setCellValue($cell, $text);
+            $sheet->getStyle($cell)->getFont()->setBold(true);
+        }
+
+        // Isi Data
+        $row = 2;
+        $x = 1;
+        foreach ($keuangan as $data) {
+            $sheet->setCellValue("A{$row}", $x++);
+            $sheet->setCellValue("B{$row}", $data->kateg_trans);
+            $sheet->setCellValue("C{$row}", $data->nominal);
+
+            // Format angka
+            $sheet->getStyle("C{$row}")
+                ->getNumberFormat()
+                ->setFormatCode('#,##0.00');
+            $sheet->getStyle("C{$row}")
+                ->getAlignment()
+                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+
+            $row++;
+        }
+
+        // Tambahkan Total Pemasukan dan Total Pengeluaran
+        $row++;
+        $sheet->setCellValue("B{$row}", "Total Pemasukan");
+        $sheet->setCellValue("C{$row}", $total_pemasukan);
+
+        $row++;
+        $sheet->setCellValue("B{$row}", "Total Pengeluaran");
+        $sheet->setCellValue("C{$row}", $total_pengeluaran);
+
+        $row++;
+        $sheet->setCellValue("B{$row}", "Saldo Akhir");
+        $sheet->setCellValue("C{$row}", $saldo_akhir);
+
+        // Buat bold dan format angka
+        $boldCells = ["B" . ($row - 2), "C" . ($row - 2), "B" . ($row - 1), "C" . ($row - 1), "B{$row}", "C{$row}"];
+        foreach ($boldCells as $cell) {
+            $sheet->getStyle($cell)->getFont()->setBold(true);
+        }
+
+        foreach (["C" . ($row - 2), "C" . ($row - 1), "C{$row}"] as $cell) {
+            $sheet->getStyle($cell)
+                ->getNumberFormat()
+                ->setFormatCode('#,##0.00');
+            $sheet->getStyle($cell)
+                ->getAlignment()
+                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+        }
+
+        // Auto-size kolom
+        foreach (range('A', 'C') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+
 
 
 

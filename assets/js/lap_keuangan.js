@@ -6,6 +6,20 @@ $(document).ready(function () {
     $("#detail_keuangan").hide();
     $("#div-table-lap-keuangan").hide();
 
+    $("#kategori_utama").change(function () {
+        let kategoriUtama = $(this).val();
+        if (kategoriUtama === "1") {
+            $("#detail_in").show();
+            $("#detail_out").hide();
+        } else if (kategoriUtama === "2") {
+            $("#detail_in").hide();
+            $("#detail_out").show();
+        } else {
+            $("#detail_in").hide();
+            $("#detail_out").hide();
+        }
+    });
+
     $("#preview").click(function () {
         let kategori = $("#kategori").val();
         let date_start = $("#date_start").val();
@@ -17,7 +31,6 @@ $(document).ready(function () {
             return;
         }
 
-        // Jika kategori ID 11 dipilih, ambil total transaksi POS
         if (kategori === "11") {
             $.ajax({
                 url: BASE_URL + "Laporan/getTotalTransaksiPOS",
@@ -36,7 +49,6 @@ $(document).ready(function () {
             });
         }
 
-        // Jika kategori ID 12 dipilih, ambil total deposit
         if (kategori === "12") {
             $.ajax({
                 url: BASE_URL + "Laporan/getTotalDeposit",
@@ -55,7 +67,6 @@ $(document).ready(function () {
             });
         }
 
-        // Jika kategori ID 3 dipilih, ambil total iuran
         if (kategori === "3") {
             $.ajax({
                 url: BASE_URL + "Laporan/getTotalIuran",
@@ -90,11 +101,11 @@ $(document).ready(function () {
                     }
                 }
             });
-            $("#detail_in").show(); // Tampilkan div pemasukan keuangan
+            $("#detail_in").show();
+            $("#detail_out").hide();
             tablePemasukanKeuangan(date_start, date_end);
         }
 
-        // Jika kategori utama adalah OUT (Pengeluaran)
         if (kategori_utama === "2") {
             $.ajax({
                 url: BASE_URL + "Laporan/getTotalOut",
@@ -111,20 +122,17 @@ $(document).ready(function () {
                     }
                 }
             });
-            $("#detail_out").show(); // Tampilkan div pemasukan keuangan
+            $("#detail_in").hide();
+            $("#detail_out").show();
             tablePengeluaranKeuangan(date_start, date_end);
         }
 
         if (kategori_utama !== "") {
-            // Jika kategori dipilih (IN atau OUT), jangan tampilkan div & jangan load tabel
             $("#detail_keuangan").hide();
             $("#div-table-lap-keuangan").hide();
         } else {
-            // Jika kategori belum dipilih, jalankan fungsi seperti biasa
             $("#detail_keuangan").show();
             $("#div-table-lap-keuangan").show();
-
-            // Panggil fungsi untuk load tabel dengan parameter tanggal
             tableKeuangan(date_end);
         }
     });

@@ -27,7 +27,7 @@ $formatter->setPattern('MMMM yyyy');
         <tr>
             <th>No</th>
             <th>Kategori</th>
-            <th>Periode</th>
+            <!-- <th>Periode</th> -->
             <th>Nominal</th>
         </tr>
     </thead>
@@ -47,23 +47,23 @@ $formatter->setPattern('MMMM yyyy');
             <tr>
                 <td><?= $x++; ?></td>
                 <td><?= $row->kateg_trans ?></td>
-                <td><?= $formatter->format(new DateTime($row->periode)) ?></td>
+                <!-- <td><?= $formatter->format(new DateTime($row->periode)) ?></td> -->
                 <td>Rp. <?= number_format($row->nominal) ?></td>
             </tr>
         <?php } ?>
 
         <!-- Baris tambahan untuk Total Pemasukan, Total Pengeluaran, dan Saldo Akhir -->
         <tr>
-            <td colspan="3" style="text-align: right;"><strong>Total Pemasukan</strong></td>
-            <td colspan="3"><strong>Rp. <?= number_format($in) ?></strong></td>
+            <td colspan="2" style="text-align: right;"><strong>Total Pemasukan</strong></td>
+            <td colspan="2"><strong>Rp. <?= number_format($in) ?></strong></td>
         </tr>
         <tr>
-            <td colspan="3" style="text-align: right;"><strong>Total Pengeluaran</strong></td>
-            <td colspan="3"><strong>Rp. <?= number_format($out) ?></strong></td>
+            <td colspan="2" style="text-align: right;"><strong>Total Pengeluaran</strong></td>
+            <td colspan="2"><strong>Rp. <?= number_format($out) ?></strong></td>
         </tr>
         <tr>
-            <td colspan="3" style="text-align: right;"><strong>Saldo Akhir</strong></td>
-            <td colspan="3"><strong>Rp. <?= number_format($in - $out) ?></strong></td>
+            <td colspan="2" style="text-align: right;"><strong>Saldo Akhir</strong></td>
+            <td colspan="2"><strong>Rp. <?= number_format($in - $out) ?></strong></td>
         </tr>
     </tbody>
 </table>
