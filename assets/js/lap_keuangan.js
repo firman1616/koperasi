@@ -6,19 +6,6 @@ $(document).ready(function () {
     $("#detail_keuangan").hide();
     $("#div-table-lap-keuangan").hide();
 
-    $("#kategori_utama").change(function () {
-        let kategoriUtama = $(this).val();
-        if (kategoriUtama === "1") {
-            $("#detail_in").show();
-            $("#detail_out").hide();
-        } else if (kategoriUtama === "2") {
-            $("#detail_in").hide();
-            $("#detail_out").show();
-        } else {
-            $("#detail_in").hide();
-            $("#detail_out").hide();
-        }
-    });
 
     $("#preview").click(function () {
         let kategori = $("#kategori").val();
@@ -29,6 +16,15 @@ $(document).ready(function () {
         if (date_start === "" || date_end === "") {
             alert("Silakan lengkapi semua inputan terlebih dahulu!");
             return;
+        }
+
+        if (kategori !== "" || kategori_utama !== "") {
+            $("#detail_keuangan").hide();
+            $("#div-table-lap-keuangan").hide();
+        } else {
+            $("#detail_keuangan").show();
+            $("#div-table-lap-keuangan").show();
+            tableKeuangan(date_end);
         }
 
         if (kategori === "11") {
@@ -47,6 +43,8 @@ $(document).ready(function () {
                     }
                 }
             });
+            $("#detail_keuangan").hide();
+            $("#div-table-lap-keuangan").hide();
         }
 
         if (kategori === "12") {
@@ -65,6 +63,8 @@ $(document).ready(function () {
                     }
                 }
             });
+            $("#detail_keuangan").hide();
+            $("#div-table-lap-keuangan").hide();
         }
 
         if (kategori === "3") {
@@ -83,6 +83,8 @@ $(document).ready(function () {
                     }
                 }
             });
+            $("#detail_keuangan").hide();
+            $("#div-table-lap-keuangan").hide();
         }
 
         if (kategori_utama === "1") {
@@ -104,9 +106,7 @@ $(document).ready(function () {
             $("#detail_in").show();
             $("#detail_out").hide();
             tablePemasukanKeuangan(date_start, date_end);
-        }
-
-        if (kategori_utama === "2") {
+        } else if (kategori_utama === "2") {
             $.ajax({
                 url: BASE_URL + "Laporan/getTotalOut",
                 type: "POST",
@@ -125,16 +125,20 @@ $(document).ready(function () {
             $("#detail_in").hide();
             $("#detail_out").show();
             tablePengeluaranKeuangan(date_start, date_end);
+        } else {
+            // Jika kategori_utama kosong, sembunyikan detail_in dan detail_out
+            $("#detail_in").hide();
+            $("#detail_out").hide();
         }
 
-        if (kategori_utama !== "") {
-            $("#detail_keuangan").hide();
-            $("#div-table-lap-keuangan").hide();
-        } else {
-            $("#detail_keuangan").show();
-            $("#div-table-lap-keuangan").show();
-            tableKeuangan(date_end);
-        }
+        // if (kategori_utama !== "") {
+        //     $("#detail_keuangan").hide();
+        //     $("#div-table-lap-keuangan").hide();
+        // } else {
+        //     $("#detail_keuangan").show();
+        //     $("#div-table-lap-keuangan").show();
+        //     tableKeuangan(date_end);
+        // }
     });
 
 
