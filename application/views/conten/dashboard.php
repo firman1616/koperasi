@@ -110,29 +110,9 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Kode Barang</th>
-                                <th scope="col">Nama Barang</th>
-                                <th scope="col">QTY</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            $x=1;
-                            foreach ($qty_0->result() as $row) { ?>
-                                <tr>
-                                    <th scope="row"><?= $x++ ?></th>
-                                    <td><?= $row->kode_barang ?></td>
-                                    <td><?= $row->nama_barang ?></td>
-                                    <td><?= $row->qty ?></td>
-                                </tr>
-                            <?php }
-                            ?>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <div id="div-table-barang-habis"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -160,30 +140,9 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Kode Barang</th>
-                                <th scope="col">Nama Barang</th>
-                                <th scope="col">QTY</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            $x=1;
-                            foreach ($qty_kurang->result() as $row) { ?>
-                                <tr>
-                                    <th scope="row"><?= $x++; ?></th>
-                                    <td><?= $row->kode_barang ?></td>
-                                    <td><?= $row->nama_barang ?></td>
-                                    <td><?= $row->qty ?></td>
-                                </tr>
-                            <?php }
-                            ?>
-                            
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <div id="div-table-barang-hampir-habis"></div>
+                    </div>
                 </div>
             </div>
         </div>

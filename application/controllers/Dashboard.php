@@ -24,9 +24,22 @@ class Dashboard extends CI_Controller {
 			'trans_day' => $this->dash->trans_day(),
 			'count_anggota' => $this->dash->count_anggota(),
 			'tempo' => $this->dash->count_tempo(),
-			'qty_0' => $this->dash->qty_0(),
-			'qty_kurang' => $this->dash->qty_kurang(),
+			'footer_js' => array('assets/js/dashboard.js')
 		];
 		$this->load->view('template/conten',$data);
 	}
+
+	function tableBarangHabis()
+    {
+        $data['qty_0'] = $this->dash->qty_0()->result();
+
+        echo json_encode($this->load->view('conten/barang-habis-table',$data,false));
+    }
+
+	function tableBarangHampirHabis()
+    {
+        $data['qty_kurang'] = $this->dash->qty_kurang()->result();
+
+        echo json_encode($this->load->view('conten/barang-hampir-habis-table',$data,false));
+    }
 }
