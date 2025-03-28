@@ -307,4 +307,29 @@ class M_laporan extends CI_Model
     where DATE(tp.date) >= '$date_start'
       and DATE(tp.date) <= '$date_end'");
   }
+
+  function export_iuran_nominal($date_start,$date_end) {
+    return $this->db->query("SELECT 
+        ti.anggota_id,
+        ta.name,
+        SUM(ti.nominal) AS total,
+        GROUP_CONCAT(DISTINCT ti.periode ORDER BY ti.periode SEPARATOR ', ') AS periode_tergabung
+    FROM tbl_iuran ti
+    LEFT JOIN tbl_anggota ta ON ta.id = ti.anggota_id
+    WHERE ti.status = '1' and DATE(ti.date) >= '$date_start'
+          and DATE(ti.date) <= '$date_end'
+    GROUP BY ti.anggota_id, ta.name;");
+  }
+
+  function export_deposit_nominal() {
+    return $this->db->query("SELECT
+      td.anggota_id,
+      td.nominal as total,
+      td.date,
+      td.status,
+      ta.name
+    from
+      tbl_deposit td
+    left join tbl_anggota ta on ta.id = td.anggota_id ");
+  }
 }

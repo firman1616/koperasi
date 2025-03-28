@@ -11,7 +11,7 @@
                 </div>
                 <div class="card-body">
                     <!-- <label class="label">Tanggal Transaksi</label> -->
-                    <form method="GET" action="<?= base_url('Laporan/export_excel_keuangan') ?>">
+                    <form method="GET" action="<?= base_url('Laporan/export_excel_keuangan') ?>" id="laporanForm">
                         <div class="row" style="margin-bottom: 5px;">
                             <div class="col">
                                 <input type="date" class="form-control" name="date_start" id="date_start">
@@ -24,8 +24,8 @@
                             <div class="col">
                                 <select name="kategori_utama" id="kategori_utama" class="form-control">
                                     <option value="">Pilih kategori Transaksi</option>
-                                    <option value="1">IN</option>
-                                    <option value="2">OUT</option>
+                                    <option value="1">Pemasukan</option>
+                                    <option value="2">Pengeluaran</option>
                                 </select>
                             </div>
                             <div class="col">
@@ -41,6 +41,7 @@
                         </div>
                         <button type="button" class="btn btn-primary" id="preview">Lihat</button>
                         <button type="submit" class="btn btn-success" id="export_excel">Export</button>
+                        <button type="submit" class="btn btn-danger" id="export_excel_all">Export All</button>
                     </form>
                 </div>
             </div>

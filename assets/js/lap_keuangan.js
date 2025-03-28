@@ -162,6 +162,16 @@ $(document).ready(function () {
         window.location.href = BASE_URL + "Laporan/export_excel_keuangan?date_end=" + date_end;
     });
 
+    document.getElementById("export_excel_all").addEventListener("click", function() {
+        let date_end = $("#date_end").val();
+
+        if (date_end === "") {
+            alert("Silakan pilih tanggal terlebih dahulu!");
+            return;
+        }
+        document.getElementById("laporanForm").action = BASE_URL + "Laporan/export_excel_all?date_end=" + date_end;
+    });
+
 
 
     let today = new Date();
