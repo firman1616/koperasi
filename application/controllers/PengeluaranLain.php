@@ -192,12 +192,20 @@ class PengeluaranLain extends CI_Controller
         redirect('PengeluaranLain');
     }
 
-
-
     public function getSaldo()
     {
         $sumberdana = $this->input->post('sumberdana');
-        $saldo = $this->db->select('nominal')->from('tbl_keuangan')->where('kategori_keuangan', $sumberdana)->get()->row();
+
+        // Ambil periode saat ini dalam format 'my' (bulan-tahun, misalnya: 042025)
+        $periode = date('my'); // Format bulan-tahun (misalnya: 042025)
+
+        // Ambil saldo berdasarkan sumber dana dan periode saat ini
+        $saldo = $this->db->select('nominal')
+            ->from('tbl_keuangan')
+            ->where('kategori_keuangan', $sumberdana)
+            ->where('periode', $periode)  // Menambahkan filter berdasarkan periode
+            ->get()
+            ->row();
 
         if ($saldo) {
             echo json_encode(['saldo' => $saldo->nominal]);
