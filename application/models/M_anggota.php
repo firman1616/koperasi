@@ -45,39 +45,109 @@ class M_anggota extends CI_Model
   {
     $this->db->select('SUM(nominal) as total');
     $this->db->from('tbl_deposit');
-    $this->db->where("DATE_FORMAT(date, '%m%y') =", $periode); // Filter berdasarkan periode my
+    $this->db->where("DATE_FORMAT(date, '%m%y') =", $periode);
     $query = $this->db->get();
 
     if ($query->num_rows() > 0) {
-      return $query->row()->total;
+      $total = (int) $query->row()->total;
+      log_message('debug', "Total Deposit Periode $periode: $total"); // Debugging
+      return $total;
     }
-    return 0; // Jika tidak ada data, kembalikan 0
+
+    log_message('debug', "Total Deposit Periode $periode: 0 (tidak ditemukan)"); // Debugging
+    return 0;
   }
 
-  public function update_keuangan($kategori_id, $periode, $data)
-  {
-    $this->db->where('kategori_keuangan', $kategori_id);
-    $this->db->where('periode', $periode); // Filter berdasarkan periode saat ini
-    return $this->db->update('tbl_keuangan', $data);
-  }
 
-  public function get_total_iuran_by_periode($periode2)
+  public function get_total_iuran_by_periode($periode)
   {
-    $query = $this->db->query("SELECT SUM(nominal) as total 
-                               FROM tbl_iuran 
-                               WHERE DATE_FORMAT(date, '%m%y') = ? 
-                               AND status = '1'", [$periode2]);
+    $this->db->select('SUM(nominal) as total');
+    $this->db->from('tbl_iuran');
+    $this->db->where("DATE_FORMAT(date, '%m%y') =", $periode);
+    $this->db->where("status", 1); // Hanya ambil status aktif
+    $query = $this->db->get();
 
     if ($query->num_rows() > 0) {
-      return $query->row()->total;
+      return (int) $query->row()->total;
     }
     return 0;
   }
 
-  public function update_keuangan_iuran($kategori_id, $periode2, $data)
+
+  public function get_nominal_keuangan($kategori_id, $periode)
+  {
+    $this->db->select('nominal');
+    $this->db->from('tbl_keuangan');
+    $this->db->where('kategori_keuangan', $kategori_id);
+    $this->db->where('periode', $periode);
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+      $nominal = (int) $query->row()->nominal;
+      log_message('debug', "Nominal Keuangan (Kategori $kategori_id, Periode $periode): $nominal"); // Debugging
+      return $nominal;
+    }
+
+    log_message('debug', "Nominal Keuangan (Kategori $kategori_id, Periode $periode): Tidak ditemukan"); // Debugging
+    return 0; // Jika tidak ada data, anggap nominal awal adalah 0
+  }
+
+  public function get_nominal_keuangan_iuran($kategori_id, $periode)
+{
+    // Hitung periode sebelumnya
+    $bulan = (int) substr($periode, 0, 2); // Ambil 2 digit pertama (bulan)
+    $tahun = (int) substr($periode, 2, 2); // Ambil 2 digit terakhir (tahun)
+
+    if ($bulan == 1) { // Jika Januari, mundur ke Desember tahun sebelumnya
+        $bulan = 12;
+        $tahun -= 1;
+    } else {
+        $bulan -= 1;
+    }
+
+    // Format periode sebelumnya (misal: '0325' → '0225')
+    $periode_sebelumnya = sprintf('%02d%02d', $bulan, $tahun);
+
+    $this->db->select('nominal');
+    $this->db->from('tbl_keuangan');
+    $this->db->where('kategori_keuangan', $kategori_id);
+    $this->db->where('periode', $periode_sebelumnya);
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+        $nominal = (int) $query->row()->nominal;
+        log_message('debug', "Nominal Keuangan (Kategori $kategori_id, Periode $periode_sebelumnya): $nominal"); // Debugging
+        return $nominal;
+    }
+
+    log_message('debug', "Nominal Keuangan (Kategori $kategori_id, Periode $periode_sebelumnya): Tidak ditemukan"); // Debugging
+    return 0; // Jika tidak ada data, anggap nominal awal adalah 0
+}
+
+
+
+  public function update_keuangan($kategori_id, $periode, $data)
   {
     $this->db->where('kategori_keuangan', $kategori_id);
-    $this->db->where('periode', $periode2); // Filter berdasarkan periode saat ini
-    return $this->db->update('tbl_keuangan', $data);
+    $this->db->where('periode', $periode);
+    $query = $this->db->get('tbl_keuangan');
+
+    if ($query->num_rows() > 0) {
+      // Jika data ditemukan, lakukan update
+      $this->db->where('kategori_keuangan', $kategori_id);
+      $this->db->where('periode', $periode);
+      $update_result = $this->db->update('tbl_keuangan', $data);
+
+      log_message('debug', "Update Keuangan Berhasil: " . json_encode($data));
+      return $update_result;
+    } else {
+      // Jika data tidak ditemukan, lakukan insert baru
+      $data['kategori_keuangan'] = $kategori_id;
+      $data['periode'] = $periode;
+      $insert_result = $this->db->insert('tbl_keuangan', $data);
+
+      log_message('debug', "Insert Keuangan Baru: " . json_encode($data));
+      return $insert_result;
+    }
   }
 }

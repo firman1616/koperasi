@@ -227,24 +227,21 @@ class Peserta extends CI_Controller
 
         $update_iuran = $this->anggota->update_iuran($anggota_id, $periode, $date);
 
-        // if ($update_iuran) {
-        //     echo json_encode(["status" => "success"]);
-        // } else {
-        //     echo json_encode(["status" => "error"]);
-        // }
-
         if ($update_iuran) {
-            // Ambil total SUM dari nominal di tbl_deposit berdasarkan periode saat ini
+            // 1️⃣ Ambil saldo sebelumnya dari tbl_keuangan
+            $saldo_sebelumnya = $this->anggota->get_nominal_keuangan_iuran(3, $periode);
+
+            // 2️⃣ Ambil total SUM dari tbl_iuran (status = 1) hanya untuk periode saat ini
             $total_nominal = $this->anggota->get_total_iuran_by_periode($periode);
 
-            if ($total_nominal !== null) {
-                // Update tbl_keuangan dengan total deposit yang dihitung
-                $update_data = [
-                    'nominal' => $total_nominal
-                ];
+            // 3️⃣ Hitung saldo baru dengan menambahkan saldo sebelumnya
+            $saldo_baru = $saldo_sebelumnya + $total_nominal;
 
-                $this->anggota->update_keuangan(3, $periode, $update_data);
-            }
+            // 4️⃣ Update saldo baru ke tbl_keuangan
+            $update_data = ['nominal' => $saldo_baru];
+            $this->anggota->update_keuangan(3, $periode, $update_data);
+
+            log_message('debug', "Update Keuangan: Periode: $periode | Saldo Sebelumnya: $saldo_sebelumnya | Tambahan: $total_nominal | Saldo Baru: $saldo_baru");
 
             echo json_encode(['status' => 'success']);
         } else {
@@ -252,13 +249,20 @@ class Peserta extends CI_Controller
         }
     }
 
+
+
+
     public function deposit()
     {
-
         $anggota_id = $this->input->post('anggota_id');
         $nominal = $this->input->post('nominal');
         $date = date('Y-m-d');
-        $periode = date('my'); // Format periode saat ini (misal: 0325 untuk Maret 2025)
+        $periode = date('my'); // Format periode saat ini (misal: 0425 untuk April 2025)
+
+        if (empty($anggota_id) || empty($nominal)) {
+            echo json_encode(["status" => "error", "message" => "Data tidak lengkap!"]);
+            return;
+        }
 
         // Simpan data deposit ke dalam database
         $data_deposit = [
@@ -274,18 +278,30 @@ class Peserta extends CI_Controller
             // Ambil total SUM dari nominal di tbl_deposit berdasarkan periode saat ini
             $total_nominal = $this->anggota->get_total_deposit_by_periode($periode);
 
-            if ($total_nominal !== null) {
-                // Update tbl_keuangan dengan total deposit yang dihitung
-                $update_data = [
-                    'nominal' => $total_nominal
-                ];
+            // Ambil nominal saat ini dari tbl_keuangan untuk kategori 12
+            $current_nominal = $this->anggota->get_nominal_keuangan(12, $periode);
 
-                $this->anggota->update_keuangan(12, $periode, $update_data);
+            if ($current_nominal === null) {
+                $current_nominal = 0; // Jika tidak ada data, anggap nominal awal adalah 0
             }
 
-            echo json_encode(['status' => 'success']);
+            $new_nominal = $current_nominal + $nominal; // Tambah nominal baru
+
+            // Debugging: Cek nilai sebelum update
+            log_message('debug', "Update Keuangan: Periode: $periode, Nominal Lama: $current_nominal, Nominal Baru: $new_nominal");
+
+            // Update tbl_keuangan
+            $update_data = ['nominal' => $new_nominal];
+
+            $update_result = $this->anggota->update_keuangan(12, $periode, $update_data);
+
+            if ($update_result) {
+                echo json_encode(['status' => 'success', 'message' => 'Update keuangan berhasil']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Update keuangan gagal']);
+            }
         } else {
-            echo json_encode(['status' => 'error']);
+            echo json_encode(['status' => 'error', 'message' => 'Insert deposit gagal']);
         }
     }
 }
