@@ -184,10 +184,11 @@ class Transaksi extends CI_Controller
         $result = $this->trans->insert_transaksi($data_transaksi, $data_detail);
 
         // Jika metode pembayaran adalah "Cash", update tbl_keuangan
+        // Jika metode pembayaran adalah "Cash", update tbl_keuangan
         if ($metode_bayar == "1") {
             // Hitung total transaksi dalam periode saat ini
-            $this->db->select('SUM(grand_total) AS total_transaksi');
-            $periode = date('my'); // Format periode '0325' (Maret 2025)
+            $periode = date('my'); // Format periode '0425' (April 2025)
+
             $this->db->select('SUM(grand_total) AS total_transaksi');
             $this->db->from('tbl_transaksi');
             $this->db->where("DATE_FORMAT(tgl_transaksi, '%m%y') =", $periode);
@@ -196,12 +197,38 @@ class Transaksi extends CI_Controller
             $result = $query->row();
             $total_transaksi = $result ? $result->total_transaksi : 0;
 
+            // Hitung periode sebelumnya
+            $bulan_sekarang = (int)date('m');
+            $tahun_sekarang = (int)date('y');
 
-            // Update hanya field nominal di tbl_keuangan berdasarkan periode
+            if ($bulan_sekarang == 1) { // Jika bulan Januari, periode sebelumnya adalah Desember tahun lalu
+                $bulan_sebelumnya = 12;
+                $tahun_sebelumnya = $tahun_sekarang - 1;
+            } else {
+                $bulan_sebelumnya = $bulan_sekarang - 1;
+                $tahun_sebelumnya = $tahun_sekarang;
+            }
+
+            $periode_sebelumnya = sprintf('%02d%02d', $bulan_sebelumnya, $tahun_sebelumnya); // Format MMYY
+
+            // Ambil saldo awal dari tbl_keuangan untuk periode sebelumnya
+            $this->db->select('nominal');
+            $this->db->from('tbl_keuangan');
+            $this->db->where('kategori_keuangan', '11');
+            $this->db->where('periode', $periode_sebelumnya);
+            $query_saldo = $this->db->get();
+
+            $saldo_awal = $query_saldo->row() ? $query_saldo->row()->nominal : 0;
+
+            // Update nominal dengan menambahkan total transaksi baru ke saldo awal
+            $total_nominal = $saldo_awal + $total_transaksi;
+
+            // Update hanya field nominal di tbl_keuangan berdasarkan periode saat ini
             $this->db->where('kategori_keuangan', '11');
             $this->db->where('periode', $periode);
-            $this->db->update('tbl_keuangan', ['nominal' => $total_transaksi]);
+            $this->db->update('tbl_keuangan', ['nominal' => $total_nominal]);
         }
+
 
         // Kurangi stok barang
         foreach ($barang as $item) {
@@ -314,12 +341,38 @@ class Transaksi extends CI_Controller
         // Ambil periode berdasarkan tgl_transaksi dengan format my (misal: 0325 untuk Maret 2025)
         $periode = date('my', strtotime($transaksi->tgl_transaksi));
 
+        // Hitung periode sebelumnya
+        $bulan_sekarang = (int)date('m', strtotime($transaksi->tgl_transaksi));
+        $tahun_sekarang = (int)date('y', strtotime($transaksi->tgl_transaksi));
+
+        if ($bulan_sekarang == 1) { // Jika bulan Januari, periode sebelumnya adalah Desember tahun lalu
+            $bulan_sebelumnya = 12;
+            $tahun_sebelumnya = $tahun_sekarang - 1;
+        } else {
+            $bulan_sebelumnya = $bulan_sekarang - 1;
+            $tahun_sebelumnya = $tahun_sekarang;
+        }
+
+        $periode_sebelumnya = sprintf('%02d%02d', $bulan_sebelumnya, $tahun_sebelumnya); // Format MMYY
+
+        // Ambil saldo awal dari tbl_keuangan untuk periode sebelumnya
+        $this->db->select('nominal');
+        $this->db->from('tbl_keuangan');
+        $this->db->where('kategori_keuangan', '11');
+        $this->db->where('periode', $periode_sebelumnya);
+        $query_saldo = $this->db->get();
+
+        $saldo_awal = $query_saldo->row() ? $query_saldo->row()->nominal : 0;
+
         // Hitung total transaksi untuk periode yang sama
         $this->db->select('SUM(grand_total) as total_transaksi');
         $this->db->from('tbl_transaksi');
         $this->db->where("DATE_FORMAT(tgl_transaksi, '%m%y') =", $periode);
         $query_total = $this->db->get();
         $total_transaksi = $query_total->row()->total_transaksi ?? 0; // Pastikan nilai tidak null
+
+        // Total nominal baru (saldo awal + total transaksi pada periode ini)
+        $total_nominal = $saldo_awal + $total_transaksi;
 
         // Data update ke tbl_transaksi
         $data_transaksi = [
@@ -332,8 +385,8 @@ class Transaksi extends CI_Controller
         $update_transaksi = $this->trans->updateTransaksi($id_transaksi, $data_transaksi); // Update transaksi
 
         if ($update_transaksi) {
-            // Jika metode_bayar = 1, update juga tbl_keuangan dengan SUM(grand_total)
-            $this->db->set('nominal', $total_transaksi);
+            // Jika metode_bayar = 1, update tbl_keuangan dengan total nominal baru
+            $this->db->set('nominal', $total_nominal);
             $this->db->where('kategori_keuangan', '11');
             $this->db->where('periode', $periode);
             $update_keuangan = $this->db->update('tbl_keuangan');
