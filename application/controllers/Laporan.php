@@ -380,9 +380,9 @@ class Laporan extends CI_Controller
     function tableLapKeuangan()
     {
         // $date_param = $this->input->post('date_end');
-        // $periode = date('my', strtotime($date_param));
-        $data['keuangan'] = $this->lap->lap_keuangan()->result();
-        $data['sum_nominal'] = $this->lap->sum_nominal()->result();
+        $periode = date('my');
+        $data['keuangan'] = $this->lap->lap_keuangan($periode)->result();
+        $data['sum_nominal'] = $this->lap->sum_nominal($periode)->result();
 
         echo json_encode($this->load->view('laporan/keuangan/lap-keuangan-table', $data, false));
     }

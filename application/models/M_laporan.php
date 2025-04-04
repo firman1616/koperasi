@@ -180,7 +180,7 @@ class M_laporan extends CI_Model
       month(thb.history_date)");
   }
 
-  function lap_keuangan()  {
+  function lap_keuangan($periode)  {
     return $this->db->query("SELECT
       tk.id,
       tk.kategori_keuangan,
@@ -195,7 +195,7 @@ class M_laporan extends CI_Model
       tkt.id = tk.kategori_keuangan
     left join tbl_kategori tk2 on
       tk2.id = tkt.kategori_id 
-    WHERE tk2.kode = 'IN'");
+    WHERE tk2.kode = 'IN' and periode = '$periode'");
   }
 
   // function lap_keuangan($periode)  {
@@ -216,14 +216,15 @@ class M_laporan extends CI_Model
   //   WHERE tk.periode = '$periode'");
   // }
 
-  function sum_nominal()  {
+  function sum_nominal($periode)  {
     return $this->db->query(" SELECT 
         SUM(CASE WHEN tk2.name = 'Pemasukan' THEN tk.nominal ELSE 0 END) AS pemasukan,
         SUM(CASE WHEN tk2.name = 'Pengeluaran' THEN tk.nominal ELSE 0 END) AS pengeluaran
     FROM 
         tbl_keuangan tk
     LEFT JOIN tbl_kateg_trans tkt ON tkt.id = tk.kategori_keuangan
-    LEFT JOIN tbl_kategori tk2 ON tk2.id = tkt.kategori_id");
+    LEFT JOIN tbl_kategori tk2 ON tk2.id = tkt.kategori_id
+    WHERE  tk.periode = '$periode'");
   }
 
   // function sum_nominal($periode) {
