@@ -241,16 +241,26 @@ class Peserta extends CI_Controller
             $update_data = ['nominal' => $saldo_baru];
             $this->anggota->update_keuangan(3, $periode, $update_data);
 
+            // get_data simpanan pokok
+            $saldo_keuangan_12 = $this->anggota->get_nominal_keuangan(12, $periode);
+            $saldo_baru_13 = $saldo_keuangan_12 + $saldo_baru;
+
+            $get_nominal_pengeluaran_lain_13 = $this->anggota->get_pengeluaran_lain($periode);
+            $update_13_after_trans = $saldo_baru_13 - $get_nominal_pengeluaran_lain_13;
+
+            $get_saldo_13 = $this->anggota->get_nominal_keuangan(13, $periode);
+            $tambahan_saldo_13 = $saldo_baru_13 - $get_saldo_13;
+
+            $this->anggota->update_keuangan(13, $periode, ['nominal' => $update_13_after_trans]);
+
             log_message('debug', "Update Keuangan: Periode: $periode | Saldo Sebelumnya: $saldo_sebelumnya | Tambahan: $total_nominal | Saldo Baru: $saldo_baru");
+            log_message('debug', "Update Keuangan Kategori 13: Periode: $periode | Saldo Sebelumnya: $get_saldo_13 | Tambahan: $tambahan_saldo_13 | Saldo Baru: $saldo_baru_13");
 
             echo json_encode(['status' => 'success']);
         } else {
             echo json_encode(['status' => 'error']);
         }
     }
-
-
-
 
     public function deposit()
     {
@@ -294,6 +304,16 @@ class Peserta extends CI_Controller
             $update_data = ['nominal' => $new_nominal];
 
             $update_result = $this->anggota->update_keuangan(12, $periode, $update_data);
+
+            $sum_12_3 = $this->anggota->sum_12_3($periode);
+
+            $get_nominal_pengeluaran_lain_13 = $this->anggota->get_pengeluaran_lain($periode);
+            $update_13_after_trans = $sum_12_3 - $get_nominal_pengeluaran_lain_13;
+            // die(json_encode($update_13_after_trans));
+
+            $this->anggota->update_keuangan(13, $periode, ['nominal' => $update_13_after_trans]);
+
+            
 
             if ($update_result) {
                 echo json_encode(['status' => 'success', 'message' => 'Update keuangan berhasil']);
