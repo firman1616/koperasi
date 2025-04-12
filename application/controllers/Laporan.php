@@ -197,7 +197,8 @@ class Laporan extends CI_Controller
         $this->load->view('template/conten', $data);
     }
 
-    public function get_total_iuran() {
+    public function get_total_iuran()
+    {
         $bulan = $this->input->get('bulan');
         $tahun = $this->input->get('tahun');
         $data = $this->lap->total_iuran($bulan, $tahun); // ganti Model_nama_model dengan nama model kamu
@@ -216,53 +217,72 @@ class Laporan extends CI_Controller
 
     public function export_excel_iuran()
     {
-        // Ambil tanggal dari input form
-        $bulan = $this->input->get('bulan'); // Bisa pakai $this->input->post() jika pakai method POST
-        $tahun = $this->input->get('tahun');
 
-        // Gunakan default jika kosong
-        if (!$bulan) $bulan = date('m');
-        if (!$tahun) $tahun = date('y');
+        $bulan = $this->input->get('bulan') ?: date('m');
+        $tahun = $this->input->get('tahun') ?: date('y'); // 2 digit tahun
 
-        // Ambil data dari model berdasarkan tanggal input
-        $data = $this->lap->lap_iuran($bulan, $tahun)->result();
+        // Panggil data dari model
+        $data_simpanan_wajib = $this->lap->getSimpananWajib($bulan, $tahun);
+        $data_simpanan_pokok = $this->lap->getSimpananPokok();
 
-        $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+        $spreadsheet = new Spreadsheet();
 
-        // Header kolom
-        $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Nama Anggota');
-        $sheet->setCellValue('C1', 'Periode Bulan');
-        $sheet->setCellValue('D1', 'Status');
+        // ================= Sheet 1 =================
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setTitle('Dana Simpanan Wajib');
 
-        // Isi data
-        $row = 2;
-        $x = 1;
-        foreach ($data as $d) {
-            if ($d->status != '1') {
-                $sts = 'Belum bayar';
-            } else {
-                $sts = 'Lunas';
-            }
+        $sheet1->setCellValue('A1', 'Nama');
+        $sheet1->setCellValue('B1', 'Nominal');
 
-            $sheet->setCellValue('A' . $row, $x++);
-            $sheet->setCellValue('B' . $row, $d->nama_anggota);
-            $sheet->setCellValue('C' . $row, $bulan);
-            $sheet->setCellValue('D' . $row, $sts);
-            $row++;
+        $row1 = 2;
+        foreach ($data_simpanan_wajib as $item) {
+            $sheet1->setCellValue('A' . $row1, $item->nama_anggota);
+            $sheet1->setCellValue('B' . $row1, $item->nominal);
+            $row1++;
         }
 
-        // Set nama file
-        $filename = 'Laporan_Iuran_Periode' . $bulan . '-' . $tahun . '.xlsx';
+        // Format kolom B sebagai format rupiah (B2 sampai baris terakhir)
+        $sheet1->getStyle('B2:B' . ($row1 - 1))
+            ->getNumberFormat()
+            ->setFormatCode('"Rp" #,##0');
+        
+        foreach (range('A', 'B') as $col) {
+            $sheet1->getColumnDimension($col)->setAutoSize(true);
+        }
 
-        // Set header untuk download
+        // ================= Sheet 2 =================
+        $sheet2 = $spreadsheet->createSheet();
+        $sheet2->setTitle('Dana Simpanan Pokok');
+
+        $sheet2->setCellValue('A1', 'Nama');
+        $sheet2->setCellValue('B1', 'Tanggal');
+        $sheet2->setCellValue('C1', 'Nominal');
+
+        $row2 = 2;
+        foreach ($data_simpanan_pokok as $item) {
+            $sheet2->setCellValue('A' . $row2, $item->name);
+            $sheet2->setCellValue('B' . $row2, date('d-m-Y', strtotime($item->date)));
+            $sheet2->setCellValue('C' . $row2, $item->nominal);
+            $row2++;
+        }
+
+        // Format kolom C sebagai format rupiah
+        $sheet2->getStyle('C2:C' . ($row2 - 1))
+            ->getNumberFormat()
+            ->setFormatCode('"Rp" #,##0');
+        
+        foreach (range('A', 'C') as $col2) {
+            $sheet2->getColumnDimension($col2)->setAutoSize(true);
+        }
+
+        $filename = 'Laporan_Iuran_' . $bulan . '-' . $tahun . '.xlsx';
+
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
 
         ob_end_clean();
-        $writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer = new Xlsx($spreadsheet);
         $writer->save('php://output');
         exit;
     }
@@ -508,10 +528,6 @@ class Laporan extends CI_Controller
         $writer->save('php://output');
         exit;
     }
-
-
-
-
 
     private function isiSheetKeuangan($sheet, $data)
     {
@@ -930,8 +946,8 @@ class Laporan extends CI_Controller
         $detail_pengeluaran = $this->lap->getLapPengeluaran($date_start, $date_end)->result();
         $detail_transaksi = $this->lap->export_excel_penjualan($date_start, $date_end)->result();
         $detail_iuran = $this->lap->export_iuran_nominal($date_start, $date_end)->result();
-        $detail_deposit  =$this->lap->export_deposit_nominal()->result();
-        
+        $detail_deposit  = $this->lap->export_deposit_nominal()->result();
+
 
         // Buat Spreadsheet
         $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -962,7 +978,7 @@ class Laporan extends CI_Controller
         $sheet6 = $spreadsheet->createSheet();
         $sheet6->setTitle('Detail Simpanan Anggota');
         $this->isiSheetDeposit($sheet6, $detail_deposit);
-        
+
 
         // **Set nama file**
         $filename = 'Laporan_Keuangan_All' . $periode . '.xlsx';

@@ -133,6 +133,26 @@ class M_laporan extends CI_Model
     AND SUBSTRING(ti.periode, 3, 2) = '$tahun'");
   }
 
+  public function getSimpananWajib($bulan, $tahun)
+  {
+    $this->db->select('ti.anggota_id, ti.date, ti.periode, ta.name AS nama_anggota, ti.nominal');
+    $this->db->from('tbl_iuran ti');
+    $this->db->join('tbl_anggota ta', 'ta.id = ti.anggota_id', 'left');
+    $this->db->where('ti.status', '1');
+    $this->db->where('SUBSTRING(ti.periode, 1, 2) =', $bulan);
+    $this->db->where('SUBSTRING(ti.periode, 3, 2) =', $tahun);
+    return $this->db->get()->result();
+  }
+
+  public function getSimpananPokok()
+  {
+    $this->db->select('td.anggota_id, td.date, td.nominal, ta.name');
+    $this->db->from('tbl_deposit td');
+    $this->db->join('tbl_anggota ta', 'ta.id = td.anggota_id');
+    return $this->db->get()->result();
+  }
+
+
   // function total_iuran()  {
   //   return $this->db->query("SELECT sum(nominal) as total from tbl_iuran where status = '1' ")->row();
   // }
