@@ -934,7 +934,7 @@ class Laporan extends CI_Controller
         $date_start = date('Y-m-01', strtotime($date_end));
 
         // Ambil data dari model
-        $keuangan = $this->lap->lap_keuangan()->result();
+        $keuangan = $this->lap->lap_keuangan($periode)->result();
         $sum_nominal = $this->lap->sum_nominal($periode)->row(); // Ambil total pemasukan & pengeluaran
 
         $total_pemasukan = $sum_nominal->pemasukan ?? 0;
@@ -972,11 +972,11 @@ class Laporan extends CI_Controller
         $this->isiSheetTransaksi($sheet4, $detail_transaksi);
 
         $sheet5 = $spreadsheet->createSheet();
-        $sheet5->setTitle('Detail Iuran');
+        $sheet5->setTitle('Detail Simpanan Wajib');
         $this->isiSheetIuran($sheet5, $detail_iuran);
 
         $sheet6 = $spreadsheet->createSheet();
-        $sheet6->setTitle('Detail Simpanan Anggota');
+        $sheet6->setTitle('Detail Simpanan Pokok');
         $this->isiSheetDeposit($sheet6, $detail_deposit);
 
 
