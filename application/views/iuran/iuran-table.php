@@ -3,8 +3,8 @@
     <tr>
       <th>No</th>
       <th>Nama Anggota</th>
-      <th>Simpanan</th>
-      <th>Iuran Bulanan</th>
+      <th>Simpanan Pokok</th>
+      <th>Simpanan Wajib</th>
     </tr>
   </thead>
   <tbody>

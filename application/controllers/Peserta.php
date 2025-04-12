@@ -142,7 +142,7 @@ class Peserta extends CI_Controller
         $data = [
             'akses' => $this->session->userdata('level'),
             'name' => $this->session->userdata('nama'),
-            'title' => 'Iuran',
+            'title' => 'Simpanan Wajib',
             'subtitle' => 'List',
             'conten' => 'iuran/index',
             'footer_js' => array('assets/js/peserta.js')
