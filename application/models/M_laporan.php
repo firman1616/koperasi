@@ -59,7 +59,8 @@ class M_laporan extends CI_Model
     return $query;
   }
 
-  function export_detail_penjualan($date_start, $date_end) {
+  function export_detail_penjualan($date_start, $date_end)
+  {
     return $this->db->query("SELECT
       tt.no_transaksi,
       tt.tgl_transaksi,
@@ -132,9 +133,30 @@ class M_laporan extends CI_Model
     AND SUBSTRING(ti.periode, 3, 2) = '$tahun'");
   }
 
-  function total_iuran()  {
-    return $this->db->query("SELECT sum(nominal) as total from tbl_iuran where status = '1' ")->row();
+  // function total_iuran()  {
+  //   return $this->db->query("SELECT sum(nominal) as total from tbl_iuran where status = '1' ")->row();
+  // }
+
+  public function total_iuran($bulan = null, $tahun = null)
+  {
+    $this->db->select('SUM(nominal) as total');
+    $this->db->from('tbl_iuran ti');
+    $this->db->where('status', '1');
+
+    if ($bulan && $tahun) {
+      $tahun_2digit = substr($tahun, -2); // convert 2025 -> 25
+      $this->db->where("SUBSTRING(ti.periode, 1, 2) =", $bulan);
+      $this->db->where("SUBSTRING(ti.periode, 3, 2) =", $tahun_2digit);
+    } else {
+      $bulan = date('m');
+      $tahun = substr(date('Y'), -2);
+      $this->db->where("SUBSTRING(ti.periode, 1, 2) =", $bulan);
+      $this->db->where("SUBSTRING(ti.periode, 3, 2) =", $tahun);
+    }
+
+    return $this->db->get()->row();
   }
+
 
   function lap_barang()
   {
@@ -180,7 +202,8 @@ class M_laporan extends CI_Model
       month(thb.history_date)");
   }
 
-  function lap_keuangan($periode)  {
+  function lap_keuangan($periode)
+  {
     return $this->db->query("SELECT
       tk.id,
       tk.kategori_keuangan,
@@ -216,7 +239,8 @@ class M_laporan extends CI_Model
   //   WHERE tk.periode = '$periode'");
   // }
 
-  function sum_nominal($periode)  {
+  function sum_nominal($periode)
+  {
     return $this->db->query(" SELECT 
         SUM(CASE WHEN tk2.name = 'Pemasukan' THEN tk.nominal ELSE 0 END) AS pemasukan,
         SUM(CASE WHEN tk2.name = 'Pengeluaran' THEN tk.nominal ELSE 0 END) AS pengeluaran
@@ -242,7 +266,8 @@ class M_laporan extends CI_Model
   //       tk.periode");
   // }
 
-  function in_keuangan($periode) {
+  function in_keuangan($periode)
+  {
     return $this->db->query("SELECT
       tk.id,
       tk.kategori_keuangan,
@@ -261,7 +286,8 @@ class M_laporan extends CI_Model
     and tk2.kode = 'IN'");
   }
 
-  function out_keuangan($periode) {
+  function out_keuangan($periode)
+  {
     return $this->db->query("SELECT
       tk.id,
       tk.kategori_keuangan,
@@ -280,7 +306,8 @@ class M_laporan extends CI_Model
     and tk2.kode = 'OUT'");
   }
 
-  function getLapPemasukan($date_start, $date_end) {
+  function getLapPemasukan($date_start, $date_end)
+  {
     return $this->db->query("SELECT
       tkt.name as kategori_trans,
       tp.nominal,
@@ -294,7 +321,8 @@ class M_laporan extends CI_Model
       and DATE(tp.date) <= '$date_end'");
   }
 
-  function getLapPengeluaran($date_start,$date_end) {
+  function getLapPengeluaran($date_start, $date_end)
+  {
     return $this->db->query("SELECT
       tkt.name as nama_kategori,
       tkt2.name as nama_sumber_dana,
@@ -309,7 +337,8 @@ class M_laporan extends CI_Model
       and DATE(tp.date) <= '$date_end'");
   }
 
-  function export_iuran_nominal($date_start,$date_end) {
+  function export_iuran_nominal($date_start, $date_end)
+  {
     return $this->db->query("SELECT 
         ti.anggota_id,
         ta.name,
@@ -322,7 +351,8 @@ class M_laporan extends CI_Model
     GROUP BY ti.anggota_id, ta.name;");
   }
 
-  function export_deposit_nominal() {
+  function export_deposit_nominal()
+  {
     return $this->db->query("SELECT
       td.anggota_id,
       td.nominal as total,

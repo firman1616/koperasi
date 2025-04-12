@@ -1,9 +1,9 @@
-$(document).ready(function() {
+$(document).ready(function () {
     // tableIuran();
     $("#detail_iuran").hide();
     $("#div-table-lap-iuran").hide();
 
-    $("#preview").click(function() {
+    $("#preview").click(function () {
         let bulan = $("#bulan").val();
         let tahun = $("#tahun").val();
 
@@ -19,7 +19,7 @@ $(document).ready(function() {
         tableLapIuran(bulan, tahun);
     });
 
-    $("#export_excel_iuran").click(function() {
+    $("#export_excel_iuran").click(function () {
         let bulan = $("#bulan").val();
         let tahun = $("#tahun").val();
 
@@ -30,6 +30,25 @@ $(document).ready(function() {
 
         // Redirect ke fungsi export di controller dengan parameter bulan & tahun
         window.location.href = BASE_URL + "Laporan/export_excel_iuran?bulan=" + bulan + "&tahun=" + tahun;
+    });
+
+    $('#preview').on('click', function () {
+        let bulan = $('#bulan').val();
+        let tahun = $('#tahun').val();
+
+        $.ajax({
+            url: BASE_URL + "Laporan/get_total_iuran",
+            type: 'GET',
+            data: { bulan: bulan, tahun: tahun },
+            dataType: 'json',
+            success: function (response) {
+                let formatted = new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
+                }).format(response.total);
+                $('.total-iuran').html(formatted);
+            }
+        });
     });
 });
 

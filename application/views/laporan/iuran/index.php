@@ -75,8 +75,8 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Total Iuran</div>
-                                <div class="h1 mb-0 font-weight-bold text-gray-800"><?= 'Rp. ' . number_format($total->total, 0, ',', '.') ?></div>
+                                    Total Simpanan Wajib</div>
+                                <div class="h1 mb-0 font-weight-bold text-gray-800 total-iuran"><?= 'Rp. ' . number_format($total->total, 0, ',', '.') ?></div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-money-check-alt fa-6x text-gray-300"></i>

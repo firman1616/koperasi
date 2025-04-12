@@ -197,6 +197,13 @@ class Laporan extends CI_Controller
         $this->load->view('template/conten', $data);
     }
 
+    public function get_total_iuran() {
+        $bulan = $this->input->get('bulan');
+        $tahun = $this->input->get('tahun');
+        $data = $this->lap->total_iuran($bulan, $tahun); // ganti Model_nama_model dengan nama model kamu
+        echo json_encode($data);
+    }
+
     function tableLapIuran()
     {
         $bulan = $this->input->post('bulan');
