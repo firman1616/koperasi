@@ -165,13 +165,13 @@ class M_laporan extends CI_Model
 
     if ($bulan && $tahun) {
       $tahun_2digit = substr($tahun, -2); // convert 2025 -> 25
-      $this->db->where("SUBSTRING(ti.periode, 1, 2) =", $bulan);
-      $this->db->where("SUBSTRING(ti.periode, 3, 2) =", $tahun_2digit);
+      $this->db->where("SUBSTRING(ti.date, 1, 2) =", $bulan);
+      $this->db->where("SUBSTRING(ti.date, 3, 2) =", $tahun_2digit);
     } else {
       $bulan = date('m');
       $tahun = substr(date('Y'), -2);
-      $this->db->where("SUBSTRING(ti.periode, 1, 2) =", $bulan);
-      $this->db->where("SUBSTRING(ti.periode, 3, 2) =", $tahun);
+      $this->db->where("SUBSTRING(ti.date, 1, 2) =", $bulan);
+      $this->db->where("SUBSTRING(ti.date, 3, 2) =", $tahun);
     }
 
     return $this->db->get()->row();
