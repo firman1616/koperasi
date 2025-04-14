@@ -159,23 +159,31 @@ class M_laporan extends CI_Model
 
   public function total_iuran($bulan = null, $tahun = null)
   {
-    $this->db->select('SUM(nominal) as total');
-    $this->db->from('tbl_iuran ti');
-    $this->db->where('status', '1');
-
-    if ($bulan && $tahun) {
-      $tahun_2digit = substr($tahun, -2); // convert 2025 -> 25
-      $this->db->where("SUBSTRING(ti.date, 1, 2) =", $bulan);
-      $this->db->where("SUBSTRING(ti.date, 3, 2) =", $tahun_2digit);
+    // Jika tidak ada parameter, ambil bulan dan tahun sekarang
+    if (is_null($bulan)) {
+      $bulan = date('m'); // contoh: '04'
     } else {
-      $bulan = date('m');
-      $tahun = substr(date('Y'), -2);
-      $this->db->where("SUBSTRING(ti.date, 1, 2) =", $bulan);
-      $this->db->where("SUBSTRING(ti.date, 3, 2) =", $tahun);
+      $bulan = str_pad($bulan, 2, '0', STR_PAD_LEFT); // pastikan dua digit
     }
 
-    return $this->db->get()->row();
+    if (is_null($tahun)) {
+      $tahun_2digit = date('y'); // contoh: '25'
+    } else {
+      $tahun_2digit = substr($tahun, -2); // contoh: '2025' jadi '25'
+    }
+
+    // Jalankan query
+    $query = $this->db->query("
+        SELECT SUM(nominal) AS total 
+        FROM tbl_iuran ti
+        WHERE status = '1' 
+          AND SUBSTRING(ti.periode, 1, 2) = ?
+          AND SUBSTRING(ti.periode, 3, 2) = ?;
+    ", [$bulan, $tahun_2digit]);
+
+    return $query->row();
   }
+
 
 
   function lap_barang()

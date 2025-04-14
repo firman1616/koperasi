@@ -185,6 +185,8 @@ class Laporan extends CI_Controller
     // iuran
     function lap_iuran()
     {
+        $bulan = $this->input->get('bulan');
+        $tahun = $this->input->get('tahun');
         $data = [
             'akses' => $this->session->userdata('level'),
             'name' => $this->session->userdata('nama'),
@@ -245,7 +247,7 @@ class Laporan extends CI_Controller
         $sheet1->getStyle('B2:B' . ($row1 - 1))
             ->getNumberFormat()
             ->setFormatCode('"Rp" #,##0');
-        
+
         foreach (range('A', 'B') as $col) {
             $sheet1->getColumnDimension($col)->setAutoSize(true);
         }
@@ -270,7 +272,7 @@ class Laporan extends CI_Controller
         $sheet2->getStyle('C2:C' . ($row2 - 1))
             ->getNumberFormat()
             ->setFormatCode('"Rp" #,##0');
-        
+
         foreach (range('A', 'C') as $col2) {
             $sheet2->getColumnDimension($col2)->setAutoSize(true);
         }
