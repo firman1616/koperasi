@@ -215,6 +215,7 @@ class M_laporan extends CI_Model
       tb.id,
       tb.kode_barang,
       tb.nama_barang,
+      tb.harga_jual,
       sum(thb.qty) as qty_history,
       thb.history_date
     from

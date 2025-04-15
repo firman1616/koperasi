@@ -361,8 +361,9 @@ class Laporan extends CI_Controller
         $sheet->setCellValue('A1', 'No');
         $sheet->setCellValue('B1', 'Kode Barang');
         $sheet->setCellValue('C1', 'Nama Barang');
-        $sheet->setCellValue('D1', 'QTY History');
-        $sheet->setCellValue('E1', 'Date History');
+        $sheet->setCellValue('D1', 'Date History');
+        $sheet->setCellValue('E1', 'QTY History');
+        $sheet->setCellValue('F1', 'Harga');
 
         // Isi data
         $row = 2;
@@ -373,9 +374,18 @@ class Laporan extends CI_Controller
             $sheet->setCellValue('A' . $row, $x++);
             $sheet->setCellValue('B' . $row, $d->kode_barang);
             $sheet->setCellValue('C' . $row, $d->nama_barang);
-            $sheet->setCellValue('D' . $row, $d->qty_history);
-            $sheet->setCellValue('E' . $row, $date);
+            $sheet->setCellValue('D' . $row, $date);
+            $sheet->setCellValue('E' . $row, $d->qty_history);
+            $sheet->setCellValue('F' . $row, $d->harga_jual);
             $row++;
+        }
+
+        $sheet->getStyle('F2:F' . ($row - 1))
+            ->getNumberFormat()
+            ->setFormatCode('"Rp" #,##0');
+
+        foreach (range('A', 'F') as $col2) {
+            $sheet->getColumnDimension($col2)->setAutoSize(true);
         }
 
         // Set nama file
