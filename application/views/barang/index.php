@@ -10,6 +10,7 @@
         <div class="card-body">
             <div class="table-responsive">
                 <a href="<?= site_url('Barang/vtambah') ?>" class="btn btn-primary" style="margin-bottom: 10px;" ><i class="fa fa-plus"></i> | Tambah Data</a>
+                <a href="<?= site_url('Barang/export_data') ?>" class="btn btn-success" style="margin-bottom: 10px;" ><i class="fa fa-download"></i> | Export Data</a>
                 <div id="div-table-barang"></div>
             </div>
         </div>

@@ -1,5 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+require_once FCPATH . 'vendor/autoload.php';
+
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Barang extends CI_Controller {
 
@@ -169,6 +174,59 @@ class Barang extends CI_Controller {
         } else {
             echo "Gagal menyimpan ke history.";
         }
+    }
+
+    function export_data(){
+
+        // Ambil data dari model berdasarkan tanggal input
+        $data = $this->barang->data_export_barang()->result();
+
+        $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Header kolom
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Kode Barang');
+        $sheet->setCellValue('C1', 'Nama Barang');
+        $sheet->setCellValue('D1', 'QTY');
+        $sheet->setCellValue('E1', 'Satuan');
+        $sheet->setCellValue('F1', 'Harga');
+
+        // Isi data
+        $row = 2;
+        $x = 1;
+        foreach ($data as $d) {
+            // $date = date('d-m-Y', strtotime($d->history_date));
+
+            $sheet->setCellValue('A' . $row, $x++);
+            $sheet->setCellValue('B' . $row, $d->kode_barang);
+            $sheet->setCellValue('C' . $row, $d->nama_barang);
+            $sheet->setCellValue('D' . $row, $d->qty);
+            $sheet->setCellValue('E' . $row, $d->uom);
+            $sheet->setCellValue('F' . $row, $d->harga_jual);
+            $row++;
+        }
+
+        $sheet->getStyle('F2:F' . ($row - 1))
+            ->getNumberFormat()
+            ->setFormatCode('"Rp" #,##0');
+
+        foreach (range('A', 'F') as $col2) {
+            $sheet->getColumnDimension($col2)->setAutoSize(true);
+        }
+
+        // Set nama file
+        $filename = 'Master_Barang.xlsx';
+
+        // Set header untuk download
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        ob_end_clean();
+        $writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
     }
     
 }
