@@ -15,7 +15,8 @@ class M_dashboard extends CI_Model
     WHERE
       MONTH(tgl_transaksi) = MONTH(CURRENT_DATE)
       AND YEAR(tgl_transaksi) = YEAR(CURRENT_DATE)
-      AND uang_bayar <> '0'")->row();
+      and metode_bayar = '1'")->row();
+      // AND uang_bayar <> '0'
   }
 
   function trans_day()
