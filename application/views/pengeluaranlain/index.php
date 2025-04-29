@@ -1,9 +1,12 @@
 <!-- Begin Page Content -->
 <style>
     .saldo-text {
-        color: red;         /* Warna merah */
-        font-weight: bold;  /* Membuat teks lebih tebal */
-        font-size: 17px;    /* Ukuran teks sedikit lebih besar */
+        color: red;
+        /* Warna merah */
+        font-weight: bold;
+        /* Membuat teks lebih tebal */
+        font-size: 17px;
+        /* Ukuran teks sedikit lebih besar */
     }
 </style>
 
@@ -20,7 +23,11 @@
                 </div>
                 <div class="card-body">
                     <form action="" id="pengeluaran" name="pengeluaran" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="id" id="id">
+                        <input type="hidden" name="id" id="id">
+                        <div class="form-group">
+                            <label for="namaTransaksi">Tanggal Pengeluaran</label>
+                            <input type="date" name="tgl_pengeluaran" id="tgl_pengeluaran" required class="form-control">
+                        </div>
                         <div class="form-group">
                             <label for="namaTransaksi">Kategori</label>
                             <select name="kategori" id="kategori" class="form-control" required>

@@ -42,7 +42,7 @@ class PengeluaranLain extends CI_Controller
         $kategori_id = $this->input->post('kategori'); // ID kategori pengeluaran
         $sumber_dana_id = $this->input->post('sumberdana'); // ID sumber dana yang dipilih
         $nominal = str_replace('.', '', $this->input->post('nominal')); // Hapus titik dari format angka
-        $date = date('Y-m-d'); // Tanggal sekarang
+        $date = $this->input->post('tgl_pengeluaran'); // Tanggal sekarang
         $keterangan = $this->input->post('keterangan');
 
         $data_pengeluaran = [
