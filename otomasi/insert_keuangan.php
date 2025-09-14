@@ -2,9 +2,9 @@
 // Load database connection
 $host = "localhost";  // Ganti sesuai konfigurasi database
 $user = "root";       // Ganti sesuai konfigurasi database
-$pass = "";           // Ganti sesuai konfigurasi database
+$pass = "123";           // Ganti sesuai konfigurasi database
 $dbname = "db_koperasi"; // Ganti dengan nama database
-$port = '5001';
+$port = '3310';
 
 $conn = new mysqli($host, $user, $pass, $dbname, $port);
 

@@ -48,14 +48,14 @@ class M_barang extends CI_Model
   }
 
   function data_export_barang()  {
-    return $this->db->query("SELECT
-      tb.kode_barang,
-      tb.nama_barang,
-      tb.harga_jual,
-      tb.qty,
-      tu.uom
-    from
-      tbl_barang tb
-    join tbl_uom tu on tu.kode = tu.uom");
+      return $this->db->query("SELECT
+        tb.kode_barang,
+        tb.nama_barang,
+        tb.harga_jual,
+        tb.qty,
+        tu.uom
+      from
+        tbl_barang tb
+      join tbl_uom tu on tu.kode = tb.uom where tb.status = '1'");
   }
 }
