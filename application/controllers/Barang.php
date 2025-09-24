@@ -59,7 +59,7 @@ class Barang extends CI_Controller {
         $data = [
             'kode_barang' => $this->input->post('kode_barang'),
             'nama_barang' => $this->input->post('nama_barang'),
-            'harga_beli' => 0,
+            'harga_beli' => $this->input->post('harga_beli'),
             'harga_jual' => $this->input->post('harga_jual'),
             'margin' => 0,
             'qty' => $this->input->post('qty'),
@@ -98,7 +98,7 @@ class Barang extends CI_Controller {
         $data = [
            'kode_barang' => $this->input->post('kode_barang'),
             'nama_barang' => $this->input->post('nama_barang'),
-            'harga_beli' => 0,
+            'harga_beli' => $this->input->post('harga_beli'),
             'harga_jual' => $this->input->post('harga_jual'),
             'margin' => 0,
             // 'qty' => $this->input->post('qty'),
