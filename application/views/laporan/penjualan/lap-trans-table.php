@@ -61,6 +61,7 @@
                             <th>Kode Barang</th>
                             <th>Nama Barang</th>
                             <th>QTY Beli Barang</th>
+                            <th>Harga Beli Barang</th>
                         </tr>
                     </thead>
                     <tbody id="modalDetailBody">

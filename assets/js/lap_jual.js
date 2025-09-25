@@ -64,6 +64,7 @@ $(document).ready(function() {
                             <td>${item.kode_barang}</td>
                             <td>${item.nama_barang}</td>
                             <td>${item.qty}</td>
+                            <td>Rp ${Number(item.harga_beli).toLocaleString('id-ID')}</td>
                         </tr>`;
                         $("#modalDetailBody").append(row);
                     });
