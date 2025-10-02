@@ -112,8 +112,7 @@ class M_laporan extends CI_Model
         tdt.head_trans,
         tdt.kode_barang,
         tb.nama_barang, 
-        tdt.qty,
-        tb.harga_beli
+        tdt.qty
     FROM tbl_dtl_trans tdt
     LEFT JOIN tbl_barang tb ON tb.kode_barang = tdt.kode_barang 
     WHERE tdt.head_trans = ?", [$id]);
@@ -189,7 +188,7 @@ class M_laporan extends CI_Model
 
   function lap_barang()
   {
-    return $this->db->query("SELECT tb.id, tb.kode_barang, tb.nama_barang, tb.qty, tb.harga_beli  from tbl_barang tb");
+    return $this->db->query("SELECT tb.id, tb.kode_barang,tb.harga_beli, tb.harga_jual, tb.nama_barang, tb.qty  from tbl_barang tb");
   }
 
   function history_barang($id, $date_start, $date_end)

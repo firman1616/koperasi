@@ -38,6 +38,12 @@ class Transaksi extends CI_Controller
         echo json_encode($this->load->view('transaksi/transaksi-table', false));
     }
 
+    public function generate_kode()
+    {
+        $kode_baru = $this->trans->kd_trans(); // panggil fungsi dari model
+        echo json_encode(['kode' => $kode_baru]);
+    }
+
     public function cari()
     {
         $kode = $_GET['kode'];
@@ -139,6 +145,7 @@ class Transaksi extends CI_Controller
 
     public function proses_pembayaran()
     {
+        $no_transaksi = $this->input->post('kd_trans');
         $tanggal = $this->input->post('tanggal');
         $diskon = $this->input->post('diskon');
         $total_bayar = $this->input->post('total_setelah_diskon');
@@ -149,12 +156,19 @@ class Transaksi extends CI_Controller
         $metode_bayar = $this->input->post('metode_bayar');
         $id_user = $this->input->post('id_user');
 
+        // ✅ CEK DUPLIKAT NO TRANSAKSI
+        $cek = $this->db->get_where('tbl_transaksi', ['no_transaksi' => $no_transaksi])->row();
+        if ($cek) {
+            echo json_encode(['status' => 'duplicate']);
+            return; // stop eksekusi lebih lanjut
+        }
+
         // Format periode berdasarkan tgl_transaksi (format MMYY)
         $periode = date('my', strtotime($tanggal));
 
         // Data transaksi utama
         $data_transaksi = [
-            'no_transaksi' => $this->input->post('kd_trans'),
+            'no_transaksi' => $no_transaksi,
             'diskon' => $diskon,
             'grand_total' => $total_bayar,
             'uang_bayar' => $uang_dibayarkan,

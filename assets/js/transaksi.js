@@ -212,7 +212,7 @@ $(document).ready(function () {
             alert("Silakan isi 'Pelanggan Lainnya' sebelum melanjutkan pembayaran!");
             $("#extraField").focus();
             return;
-        } 
+        }
 
         if (!tanggal || !kd_trans) {
             alert("Silakan isi semua data pembayaran!");
@@ -255,7 +255,7 @@ $(document).ready(function () {
             url: BASE_URL + "Transaksi/proses_pembayaran",
             type: "POST",
             data: {
-                kd_trans: kd_trans, 
+                kd_trans: kd_trans,
                 tanggal: tanggal,
                 uang_dibayarkan: uangDibayarkan,
                 diskon: diskon,
@@ -268,6 +268,16 @@ $(document).ready(function () {
             },
             dataType: "json",
             success: function (response) {
+                if (response.status === "duplicate") {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Kode Transaksi Sudah Ada",
+                        text: "Kode transaksi ini sudah digunakan. Silakan gunakan kode lain.",
+                        confirmButtonText: "OK"
+                    });
+                    return;
+                }
+
                 if (response.status === "success") {
                     alert("Pembayaran berhasil! Kembalian: Rp. " + kembalian.toLocaleString("id-ID"));
                     location.reload();
@@ -279,7 +289,7 @@ $(document).ready(function () {
                 alert("Terjadi kesalahan dalam pengiriman data!");
             }
         });
-        
+
 
         $("#modalPembayaran").modal("hide");
     });
@@ -306,7 +316,7 @@ $(document).ready(function () {
             alert("Silakan isi 'Pelanggan Lainnya' sebelum melanjutkan pembayaran!");
             $("#extraField").focus();
             return;
-        } 
+        }
 
         if (!tanggal || !kd_trans || uangDibayarkan <= 0) {
             alert("Silakan isi semua data pembayaran!");
@@ -348,6 +358,15 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 console.log("Response dari server:", response); // Debugging
+                if (response.status === "duplicate") {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Kode Transaksi Sudah Ada",
+                        text: "Kode transaksi ini sudah digunakan. Silakan gunakan kode lain.",
+                        confirmButtonText: "OK"
+                    });
+                    return;
+                }
 
                 alert("Pembayaran berhasil! Kembalian: Rp. " + kembalian.toLocaleString("id-ID"));
                 if (id_akhir) { // Cek apakah id_akhir tersedia di form
@@ -394,20 +413,20 @@ $(document).ready(function () {
         var noTransaksi = $(this).data("transaksi");
         var id = $(this).data("id");
         var nominal = $(this).data("nominal");
-    
+
         $("#id_transaksi").val(id);
         $("#noTransaksi").val(noTransaksi);
         $("#nominalTransaksi").val(nominal);
-    
+
         $("#modalDetailTempo").modal("show");
     });
 
     $(document).on("input", "#nominalBayar", function () {
         var nominalTagihan = parseFloat($("#nominalTransaksi").val().replace(/Rp. |,/g, "")) || 0;
         var nominalBayar = parseFloat($(this).val().replace(/Rp. |,/g, "")) || 0;
-    
+
         var nominalKembali = nominalBayar - nominalTagihan;
-    
+
         $("#nominalKembali").val(nominalKembali);
     });
 
@@ -415,16 +434,16 @@ $(document).ready(function () {
         var id_transaksi = $("#id_transaksi").val(); // Ambil ID transaksi dari input
         var uang_bayar = parseFloat($("#nominalBayar").val().replace(/Rp. |,/g, "")) || 0;
         var uang_kembali = parseFloat($("#nominalKembali").val().replace(/Rp. |,/g, "")) || 0;
-    
+
         console.log("ID Transaksi:", id_transaksi); // Debugging
         console.log("Uang Bayar:", uang_bayar);
         console.log("Uang Kembali:", uang_kembali);
-    
+
         if (!id_transaksi) {
             alert("ID Transaksi tidak ditemukan!");
             return;
         }
-    
+
         $.ajax({
             url: BASE_URL + "Transaksi/updatePembayaran",
             type: "POST",
@@ -449,7 +468,41 @@ $(document).ready(function () {
                 alert("Terjadi kesalahan dalam proses pembayaran!");
             }
         });
-    });   
+    });
+
+    $("#refreshKode").click(function () {
+        $.ajax({
+            url: BASE_URL + "Transaksi/generate_kode", // arahkan ke controller
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                if (response.kode) {
+                    $("#kd_trans").val(response.kode);
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Kode Diperbarui",
+                        text: "Kode transaksi sekarang: " + response.kode,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Gagal Membuat Kode",
+                        text: "Terjadi kesalahan saat membuat kode transaksi baru."
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: "error",
+                    title: "Gagal Terhubung",
+                    text: "Tidak dapat menghubungi server untuk generate kode."
+                });
+            }
+        });
+    });
 });
 
 function autofill() {

@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 text-end">
-                    <div class="nota">Nota: <?= $kd_trans ?></div>
+                    <div class="nota">Nota: <?= $kd_trans ?> <button type="button" class="btn btn-default" id="refreshKode"><i class="fa fa-sync"></i></button></div> 
                     <input type="hidden" name="kd_trans" id="kd_trans" value="<?= $kd_trans ?>">
                     <input type="hidden" name="id_akhir" id="id_akhir" value="<?= $id_akhir ?>">
                     <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">

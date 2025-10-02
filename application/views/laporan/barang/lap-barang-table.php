@@ -6,6 +6,7 @@
             <th>Nama Barang</th>
             <th>QTY</th>
             <th>Harga Beli Barang</th>
+            <th>Harga Jual Barang</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -19,6 +20,7 @@
                 <td><?= $row->nama_barang ?></td>
                 <td><?= $row->qty ?></td>
                 <td><?= 'Rp. ' .number_format($row->harga_beli) ?></td>
+                <td><?= 'Rp. ' .number_format($row->harga_jual) ?></td>
                 <td>
                     <button type="button" class="btn btn-primary btn-detail" data-id="<?= $row->id ?>">
                         <i class="fa fa-list"></i>
