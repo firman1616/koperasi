@@ -216,20 +216,25 @@ class M_laporan extends CI_Model
       tb.kode_barang,
       tb.nama_barang,
       tb.harga_jual,
-      sum(thb.qty) as qty_history,
-      thb.history_date
-    from
+      tb.harga_beli,
+      SUM(thb.qty) AS qty_history,
+      DATE_FORMAT(MAX(thb.history_date), '%Y-%m-%d') AS history_date
+    FROM
       tbl_barang tb
-    left join tbl_history_barang thb on
+    LEFT JOIN tbl_history_barang thb ON
       thb.barang_id = tb.id
-    where
-      date(thb.history_date) >= '$date_start' and date(thb.history_date) <= '$date_end'
-    group by 
-    tb.id,
+    WHERE
+      DATE(thb.history_date) >= '$date_start' 
+      AND DATE(thb.history_date) <= '$date_end'
+    GROUP BY 
+      tb.id,
       tb.kode_barang,
       tb.nama_barang,
-      month(thb.history_date)");
+      tb.harga_jual,
+      tb.harga_beli,
+      MONTH(thb.history_date)");
   }
+
 
   function lap_keuangan($periode)
   {

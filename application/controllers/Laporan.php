@@ -363,7 +363,8 @@ class Laporan extends CI_Controller
         $sheet->setCellValue('C1', 'Nama Barang');
         $sheet->setCellValue('D1', 'Date History');
         $sheet->setCellValue('E1', 'QTY History');
-        $sheet->setCellValue('F1', 'Harga');
+        $sheet->setCellValue('F1', 'Harga Beli');
+        $sheet->setCellValue('G1', 'Harga Jual');
 
         // Isi data
         $row = 2;
@@ -376,15 +377,20 @@ class Laporan extends CI_Controller
             $sheet->setCellValue('C' . $row, $d->nama_barang);
             $sheet->setCellValue('D' . $row, $date);
             $sheet->setCellValue('E' . $row, $d->qty_history);
-            $sheet->setCellValue('F' . $row, $d->harga_jual);
+            $sheet->setCellValue('F' . $row, $d->harga_beli);
+            $sheet->setCellValue('G' . $row, $d->harga_jual);
             $row++;
         }
 
         $sheet->getStyle('F2:F' . ($row - 1))
             ->getNumberFormat()
             ->setFormatCode('"Rp" #,##0');
+        
+        $sheet->getStyle('G2:G' . ($row - 1))
+            ->getNumberFormat()
+            ->setFormatCode('"Rp" #,##0');
 
-        foreach (range('A', 'F') as $col2) {
+        foreach (range('A', 'G') as $col2) {
             $sheet->getColumnDimension($col2)->setAutoSize(true);
         }
 
@@ -401,6 +407,7 @@ class Laporan extends CI_Controller
         $writer->save('php://output');
         exit;
     }
+
 
     function lap_keuangan()
     {
