@@ -47,6 +47,7 @@
                             <option value="" disabled selected>Pilih Satu</option>
                             <option value="1">Raw Material</option>
                             <option value="2">Siap Jual</option>
+                            <option value="3">JBBT</option>
                         </select>
                     </div>
                 </div>
