@@ -107,6 +107,7 @@
                             <a class="collapse-item" href="<?= site_url('Peserta') ?>">Anggota</a>
                             <a class="collapse-item" href="<?= site_url('Barang') ?>">Barang</a>
                             <a class="collapse-item" href="<?= site_url('UOM') ?>">UoM (Satuan)</a>
+                            <a class="collapse-item" href="<?= site_url('Master_tempo') ?>">Master Tempo</a>
                             <!-- <a class="collapse-item" href="<?= site_url('Kategori') ?>">Kategori</a> -->
                             <a class="collapse-item" href="<?= site_url('User') ?>">User</a>
                         </div>
