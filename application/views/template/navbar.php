@@ -31,6 +31,14 @@
                 </li>
             <?php } ?>
 
+            <?php if ($akses == 1 || $akses == 3) { ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= site_url('JBBT') ?>">
+                        <i class="fas fa-fw fa-money-bill"></i>
+                        <span>JBBT</span></a>
+                </li>
+            <?php } ?>
+
             <!--
             <?php if ($akses == 1 || $akses == 2) { ?>
             <li class="nav-item">
