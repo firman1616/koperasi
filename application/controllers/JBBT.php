@@ -44,7 +44,7 @@ class JBBT extends CI_Controller
             'conten' => 'jbbt/tambah-data',
             'kode' => $this->jbbt->generate_kode_jbbt(),
             'barang' => $this->jbbt->get_data_barang(),
-            'tempo' => $this->m_data->get_data('tbl_master_tempo'),
+            'tenor' => $this->m_data->get_data('tbl_master_tempo'),
             'footer_js' => array('assets/js/jbbt.js')
         ];
         $this->load->view('template/conten', $data);
