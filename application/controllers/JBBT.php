@@ -11,7 +11,7 @@ class JBBT extends CI_Controller
             redirect(base_url("Login"));
         }
         // $this->load->library('Pdf');
-        // $this->load->model('M_JBBT', 'jbbt');
+        $this->load->model('M_JBBT', 'jbbt');
     }
 
     public function index()
@@ -39,13 +39,29 @@ class JBBT extends CI_Controller
         $data = [
             'akses' => $this->session->userdata('level'),
             'name' => $this->session->userdata('nama'),
-            'title' => 'Tambah Data Peserta',
+            'title' => 'Tambah Data Transaksi',
             'subtitle' => 'Form Tambah Data',
-            'conten' => 'peserta/tambah-data',
-            // 'footer_js' => array('assets/js/peserta.js')
+            'conten' => 'jbbt/tambah-data',
+            'kode' => $this->jbbt->generate_kode_jbbt(),
+            'barang' => $this->jbbt->get_data_barang(),
+            'tempo' => $this->m_data->get_data('tbl_master_tempo'),
+            'footer_js' => array('assets/js/jbbt.js')
         ];
         $this->load->view('template/conten', $data);
     }
+
+    public function get_prosentase_tempo()
+    {
+        $tempo = $this->input->post('tempo');
+        $data = $this->db->get_where('tbl_master_tempo', ['tempo' => $tempo])->row();
+        $prosentase = $data ? $data->prosentase : 0;
+
+        echo json_encode([
+            'prosentase' => $prosentase
+        ]);
+    }
+
+
 
     function tambah_data()
     {
@@ -111,5 +127,4 @@ class JBBT extends CI_Controller
         $this->m_data->hapus_data($table, $where);
         redirect('Peserta');
     }
-
 }

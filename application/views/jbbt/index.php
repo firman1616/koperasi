@@ -9,7 +9,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <a href="<?= site_url('#') ?>" class="btn btn-primary" style="margin-bottom: 10px;" ><i class="fa fa-plus"></i> | Tambah Data</a>
+                <a href="<?= site_url('JBBT/vtambah') ?>" class="btn btn-primary" style="margin-bottom: 10px;" ><i class="fa fa-plus"></i> | Tambah Data</a>
                 <div id="div-table-jbbt"></div>
             </div>
         </div>
