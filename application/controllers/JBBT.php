@@ -62,26 +62,68 @@ class JBBT extends CI_Controller
     }
 
 
-
-    function tambah_data()
+    public function simpan()
     {
-        $table = 'tbl_anggota';
+        $this->load->model('M_jbbt');
+
         $data = [
-            'no_agt' => $this->input->post('no_anggota'),
-            'name' => $this->input->post('nama_anggota'),
-            'jk' => $this->input->post('jenis_kelamin'),
-            'binbinti' => $this->input->post('binbinti'),
-            'tmp_lahir' => $this->input->post('tempat_lahir'),
-            'tgl_lahir' => $this->input->post('tgl_lahir'),
-            'nik' => $this->input->post('nik'),
-            'alamat' => $this->input->post('alamat'),
-            'kongsi2' => $this->input->post('kongsi1'),
-            'kongsi1' => $this->input->post('kongsi2'),
-            'kongsi3' => $this->input->post('kongsi3'),
-            'no_telp' => $this->input->post('phone')
+            'tgl_trans'         => $this->input->post('tgl_trans'),
+            'kd_trans'          => $this->input->post('kd_trans'),
+            'nama_pembeli'      => $this->input->post('nama_pembeli'),
+            'barang_id'         => $this->input->post('barang_id'),
+            'harga_modal'       => intval($this->input->post('harga_modal')),
+            'harga_jual'        => intval($this->input->post('harga_jual')),
+            'tempo'             => intval($this->input->post('tempo')),
+            'prosentase'        => intval($this->input->post('prosentase')),
+            'total_bayar'       => intval($this->input->post('total_bayar')),
+            'uang_muka'         => intval($this->input->post('uang_muka')),
+            'cicilan_per_bulan' => intval($this->input->post('cicilan_per_bulan')),
+            'sisa_bayar'        => intval($this->input->post('sisa_bayar')),
         ];
-        $this->m_data->simpan_data($table, $data);
-        redirect('Peserta');
+
+        // insert ke tbl_jbbt
+        $jbbt_id = $this->M_jbbt->insert_jbbt($data);
+
+        // gagal insert
+        if (!$jbbt_id) {
+            echo json_encode(["status" => "error", "message" => "Gagal menyimpan JBBT"]);
+            return;
+        }
+
+        // INSERT DETAIL CICILAN
+        $tempo = $data['tempo'];
+        $cicilan = $data['cicilan_per_bulan'];
+        $sisa = $data['sisa_bayar'];
+        $tgl_trans = $data['tgl_trans'];
+
+        $detail = [];
+        $total_terkumpul = 0;
+
+        for ($i = 1; $i <= $tempo; $i++) {
+
+            // hitung tanggal pembayaran
+            $tgl_japo = date('Y-m-d', strtotime("+$i month", strtotime($tgl_trans)));
+
+            // untuk pembayaran terakhir → samakan totalnya
+            if ($i == $tempo) {
+                $nominal = $sisa - $total_terkumpul;
+            } else {
+                $nominal = $cicilan;
+                $total_terkumpul += $cicilan;
+            }
+
+            $detail[] = [
+                "jbbt_id"       => $jbbt_id,
+                "tgl_japo"      => $tgl_japo,
+                "nominal_bayar" => $nominal,
+                "status"        => 1
+            ];
+        }
+
+        // insert batch detail cicilan
+        $this->M_jbbt->insert_detail($detail);
+
+        echo json_encode(["status" => "success"]);
     }
 
     function vedit($id)

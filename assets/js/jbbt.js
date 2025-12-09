@@ -74,6 +74,46 @@ $(document).ready(function () {
 	// $("#jual, #prosentase").on("keyup change", function () {
 	// 	hitungTotalBayar();
 	// });
+
+	// simpan data
+	$('#simpan-data').click(function (e) {
+    e.preventDefault();
+
+    let data = {
+        tgl_trans: $('#tgl_transaksi').val(),
+        kd_trans: $('#kode_trans').val(),
+        nama_pembeli: $('#pembeli').val(),
+        barang_id: $('#barang').val(),
+        harga_modal: $('#modal').val().replace(/[^0-9]/g, ""),
+        harga_jual: $('#jual').val().replace(/[^0-9]/g, ""),
+        tempo: $('#tenor').val(),
+        prosentase: $('#prosentase').val().replace(/[^0-9]/g, ""),
+        total_bayar: $('#total_bayar').val().replace(/[^0-9]/g, ""),
+        uang_muka: $('#dp').val().replace(/[^0-9]/g, ""),
+        cicilan_per_bulan: $('#cicilan').val().replace(/[^0-9]/g, ""),
+        sisa_bayar: $('#sisa_bayar').val().replace(/[^0-9]/g, "")
+    };
+
+		$.ajax({
+			url: BASE_URL + "JBBT/simpan",
+			type: "POST",
+			data: data,
+			dataType: "json",
+			success: function (res) {
+				if (res.status === "success") {
+					alert("Transaksi berhasil disimpan!");
+					window.location.href = base_url + "JBBT"; // redirect ke index
+				} else {
+					alert("Gagal menyimpan: " + res.message);
+				}
+			},
+			error: function () {
+				alert("Terjadi kesalahan pada server.");
+			}
+		});
+	});
+
+
 });
 
 // Load tabel peserta

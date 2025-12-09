@@ -35,4 +35,15 @@ class M_JBBT extends CI_Model
   {
     return $this->db->get_where('tbl_barang', ['status_barang' => 3])->result();
   }
+
+  public function insert_jbbt($data)
+  {
+    $this->db->insert("tbl_jbbt", $data);
+    return $this->db->insert_id();
+  }
+
+  public function insert_detail($data)
+  {
+    return $this->db->insert_batch("tbl_dtl_jbbt", $data);
+  }
 }
