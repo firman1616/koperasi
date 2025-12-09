@@ -95,7 +95,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Tenor (Bulan)</label>
                         <select name="tenor" id="tenor" class="form-control" required>
@@ -106,24 +106,36 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Prosentase</label>
                         <input type="text" name="prosentase" id="prosentase" class="form-control">
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Total Bayar</label>
+                        <input type="text" name="total_bayar" id="total_bayar" class="form-control" readonly>
+                    </div>
+                </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">DP (Uang Muka)</label>
                         <input type="text" name="dp" id="dp" class="form-control" readonly required>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Cicilan Per Bulan</label>
                         <input type="text" name="cicilan" id="cicilan" class="form-control" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Total Sisa Bayar</label>
+                        <input type="text" name="sisa_bayar" id="sisa_bayar" class="form-control" readonly>
                     </div>
                 </div>
             </div>
