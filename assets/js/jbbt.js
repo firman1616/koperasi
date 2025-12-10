@@ -102,7 +102,7 @@ $(document).ready(function () {
 			success: function (res) {
 				if (res.status === "success") {
 					alert("Transaksi berhasil disimpan!");
-					window.location.href = base_url + "JBBT"; // redirect ke index
+					window.location.href = BASE_URL + "JBBT"; // redirect ke index
 				} else {
 					alert("Gagal menyimpan: " + res.message);
 				}
