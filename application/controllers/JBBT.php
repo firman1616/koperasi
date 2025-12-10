@@ -162,4 +162,25 @@ class JBBT extends CI_Controller
             "html"   => $this->load->view('jbbt/detail-view', $data, true)
         ]);
     }
+
+    public function cek_status($id)
+    {
+        $ada = $this->db->get_where("tbl_dtl_jbbt", [
+            "jbbt_id" => $id,
+            "status" => 2
+        ])->num_rows() > 0;
+
+        echo json_encode(["ada_status2" => $ada]);
+    }
+
+
+    public function hapus($id)
+    {
+        // hapus detail dulu
+        $this->db->delete("tbl_dtl_jbbt", ["jbbt_id" => $id]);
+        // hapus header
+        $this->db->delete("tbl_jbbt", ["id" => $id]);
+
+        echo json_encode(["status" => "success"]);
+    }
 }

@@ -305,3 +305,41 @@ function hitungSisaBayar() {
 
 	$("#sisa_bayar").val(formatRupiah(sisa.toString()));
 }
+
+function hapusData(id) {
+
+	// 1️⃣ Cek status pembayaran dulu
+	$.ajax({
+		url: BASE_URL + "JBBT/cek_status/" + id,
+		type: "GET",
+		dataType: "json",
+		success: function (res) {
+
+			// Jika ada pembayaran status = 2 → TIDAK BOLEH HAPUS
+			if (res.ada_status2) {
+				alert("Data TIDAK dapat dihapus karena sudah ada pembayaran!");
+				return;
+			}
+
+			// 2️⃣ Jika aman → konfirmasi hapus
+			if (!confirm("Yakin ingin menghapus data ini?")) {
+				return;
+			}
+
+			// 3️⃣ Proses hapus
+			$.ajax({
+				url: BASE_URL + "JBBT/hapus/" + id,
+				type: "POST",
+				dataType: "json",
+				success: function (r) {
+					if (r.status === "success") {
+						alert("Data berhasil dihapus!");
+						tableJBBT(); // reload table
+					} else {
+						alert("Gagal menghapus data!");
+					}
+				}
+			});
+		}
+	});
+}

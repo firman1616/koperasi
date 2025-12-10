@@ -29,7 +29,7 @@
                                 View Detail
                             </a>
                             <a class="dropdown-item" href="#">Edit</a>
-                            <a class="dropdown-item text-danger" href="#" onclick="return confirm('Yakin ingin hapus data ini?')">Hapus</a>
+                            <a class="dropdown-item text-danger" href="#" onclick="hapusData(<?= $row->id ?>)">Hapus</a>
                         </div>
                     </div>
                 </td>
