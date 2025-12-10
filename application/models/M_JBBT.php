@@ -81,4 +81,20 @@ class M_JBBT extends CI_Model
 
     return $grouped;
   }
+
+  public function update_detail($id, $data)
+  {
+    $this->db->where('id', $id);
+    return $this->db->update('tbl_dtl_jbbt', $data);
+  }
+
+  public function get_header_detail($id)
+  {
+    return $this->db->select('j.*, b.nama_barang')
+      ->from('tbl_jbbt j')
+      ->join('tbl_barang b', 'j.barang_id = b.id', 'left')
+      ->where('j.id', $id)
+      ->get()
+      ->row();
+  }
 }

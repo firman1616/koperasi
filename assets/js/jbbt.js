@@ -77,22 +77,22 @@ $(document).ready(function () {
 
 	// simpan data
 	$('#simpan-data').click(function (e) {
-    e.preventDefault();
+		e.preventDefault();
 
-    let data = {
-        tgl_trans: $('#tgl_transaksi').val(),
-        kd_trans: $('#kode_trans').val(),
-        nama_pembeli: $('#pembeli').val(),
-        barang_id: $('#barang').val(),
-        harga_modal: $('#modal').val().replace(/[^0-9]/g, ""),
-        harga_jual: $('#jual').val().replace(/[^0-9]/g, ""),
-        tempo: $('#tenor').val(),
-        prosentase: $('#prosentase').val().replace(/[^0-9]/g, ""),
-        total_bayar: $('#total_bayar').val().replace(/[^0-9]/g, ""),
-        uang_muka: $('#dp').val().replace(/[^0-9]/g, ""),
-        cicilan_per_bulan: $('#cicilan').val().replace(/[^0-9]/g, ""),
-        sisa_bayar: $('#sisa_bayar').val().replace(/[^0-9]/g, "")
-    };
+		let data = {
+			tgl_trans: $('#tgl_transaksi').val(),
+			kd_trans: $('#kode_trans').val(),
+			nama_pembeli: $('#pembeli').val(),
+			barang_id: $('#barang').val(),
+			harga_modal: $('#modal').val().replace(/[^0-9]/g, ""),
+			harga_jual: $('#jual').val().replace(/[^0-9]/g, ""),
+			tempo: $('#tenor').val(),
+			prosentase: $('#prosentase').val().replace(/[^0-9]/g, ""),
+			total_bayar: $('#total_bayar').val().replace(/[^0-9]/g, ""),
+			uang_muka: $('#dp').val().replace(/[^0-9]/g, ""),
+			cicilan_per_bulan: $('#cicilan').val().replace(/[^0-9]/g, ""),
+			sisa_bayar: $('#sisa_bayar').val().replace(/[^0-9]/g, "")
+		};
 
 		$.ajax({
 			url: BASE_URL + "JBBT/simpan",
@@ -112,6 +112,71 @@ $(document).ready(function () {
 			}
 		});
 	});
+
+	// Ketika tombol periode diklik
+	$(document).on('click', '.btnBayar', function () {
+
+		let id = $(this).data('id');
+		let periode = $(this).data('periode');
+		let japo = $(this).data('japo');
+
+		// simpan tombol yang diklik (agar bisa dihapus nanti)
+		window.buttonTarget = $(this);
+
+		$('#id_cicilan').val(id);
+		$('#periode').val(periode);
+		$('#tgl_jibayar').val(japo);
+
+		$('#modalBayar').modal('show');
+	});
+
+	// Update pembayaran
+	$('#btnUpdate').click(function () {
+
+		let id = $('#id_cicilan').val();
+		let tgl = $('#tgl_dibayar').val();
+
+		$.ajax({
+			url: BASE_URL + 'JBBT/update_pembayaran',
+			type: 'POST',
+			data: { id: id, tgl: tgl },
+			dataType: 'json',
+			success: function (res) {
+				if (res.status === 'success') {
+
+					// Hapus tombol yang ditekan
+					window.buttonTarget.remove();
+
+					// Tutup modal
+					$('#modalBayar').modal('hide');
+
+					alert("Pembayaran berhasil diperbarui!");
+				}
+			}
+		});
+	});
+
+	$(document).on('click', '.btnViewDetail', function () {
+
+		let id = $(this).data('id');
+		let kode = $(this).data('kode');
+
+		$("#titleDetail").text("Detail Transaksi : " + kode);
+
+		$.ajax({
+			url: BASE_URL + 'JBBT/detail',
+			type: 'POST',
+			data: { id: id },
+			dataType: 'json',
+			success: function (res) {
+				if (res.status == "success") {
+					$("#bodyDetail").html(res.html);
+					$("#modalDetailJBBT").modal('show');
+				}
+			}
+		});
+	});
+
 
 
 });
@@ -213,7 +278,7 @@ function hitungTotalBayar() {
 	// format rupiah
 	$("#total_bayar").val(formatRupiah(total.toString()));
 	// tambahkan ini
-    hitungSisaBayar();
+	hitungSisaBayar();
 }
 
 function hitungSisaBayar() {

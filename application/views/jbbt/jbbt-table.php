@@ -22,7 +22,12 @@
                             <?= $row->kd_trans ?>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenu<?= $row->id ?>">
-                            <a class="dropdown-item" href="#">View Detail</a>
+                            <a class="dropdown-item btnViewDetail"
+                                href="javascript:void(0);"
+                                data-id="<?= $row->id ?>"
+                                data-kode="<?= $row->kd_trans ?>">
+                                View Detail
+                            </a>
                             <a class="dropdown-item" href="#">Edit</a>
                             <a class="dropdown-item text-danger" href="#" onclick="return confirm('Yakin ingin hapus data ini?')">Hapus</a>
                         </div>
@@ -55,7 +60,11 @@
                                 $btn = "btn-info";    // masih jauh sebelum bulan jatuh tempo
                             }
                     ?>
-                            <button class="btn btn-sm <?= $btn ?>" title="<?= $periode ?>">
+                            <button
+                                class="btn btn-sm <?= $btn ?> btnBayar"
+                                data-id="<?= $d->id ?>"
+                                data-periode="<?= $periode ?>"
+                                data-japo="<?= $d->tgl_japo ?>">
                                 <?= $periode ?>
                             </button>
                     <?php
@@ -70,3 +79,24 @@
         ?>
     </tbody>
 </table>
+
+<!-- view detail -->
+<div class="modal fade" id="modalDetailJBBT" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleDetail"></h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    &times;
+                </button>
+            </div>
+
+            <div class="modal-body" id="bodyDetail">
+                <!-- detail akan dimuat via AJAX -->
+            </div>
+
+        </div>
+    </div>
+</div>

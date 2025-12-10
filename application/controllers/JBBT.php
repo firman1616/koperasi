@@ -126,4 +126,40 @@ class JBBT extends CI_Controller
 
         echo json_encode(["status" => "success"]);
     }
+
+    public function update_pembayaran()
+    {
+        $id  = $this->input->post('id');
+        $tgl = $this->input->post('tgl');
+
+        $data = [
+            'tgl_dibayar' => $tgl,
+            'status'      => 2
+        ];
+
+        $this->jbbt->update_detail($id, $data);
+
+        echo json_encode(['status' => 'success']);
+    }
+
+    public function detail()
+    {
+        $id = $this->input->post('id');
+
+        // ambil data header JBBT
+        $header = $this->jbbt->get_header_detail($id);
+
+        // ambil data detail cicilan
+        $detail = $this->db->get_where('tbl_dtl_jbbt', ['jbbt_id' => $id])->result();
+
+        $data = [
+            'header' => $header,
+            'detail' => $detail
+        ];
+
+        echo json_encode([
+            "status" => "success",
+            "html"   => $this->load->view('jbbt/detail-view', $data, true)
+        ]);
+    }
 }
